@@ -29,6 +29,8 @@ void AsterixFile::readFile(QString path) {
                 data[i-3] = fileBinary.at(offset + i);
             }
             cat10Block->SetData(data);
+            cat10Block->DecodeFSPEC();
+            cat10Block->FullDecode();
             dataBlocks->append(cat10Block);
         }
 
@@ -39,6 +41,7 @@ void AsterixFile::readFile(QString path) {
                 data[i-3] = fileBinary.at(offset + i);
             }
             cat21Block->SetData(data);
+            cat21Block->DecodeFSPEC();
             dataBlocks->append(cat21Block);
         }
 

@@ -14,14 +14,16 @@ SOURCES += \
     src/asterix_lib/asterixfile.cpp \
     src/asterix_lib/datablock.cpp \
     src/asterix_lib/cat10.cpp \
-    src/asterix_lib/cat21.cpp
+    src/asterix_lib/cat21.cpp \
+    src/asterix_lib/utilities.cpp
 
 HEADERS += \
     hdr/asterix_lib/cat10.h \
     hdr/gui/mainwindow.h \
     hdr/asterix_lib/asterixfile.h \
     hdr/asterix_lib/datablock.h \
-    hdr/asterix_lib/cat21.h
+    hdr/asterix_lib/cat21.h \
+    hdr/asterix_lib/utilities.h
 
 FORMS += \
     ui/mainwindow.ui

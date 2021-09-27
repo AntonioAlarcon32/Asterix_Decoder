@@ -6,7 +6,6 @@ Cat21::Cat21()
     this->length = 0;
 }
 
+void Cat21::FullDecode() {
 
-int Cat21::TestFunction() {
-    return 2;
 }

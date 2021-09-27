@@ -7,7 +7,7 @@ class Cat21: public DataBlock
 {
 public:
     Cat21();
-    int TestFunction();
+    void FullDecode();
 };
 
 #endif // CAT21_H

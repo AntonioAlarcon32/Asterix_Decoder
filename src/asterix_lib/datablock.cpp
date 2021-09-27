@@ -20,3 +20,12 @@ QVector<char> DataBlock::GetData() {
 void DataBlock::SetData(QVector<char> data) {
     this->data = data;
 }
+
+void DataBlock::DecodeFSPEC() {
+    while((data[0] & 1) != 0) {
+        this->fspec.append(data[0]);
+        data.remove(0);
+    }
+    this->fspec.append(data[0]);
+    data.remove(0);
+}
