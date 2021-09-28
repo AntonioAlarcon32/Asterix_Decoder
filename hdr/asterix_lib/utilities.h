@@ -12,8 +12,8 @@ namespace Utilities
         static QVector<char> GetVariableLengthDataItem(QVector<char> &message);
         static QVector<char> GetRepetitiveDataItem(QVector<char> message, int length);
         static double DecodeUnsignedBytesToDouble(QVector<char> bytes, double resolution);
+        static double DecodeTwosComplementToDouble(QVector<char> bytes, double resolution);
     };
-
 };
 
 #endif // UTILITIES_H

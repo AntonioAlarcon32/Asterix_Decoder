@@ -24,6 +24,76 @@ Cat10::Cat10()
     this->trSPI = "N/A";
 
     this->timeOfDay = QTime();
+
+    this->wgs84latitude = nan("");
+    this->wgs84longitude = nan("");
+
+    this->polarRho = nan("");
+    this->polarTheta = nan("");
+
+    this->cartesianX = nan("");
+    this->cartesianY = nan("");
+
+    this->M3AValidated = "N/A";
+    this->M3AGarbled = "N/A";
+    this->M3ACode = "N/A";
+    this->M3ADerivation= "N/A";
+
+    this->targetAddress = "N/A";
+
+    this->targetIdentification = "N/A";
+
+    this->polarGroundSpeed = nan("");
+    this->polarTrackAngle = nan("");
+
+    this->cartesianVx = nan("");
+    this->cartesianVy = nan("");
+
+    this->trackNumber = -1;
+
+    this->tsCNF = "N/A";
+    this->tsTRE = "N/A";
+    this->tsCST = "N/A";
+    this->tsMAH = "N/A";
+    this->tsTCC = "N/A";
+    this->tsSTH = "N/A";
+    this->tsTOM = "N/A";
+    this->tsDOU = "N/A";
+    this->tsMRS = "N/A";
+    this->tsGHO = "N/A";
+
+    this->targetLength = nan("");
+    this->targetOrientation = nan("");
+    this->targetWidth = nan("");
+
+    this->calcAccelerationX = nan("");
+    this->calcAccelerationY = nan("");
+
+    this->ssNOGO = "N/A";
+    this->ssOVL = "N/A";
+    this->ssTSV = "N/A";
+    this->ssDIV = "N/A";
+    this->ssTTF = "N/A";
+
+    this->flFlightLevel = nan("");
+    this->flGarbled = "N/A";
+    this->flValidated = "N/A";
+
+    this->vehicleFleetId= "N/A";
+
+    this->measuredHeight = nan("");
+
+    this->ppmTRB = "N/A";
+    this->ppMSG= "N/A";
+
+    this->standardDeviationX = nan("");
+    this->standardDeviationY = nan("");
+    this->standardDeviationXY = nan("");
+    this->amplitudeOfPrimaryPlot= nan("");
+
+
+    //this->ModeSMBData = new List<byte[]>();
+    //this->ModeSMBCodes = new List<byte[]>();
 }
 
 void Cat10::FullDecode() {
@@ -47,76 +117,95 @@ void Cat10::FullDecode() {
             this->DecodeTimeOfDay(dataItem);
         }
         if ((this->fspec.at(0) & 0x08) == 0x08) {
-            //this->DecodePositionInWGS84Coordinates(dataItem);
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,8);
+            this->DecodePositionInWGS84Coordinates(dataItem);
         }
         if ((this->fspec.at(0) & 0x04) == 0x04) {
-            //this->DecodeMeasuredPositionInPolarCoordinates(dataItem);
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
+            this->DecodeMeasuredPositionInPolarCoordinates(dataItem);
         }
         if ((this->fspec.at(0) & 0x02) == 0x02) {
-            //this->DecodePositionInCartesianCoordinates(dataItem);
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
+            this->DecodePositionInCartesianCoordinates(dataItem);
         }
     }
 
     if (this->fspec.length() > 1) {
 
         if ((this->fspec.at(1) & 0x80) == 0x80) {
-            //this->DecodeCalculatedTrackVelocityInPolarCoordinates(dataItem);
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
+            this->DecodeCalculatedTrackVelocityInPolarCoordinates(dataItem);
         }
         if ((this->fspec.at(1) & 0x40) == 0x40) {
-            //this->DecodeCalculatedTrackVelocityInCartesianCoordinates(dataItem);
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
+            this->DecodeCalculatedTrackVelocityInCartesianCoordinates(dataItem);
         }
         if ((this->fspec.at(1) & 0x20) == 0x20) {
-            //this->DecodeTrackNumber(dataItem);
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
+            this->DecodeTrackNumber(dataItem);
         }
         if ((this->fspec.at(1) & 0x10) == 0x10) {
+            QVector<char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data);
             //this->DecodeTrackStatus(dataItem);
         }
         if ((this->fspec.at(1) & 0x08) == 0x08) {
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
             //this->DecodeMode3ACodeInOctalRepresentation(dataItem);
         }
         if ((this->fspec.at(1) & 0x04) == 0x04) {
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,3);
             //this->DecodeTargetAddress(dataItem);
         }
         if ((this->fspec.at(1) & 0x02) == 0x02) {
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,7);
             //this->DecodeTargetIdentification(dataItem);
         }
     }
     if (this->fspec.length() > 2) {
 
         if ((this->fspec.at(2) & 0x80) == 0x80) {
+
             //this->DecodeModeSMBData(dataItem);
         }
         if ((this->fspec.at(2) & 0x40) == 0x40) {
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
             //this->DecodeVehicleFleetIdentification(dataItem);
         }
         if ((this->fspec.at(2) & 0x20) == 0x20) {
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
             //this->DecodeFlightLevelInBinaryRepresentation(dataItem);
         }
         if ((this->fspec.at(2) & 0x10) == 0x10) {
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
             //this->DecodeMeasuredHeight(dataItem);
         }
         if ((this->fspec.at(2) & 0x08) == 0x08) {
             //this->DecodeTargetSizeAndOrientation(dataItem);
         }
         if ((this->fspec.at(2) & 0x04) == 0x04) {
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
             //this->DecodeSystemStatus(dataItem);
         }
         if ((this->fspec.at(2) & 0x02) == 0x02) {
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
             //this->DecodePreProgrammedMessage(dataItem);
         }
     }
     if (this->fspec.length() > 3) {
 
         if ((this->fspec.at(3) & 0x80) == 0x80) {
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
             //this->DecodeStandardDeviationOfPosition(dataItem);
         }
         if ((this->fspec.at(3) & 0x40) == 0x40) {
             //this->DecodePresence(dataItem);
         }
         if ((this->fspec.at(3) & 0x20) == 0x20) {
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
             //this->DecodeAmplitudeOfPrimaryPlot(dataItem);
         }
         if ((this->fspec.at(3) & 0x10) == 0x10) {
+            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
             //this->DecodeCalculatedAcceleration(dataItem);
         }
         if ((this->fspec.at(3) & 0x08) == 0x08) {
@@ -317,8 +406,100 @@ void Cat10::DecodeTimeOfDay(QVector<char> &dataItem) {
     double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
     int mseconds = (int) seconds * 1000;
     this->timeOfDay = QTime::fromMSecsSinceStartOfDay(mseconds);
-    int t = 1;
 }
 
+void Cat10::DecodePositionInWGS84Coordinates(QVector<char> &dataItem) {
 
+    int i = 0;
+    QVector<char> latitudeBytes(4);
+    QVector<char> longitudeBytes(4);
+    while (i < dataItem.length())
+    {
+        if (i <= 3)
+            latitudeBytes[i] = dataItem[i];
+        else if (i > 3)
+            longitudeBytes[i - 4] = dataItem[i];
+        i++;
+    }
+    double resolution = 180 / pow(2,31);
+    this->wgs84latitude = Utilities::DataTools::DecodeTwosComplementToDouble(latitudeBytes, resolution);
+    this->wgs84longitude = Utilities::DataTools::DecodeTwosComplementToDouble(longitudeBytes, resolution);
+    int c = 1;
+}
+
+void Cat10::DecodeMeasuredPositionInPolarCoordinates(QVector<char> &dataItem) {
+
+    QVector<char> rhoBytes(2);
+    QVector<char> thetaBytes(2);
+
+    rhoBytes[0] = dataItem.at(0);
+    rhoBytes[1] = dataItem.at(1);
+    double rhoResolution = 1;
+
+    thetaBytes[0] = dataItem.at(2);
+    thetaBytes[1] = dataItem.at(3);
+    double thetaResolution = 360 / pow(2, 16);
+
+    this->polarRho = Utilities::DataTools::DecodeUnsignedBytesToDouble(rhoBytes, rhoResolution);
+    this->polarTheta = Utilities::DataTools::DecodeUnsignedBytesToDouble(thetaBytes, thetaResolution);
+}
+
+void Cat10::DecodePositionInCartesianCoordinates(QVector<char> &dataItem) {
+
+    QVector<char> xBytes(2);
+    QVector<char> yBytes(2);
+
+    xBytes[0] = dataItem.at(0);
+    xBytes[1] = dataItem.at(1);
+    double xResolution = 1;
+
+    yBytes[0] = dataItem.at(2);
+    yBytes[1] = dataItem.at(3);
+    double yResolution = 1;
+
+    this->cartesianX = Utilities::DataTools::DecodeTwosComplementToDouble(xBytes,xResolution);
+    this->cartesianY = Utilities::DataTools::DecodeTwosComplementToDouble(yBytes,yResolution);
+}
+
+void Cat10::DecodeCalculatedTrackVelocityInPolarCoordinates(QVector<char> &dataItem) {
+
+    QVector<char> speedBytes(2);
+    QVector<char> angleBytes(2);
+
+    speedBytes[0] = dataItem.at(0);
+    speedBytes[1] = dataItem.at(1);
+    double speedResolution = 0.22;
+
+    angleBytes[0] = dataItem.at(2);
+    angleBytes[1] = dataItem.at(3);
+    double angleResolution = 360 / pow(2,16);
+
+    this->polarGroundSpeed = Utilities::DataTools::DecodeUnsignedBytesToDouble(speedBytes, speedResolution);
+    this->polarTrackAngle = Utilities::DataTools::DecodeUnsignedBytesToDouble(angleBytes, angleResolution);
+}
+
+void Cat10::DecodeCalculatedTrackVelocityInCartesianCoordinates(QVector<char> &dataItem) {
+    QVector<char> xBytes(2);
+    QVector<char> yBytes(2);
+
+    xBytes[0] = dataItem.at(0);
+    xBytes[1] = dataItem.at(1);
+    double xResolution = 0.25;
+
+    yBytes[0] = dataItem.at(2);
+    yBytes[1] = dataItem.at(3);
+    double yResolution = 0.25;
+
+    this->cartesianVx = Utilities::DataTools::DecodeTwosComplementToDouble(xBytes,xResolution);
+    this->cartesianVy = Utilities::DataTools::DecodeTwosComplementToDouble(yBytes,yResolution);
+
+}
+
+void Cat10::DecodeTrackNumber(QVector<char> &dataItem) {
+    QVector<char> trackBytes(2);
+    trackBytes[0] = dataItem.at(0);
+    trackBytes[1] = dataItem.at(1);
+    double resolution = 1;
+    this->trackNumber = (int) Utilities::DataTools::DecodeUnsignedBytesToDouble(trackBytes,resolution);
+}
 

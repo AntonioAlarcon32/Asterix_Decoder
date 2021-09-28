@@ -43,4 +43,32 @@ double DataTools::DecodeUnsignedBytesToDouble(QVector<char> bytes, double resolu
     }
     return bytesValue * resolution;
 }
+
+double DataTools::DecodeTwosComplementToDouble(QVector<char> bytes, double resolution) {
+
+    char mask = 0x7F;
+    bool negative = false;
+    if ((unsigned char)bytes.at(0) > 127) {
+        negative = true;
+    }
+    unsigned char noSign = (unsigned char)(bytes.at(0) & mask);
+    double bytesValue = 0;
+    double multiplier = 1;
+
+    for (int c = bytes.length() - 1; c >= 0; c--)
+    {
+        if (c == 0)
+        {
+            bytesValue += noSign * multiplier;
+            break;
+        }
+        bytesValue += ((unsigned char)bytes.at(c) * multiplier);
+        multiplier = multiplier * pow(2, 8);
+    }
+    if (negative) {
+        bytesValue = bytesValue - pow(2, (bytes.length() * 8) - 1);
+    }
+
+    return bytesValue * resolution;
+}
 }

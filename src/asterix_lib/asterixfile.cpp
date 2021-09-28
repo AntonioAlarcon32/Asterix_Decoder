@@ -1,4 +1,6 @@
 #include <hdr/asterix_lib/asterixfile.h>
+#include "QElapsedTimer"
+#include "QDebug"
 
 
 AsterixFile::AsterixFile()
@@ -14,6 +16,8 @@ void AsterixFile::readFile(QString path) {
     if (!file.open(QIODevice::ReadOnly)) return;
     QByteArray fileBinary = file.readAll();
     int numOfPackets = 0;
+    QElapsedTimer* testTime = new QElapsedTimer();
+    testTime->start();
 
     for (int offset = 0; offset < fileBinary.length(); ) {
 
@@ -50,4 +54,6 @@ void AsterixFile::readFile(QString path) {
         numOfPackets++;
         offset += length;
     }
+     qDebug() << "Loading took" << testTime->elapsed() << "milliseconds";
+     qDebug() << "Loaded " << numOfPackets << " packets";
 }
