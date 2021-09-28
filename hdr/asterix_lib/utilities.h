@@ -9,8 +9,9 @@ namespace Utilities
 
     public:
         static QVector<char> GetFixedLengthDataItem(QVector<char> &message, int length);
-        static QVector<char> GetVariableLengthDataItem(QVector<char> message, int length);
+        static QVector<char> GetVariableLengthDataItem(QVector<char> &message);
         static QVector<char> GetRepetitiveDataItem(QVector<char> message, int length);
+        static double DecodeUnsignedBytesToDouble(QVector<char> bytes, double resolution);
     };
 
 };
