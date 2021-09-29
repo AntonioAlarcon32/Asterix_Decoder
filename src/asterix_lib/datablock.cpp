@@ -13,11 +13,11 @@ void DataBlock::SetLength(int len) {
     this->length = len;
 };
 
-QVector<char> DataBlock::GetData() {
+QVector<unsigned char> DataBlock::GetData() {
     return this->data;
 }
 
-void DataBlock::SetData(QVector<char> data) {
+void DataBlock::SetData(QVector<unsigned char> data) {
     this->data = data;
 }
 

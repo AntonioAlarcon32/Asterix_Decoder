@@ -8,11 +8,12 @@ namespace Utilities
     class DataTools {
 
     public:
-        static QVector<char> GetFixedLengthDataItem(QVector<char> &message, int length);
-        static QVector<char> GetVariableLengthDataItem(QVector<char> &message);
-        static QVector<char> GetRepetitiveDataItem(QVector<char> message, int length);
-        static double DecodeUnsignedBytesToDouble(QVector<char> bytes, double resolution);
-        static double DecodeTwosComplementToDouble(QVector<char> bytes, double resolution);
+        static QVector<unsigned char> GetFixedLengthDataItem(QVector<unsigned char> &message, int length);
+        static QVector<unsigned char> GetVariableLengthDataItem(QVector<unsigned char> &message);
+        static QVector<unsigned char> GetRepetitiveDataItem(QVector<unsigned char> message, int length);
+        static double DecodeUnsignedBytesToDouble(QVector<unsigned char> bytes, double resolution);
+        static double DecodeTwosComplementToDouble(QVector<unsigned char> bytes, double resolution);
+        static QString GetAircraftIDFromBytes(QVector<unsigned char> bytes);
     };
 };
 

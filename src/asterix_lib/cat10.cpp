@@ -101,31 +101,31 @@ void Cat10::FullDecode() {
     if (this->fspec.length() > 0) {
 
         if ((this->fspec.at(0) & 0x80) == 0x80) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
             this->DecodeDataSourceIdentifier(dataItem);
         }
         if ((this->fspec.at(0) & 0x40) == 0x40) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
             this->DecodeMessageType(dataItem);
         }
         if ((this->fspec.at(0) & 0x20) == 0x20) {
-            QVector<char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data);
             this->DecodeTargetReportDescriptor(dataItem);
         }
         if ((this->fspec.at(0) & 0x10) == 0x10) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,3);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,3);
             this->DecodeTimeOfDay(dataItem);
         }
         if ((this->fspec.at(0) & 0x08) == 0x08) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,8);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,8);
             this->DecodePositionInWGS84Coordinates(dataItem);
         }
         if ((this->fspec.at(0) & 0x04) == 0x04) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
             this->DecodeMeasuredPositionInPolarCoordinates(dataItem);
         }
         if ((this->fspec.at(0) & 0x02) == 0x02) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
             this->DecodePositionInCartesianCoordinates(dataItem);
         }
     }
@@ -133,32 +133,32 @@ void Cat10::FullDecode() {
     if (this->fspec.length() > 1) {
 
         if ((this->fspec.at(1) & 0x80) == 0x80) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
             this->DecodeCalculatedTrackVelocityInPolarCoordinates(dataItem);
         }
         if ((this->fspec.at(1) & 0x40) == 0x40) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
             this->DecodeCalculatedTrackVelocityInCartesianCoordinates(dataItem);
         }
         if ((this->fspec.at(1) & 0x20) == 0x20) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
             this->DecodeTrackNumber(dataItem);
         }
         if ((this->fspec.at(1) & 0x10) == 0x10) {
-            QVector<char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data);
-            //this->DecodeTrackStatus(dataItem);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data);
+            this->DecodeTrackStatus(dataItem);
         }
         if ((this->fspec.at(1) & 0x08) == 0x08) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
-            //this->DecodeMode3ACodeInOctalRepresentation(dataItem);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
+            this->DecodeMode3ACodeInOctalRepresentation(dataItem);
         }
         if ((this->fspec.at(1) & 0x04) == 0x04) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,3);
-            //this->DecodeTargetAddress(dataItem);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,3);
+            this->DecodeTargetAddress(dataItem);
         }
         if ((this->fspec.at(1) & 0x02) == 0x02) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,7);
-            //this->DecodeTargetIdentification(dataItem);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,7);
+            this->DecodeTargetIdentification(dataItem);
         }
     }
     if (this->fspec.length() > 2) {
@@ -168,44 +168,44 @@ void Cat10::FullDecode() {
             //this->DecodeModeSMBData(dataItem);
         }
         if ((this->fspec.at(2) & 0x40) == 0x40) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
             //this->DecodeVehicleFleetIdentification(dataItem);
         }
         if ((this->fspec.at(2) & 0x20) == 0x20) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
             //this->DecodeFlightLevelInBinaryRepresentation(dataItem);
         }
         if ((this->fspec.at(2) & 0x10) == 0x10) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
             //this->DecodeMeasuredHeight(dataItem);
         }
         if ((this->fspec.at(2) & 0x08) == 0x08) {
             //this->DecodeTargetSizeAndOrientation(dataItem);
         }
         if ((this->fspec.at(2) & 0x04) == 0x04) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
             //this->DecodeSystemStatus(dataItem);
         }
         if ((this->fspec.at(2) & 0x02) == 0x02) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
             //this->DecodePreProgrammedMessage(dataItem);
         }
     }
     if (this->fspec.length() > 3) {
 
         if ((this->fspec.at(3) & 0x80) == 0x80) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
             //this->DecodeStandardDeviationOfPosition(dataItem);
         }
         if ((this->fspec.at(3) & 0x40) == 0x40) {
             //this->DecodePresence(dataItem);
         }
         if ((this->fspec.at(3) & 0x20) == 0x20) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
             //this->DecodeAmplitudeOfPrimaryPlot(dataItem);
         }
         if ((this->fspec.at(3) & 0x10) == 0x10) {
-            QVector<char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
             //this->DecodeCalculatedAcceleration(dataItem);
         }
         if ((this->fspec.at(3) & 0x08) == 0x08) {
@@ -220,12 +220,12 @@ void Cat10::FullDecode() {
     }
 }
 
-void Cat10::DecodeDataSourceIdentifier(QVector<char> &dataItem) {
+void Cat10::DecodeDataSourceIdentifier(QVector<unsigned char> &dataItem) {
     this->systemAreaCode = (short)dataItem.at(0);
     this->systemIdentificationCode = (short)dataItem.at(1);
 }
 
-void Cat10::DecodeMessageType(QVector<char> &dataItem) {
+void Cat10::DecodeMessageType(QVector<unsigned char> &dataItem) {
 
     switch (dataItem.at(0)) {
     case 0x01:
@@ -243,18 +243,18 @@ void Cat10::DecodeMessageType(QVector<char> &dataItem) {
     }
 }
 
-void Cat10:: DecodeTargetReportDescriptor(QVector<char> &dataItem) {
-    char typMask = 0xE0;
-    char dcrMask = 0x10;
-    char chnMask = 0x08;
-    char gbsMask = 0x04;
-    char crtMask = 0x02;
+void Cat10:: DecodeTargetReportDescriptor(QVector<unsigned char> &dataItem) {
+    unsigned char typMask = 0xE0;
+    unsigned char dcrMask = 0x10;
+    unsigned char chnMask = 0x08;
+    unsigned char gbsMask = 0x04;
+    unsigned char crtMask = 0x02;
 
-    char typ = ((dataItem.at(0) & typMask) >> 5);
-    char dcr = ((dataItem.at(0) & dcrMask) >> 4);
-    char chn = ((dataItem.at(0) & chnMask) >> 3);
-    char gbs = ((dataItem.at(0) & gbsMask) >> 2);
-    char crt = ((dataItem.at(0) & crtMask) >> 1);
+    unsigned char typ = ((dataItem.at(0) & typMask) >> 5);
+    unsigned char dcr = ((dataItem.at(0) & dcrMask) >> 4);
+    unsigned char chn = ((dataItem.at(0) & chnMask) >> 3);
+    unsigned char gbs = ((dataItem.at(0) & gbsMask) >> 2);
+    unsigned char crt = ((dataItem.at(0) & crtMask) >> 1);
 
     switch (typ)
     {
@@ -323,17 +323,17 @@ void Cat10:: DecodeTargetReportDescriptor(QVector<char> &dataItem) {
 
     if (dataItem.length() >= 2) {
 
-        char simMask = 0x80;
-        char tstMask = 0x40;
-        char rabMask = 0x20;
-        char lopMask = 0x18;
-        char totMask = 0x06;
+        unsigned char simMask = 0x80;
+        unsigned char tstMask = 0x40;
+        unsigned char rabMask = 0x20;
+        unsigned char lopMask = 0x18;
+        unsigned char totMask = 0x06;
 
-        char sim = ((dataItem.at(1) & simMask) >> 7);
-        char tst = ((dataItem.at(1) & tstMask) >> 6);
-        char rab = ((dataItem.at(1) & rabMask) >> 5);
-        char lop = ((dataItem.at(1) & lopMask) >> 3);
-        char tot = ((dataItem.at(1) & totMask) >> 1);
+        unsigned char sim = ((dataItem.at(1) & simMask) >> 7);
+        unsigned char tst = ((dataItem.at(1) & tstMask) >> 6);
+        unsigned char rab = ((dataItem.at(1) & rabMask) >> 5);
+        unsigned char lop = ((dataItem.at(1) & lopMask) >> 3);
+        unsigned char tot = ((dataItem.at(1) & totMask) >> 1);
 
         switch (sim)
         {
@@ -401,18 +401,18 @@ void Cat10:: DecodeTargetReportDescriptor(QVector<char> &dataItem) {
     }
 }
 
-void Cat10::DecodeTimeOfDay(QVector<char> &dataItem) {
+void Cat10::DecodeTimeOfDay(QVector<unsigned char> &dataItem) {
     double timeResolution = pow(2,-7);
     double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
     int mseconds = (int) seconds * 1000;
     this->timeOfDay = QTime::fromMSecsSinceStartOfDay(mseconds);
 }
 
-void Cat10::DecodePositionInWGS84Coordinates(QVector<char> &dataItem) {
+void Cat10::DecodePositionInWGS84Coordinates(QVector<unsigned char> &dataItem) {
 
     int i = 0;
-    QVector<char> latitudeBytes(4);
-    QVector<char> longitudeBytes(4);
+    QVector<unsigned char> latitudeBytes(4);
+    QVector<unsigned char> longitudeBytes(4);
     while (i < dataItem.length())
     {
         if (i <= 3)
@@ -427,10 +427,10 @@ void Cat10::DecodePositionInWGS84Coordinates(QVector<char> &dataItem) {
     int c = 1;
 }
 
-void Cat10::DecodeMeasuredPositionInPolarCoordinates(QVector<char> &dataItem) {
+void Cat10::DecodeMeasuredPositionInPolarCoordinates(QVector<unsigned char> &dataItem) {
 
-    QVector<char> rhoBytes(2);
-    QVector<char> thetaBytes(2);
+    QVector<unsigned char> rhoBytes(2);
+    QVector<unsigned char> thetaBytes(2);
 
     rhoBytes[0] = dataItem.at(0);
     rhoBytes[1] = dataItem.at(1);
@@ -444,10 +444,10 @@ void Cat10::DecodeMeasuredPositionInPolarCoordinates(QVector<char> &dataItem) {
     this->polarTheta = Utilities::DataTools::DecodeUnsignedBytesToDouble(thetaBytes, thetaResolution);
 }
 
-void Cat10::DecodePositionInCartesianCoordinates(QVector<char> &dataItem) {
+void Cat10::DecodePositionInCartesianCoordinates(QVector<unsigned char> &dataItem) {
 
-    QVector<char> xBytes(2);
-    QVector<char> yBytes(2);
+    QVector<unsigned char> xBytes(2);
+    QVector<unsigned char> yBytes(2);
 
     xBytes[0] = dataItem.at(0);
     xBytes[1] = dataItem.at(1);
@@ -461,10 +461,10 @@ void Cat10::DecodePositionInCartesianCoordinates(QVector<char> &dataItem) {
     this->cartesianY = Utilities::DataTools::DecodeTwosComplementToDouble(yBytes,yResolution);
 }
 
-void Cat10::DecodeCalculatedTrackVelocityInPolarCoordinates(QVector<char> &dataItem) {
+void Cat10::DecodeCalculatedTrackVelocityInPolarCoordinates(QVector<unsigned char> &dataItem) {
 
-    QVector<char> speedBytes(2);
-    QVector<char> angleBytes(2);
+    QVector<unsigned char> speedBytes(2);
+    QVector<unsigned char> angleBytes(2);
 
     speedBytes[0] = dataItem.at(0);
     speedBytes[1] = dataItem.at(1);
@@ -478,9 +478,9 @@ void Cat10::DecodeCalculatedTrackVelocityInPolarCoordinates(QVector<char> &dataI
     this->polarTrackAngle = Utilities::DataTools::DecodeUnsignedBytesToDouble(angleBytes, angleResolution);
 }
 
-void Cat10::DecodeCalculatedTrackVelocityInCartesianCoordinates(QVector<char> &dataItem) {
-    QVector<char> xBytes(2);
-    QVector<char> yBytes(2);
+void Cat10::DecodeCalculatedTrackVelocityInCartesianCoordinates(QVector<unsigned char> &dataItem) {
+    QVector<unsigned char> xBytes(2);
+    QVector<unsigned char> yBytes(2);
 
     xBytes[0] = dataItem.at(0);
     xBytes[1] = dataItem.at(1);
@@ -495,11 +495,291 @@ void Cat10::DecodeCalculatedTrackVelocityInCartesianCoordinates(QVector<char> &d
 
 }
 
-void Cat10::DecodeTrackNumber(QVector<char> &dataItem) {
-    QVector<char> trackBytes(2);
+void Cat10::DecodeTrackNumber(QVector<unsigned char> &dataItem) {
+    QVector<unsigned char> trackBytes(2);
     trackBytes[0] = dataItem.at(0);
     trackBytes[1] = dataItem.at(1);
     double resolution = 1;
     this->trackNumber = (int) Utilities::DataTools::DecodeUnsignedBytesToDouble(trackBytes,resolution);
 }
+void Cat10::DecodeTrackStatus(QVector<unsigned char> &dataItem) {
+
+    unsigned char cnfMask = 0x80;
+    unsigned char treMask = 0x40;
+    unsigned char cstMask = 0x30;
+    unsigned char mahMask = 0x08;
+    unsigned char tccMask = 0x04;
+    unsigned char sthMask = 0x02;
+    unsigned char cnf = ((dataItem[0] & cnfMask) >> 7);
+    unsigned char tre = ((dataItem[0] & treMask) >> 6);
+    unsigned char cst = ((dataItem[0] & cstMask) >> 4);
+    unsigned char mah = ((dataItem[0] & mahMask) >> 3);
+    unsigned char tcc = ((dataItem[0] & tccMask) >> 2);
+    unsigned char sth = ((dataItem[0] & sthMask) >> 1);
+
+    switch (cnf)
+    {
+    case 0:
+        this->tsCNF = "Confirmed Track";
+        break;
+    case 1:
+        this->tsCNF = "Track in Initialization Phase";
+        break;
+    }
+    switch (tre)
+    {
+    case 0:
+        this->tsTRE = "Default";
+        break;
+    case 1:
+        this->tsTRE = "Last Report for a Track";
+        break;
+    }
+    switch (cst)
+    {
+    case 0:
+        this->tsCST = "No extrapolation";
+        break;
+    case 1:
+        this->tsCST = "Predictable extrapolation due to sensor refresh period";
+        break;
+    case 2:
+        this->tsCST = "Predictable extrapolation in masked area";
+        break;
+    case 3:
+        this->tsCST = "Extrapolation due to unpredictable absence of detection";
+        break;
+    }
+    switch (mah)
+    {
+    case 0:
+        this->tsMAH = "Default";
+        break;
+    case 1:
+        this->tsMAH = "Horizontal manoeuvre";
+        break;
+    }
+    switch (tcc)
+    {
+    case 0:
+        this->tsTCC = "Tracking performed in 'Sensor Plane'";
+        break;
+    case 1:
+        this->tsTCC = "Slant range correction";
+        break;
+    }
+    switch (sth)
+    {
+    case 0:
+        this->tsSTH = "Measured position";
+        break;
+    case 1:
+        this->tsSTH = "Smoothed position";
+        break;
+    }
+    if (dataItem.length() >= 2) {
+        unsigned char tomMask = 0xC0;
+        unsigned char douMask = 0x38;
+        unsigned char mrsMask = 0x06;
+        unsigned char tom = ((dataItem[1] & tomMask) >> 6);
+        unsigned char dou = ((dataItem[1] & douMask) >> 3);
+        unsigned char mrs = ((dataItem[1] & mrsMask) >> 1);
+        switch (tom)
+        {
+        case 0:
+            this->tsTOM = "Unknown type of movement";
+            break;
+        case 1:
+            this->tsTOM = "Taking-off";
+            break;
+        case 2:
+            this->tsTOM = "Landing";
+            break;
+        case 3:
+            this->tsTOM = "Other types of movement";
+            break;
+        }
+        switch (dou)
+        {
+        case 0:
+            this->tsDOU = "No doubt";
+            break;
+        case 1:
+            this->tsDOU = "Doubtful correlation (undetermined reason)";
+            break;
+        case 2:
+            this->tsDOU = "Doubtful correlation in clutter";
+            break;
+        case 3:
+            this->tsDOU = "Loss of accuracy";
+            break;
+        case 4:
+            this->tsDOU = "Loss of accuracy in clutter";
+            break;
+        case 5:
+            this->tsDOU = "Unstable track";
+            break;
+        case 6:
+            this->tsDOU = "Previously coasted";
+            break;
+        }
+        switch (mrs)
+        {
+        case 0:
+            this->tsMRS = "Merge or split indication undetermined";
+            break;
+        case 1:
+            this->tsMRS = "Track merged by association to plot";
+            break;
+        case 2:
+            this->tsMRS = "Track merged by non-association to plot";
+            break;
+        case 3:
+            this->tsMRS = "Splittrack";
+            break;
+        }
+        if (dataItem.length() >= 3)
+        {
+            if (dataItem.at(2) == 0)
+                this->tsGHO = "Default";
+            else if (dataItem.at(2) > 0)
+                this->tsGHO = "Ghost track";
+        }
+    }
+}
+
+void Cat10::DecodeMode3ACodeInOctalRepresentation(QVector<unsigned char> &dataItem) {
+    unsigned char vMask = 0x80;
+    unsigned char gMask = 0x40;
+    unsigned char lMask = 0x20;
+
+    unsigned char validated = ((dataItem.at(0) & vMask) >> 6);
+    unsigned char garbled = ((dataItem.at(0) & gMask) >> 3);
+    unsigned char derived = ((dataItem.at(0) & lMask) >> 1);
+
+    switch (validated)
+    {
+    case 0:
+        this->M3AValidated = "Code Validated";
+        break;
+    case 1:
+        this->M3AValidated = "Code Not Validated";
+        break;
+    }
+    switch (garbled)
+    {
+    case 0:
+        this->M3AValidated = "Default";
+        break;
+    case 1:
+        this->M3AValidated = "Garbled Code";
+        break;
+    }
+    switch (derived)
+    {
+    case 0:
+        this->M3ADerivation = "Mode-3/A code derived from the reply of the transponder";
+        break;
+    case 1:
+        this->M3ADerivation = "Mode-3/A code not extracted during the last scan";
+        break;
+    }
+
+    unsigned char aMask = 0x0E;
+
+    unsigned char A = (dataItem.at(0) & aMask) >> 1;
+    unsigned char B4 = (dataItem.at(0) & 0x01) << 2;
+    unsigned char B21 = (dataItem.at(1) & 0xC0) >> 6;
+
+    unsigned char B = B4 | B21;
+
+    unsigned char C = (dataItem.at(1) & 0x38) >> 3;
+    unsigned char D = (dataItem.at(1) & 0x07);
+    int code = A * 1000 + B * 100 + C * 10 + D;
+    this->M3ACode = QString::number(code);
+}
+
+void Cat10::DecodeTargetAddress(QVector<unsigned char> &dataItem) {
+
+    QString buildAddress = "0x";
+
+    for (unsigned char byte : dataItem) {
+        short a = (short) byte;
+        QString str = QString("%1").arg(a,0,16);
+        buildAddress.append(str);
+    }
+    this->targetAddress = buildAddress;
+}
+
+void Cat10::DecodeTargetIdentification(QVector<unsigned char> &dataItem) {
+
+    QVector<unsigned char> bytes;
+
+    unsigned char char1 = (dataItem.at(1) & 0xFC) >> 2;
+    bytes.append(char1);
+    unsigned char char2 = ((dataItem.at(1) & 0x03) << 4) | ((dataItem.at(2) & 0xF0) >> 4);
+    bytes.append(char2);
+    unsigned char char3 =((dataItem.at(3) & 0xC0) >> 6) | ((dataItem.at(2) & 0x0F) << 2);
+    bytes.append(char3);
+    unsigned char char4 =(dataItem.at(3) & 0x3F);
+    bytes.append(char4);
+    unsigned char char5 =(dataItem.at(4) & 0xFC) >> 2;
+    bytes.append(char5);
+    unsigned char char6 = ((dataItem.at(4) & 0x03) << 4) | ((dataItem.at(5) & 0xF0) >> 4);
+    bytes.append(char6);
+    unsigned char char7 = ((dataItem.at(6) & 0xC0) >> 6) | ((dataItem.at(5) & 0x0F) << 2);
+    bytes.append(char7);
+    unsigned char char8 = (dataItem.at(6) & 0x3F);
+    bytes.append(char8);
+    this->targetIdentification = Utilities::DataTools::GetAircraftIDFromBytes(bytes);
+}
+
+void Cat10::DecodeModeSMBData(QVector<unsigned char> &dataItem) {
+
+}
+
+void Cat10::DecodeVehicleFleetIdentification(QVector<unsigned char> &dataItem) {
+
+}
+
+void Cat10::DecodeFlightLevelInBinaryRepresentation(QVector<unsigned char> &dataItem) {
+
+}
+
+void Cat10::DecodeMeasuredHeight(QVector<unsigned char> &dataItem) {
+
+}
+
+void Cat10::DecodeTargetSizeAndOrientation(QVector<unsigned char> &dataItem) {
+
+}
+
+void Cat10::DecodeSystemStatus(QVector<unsigned char> &dataItem) {
+
+}
+
+void Cat10::DecodePreProgrammedMessage(QVector<unsigned char> &dataItem) {
+
+}
+
+void Cat10::DecodeStandardDeviationOfPosition(QVector<unsigned char> &dataItem) {
+
+}
+
+void Cat10::DecodePresence(QVector<unsigned char> &dataItem) {
+
+}
+
+void Cat10::DecodeAmplitudeOfPrimaryPlot(QVector<unsigned char> &dataItem) {
+
+}
+
+void Cat10::DecodeCalculatedAcceleration(QVector<unsigned char> &dataItem) {
+
+}
+
+void Cat10::DecodeSpecialPurposeField(QVector<unsigned char> &dataItem) {
+
+}
+
 

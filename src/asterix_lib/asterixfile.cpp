@@ -23,7 +23,7 @@ void AsterixFile::readFile(QString path) {
 
         int category = fileBinary[offset];
         int length =  fileBinary[offset + 2] << fileBinary[offset + 1] ;
-        QVector<char> data(QVector<char>(length - 3));
+        QVector<unsigned char> data(QVector<unsigned char>(length - 3));
 
         if (category == 10) {
 
