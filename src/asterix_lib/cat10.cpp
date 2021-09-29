@@ -164,49 +164,51 @@ void Cat10::FullDecode() {
     if (this->fspec.length() > 2) {
 
         if ((this->fspec.at(2) & 0x80) == 0x80) {
-
-            //this->DecodeModeSMBData(dataItem);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetRepetitiveDataItem(this->data,8);
+            this->DecodeModeSMBData(dataItem);
         }
         if ((this->fspec.at(2) & 0x40) == 0x40) {
             QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
-            //this->DecodeVehicleFleetIdentification(dataItem);
+            this->DecodeVehicleFleetIdentification(dataItem);
         }
         if ((this->fspec.at(2) & 0x20) == 0x20) {
             QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
-            //this->DecodeFlightLevelInBinaryRepresentation(dataItem);
+            this->DecodeFlightLevelInBinaryRepresentation(dataItem);
         }
         if ((this->fspec.at(2) & 0x10) == 0x10) {
             QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
-            //this->DecodeMeasuredHeight(dataItem);
+            this->DecodeMeasuredHeight(dataItem);
         }
         if ((this->fspec.at(2) & 0x08) == 0x08) {
-            //this->DecodeTargetSizeAndOrientation(dataItem);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data);
+            this->DecodeTargetSizeAndOrientation(dataItem);
         }
         if ((this->fspec.at(2) & 0x04) == 0x04) {
             QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
-            //this->DecodeSystemStatus(dataItem);
+            this->DecodeSystemStatus(dataItem);
         }
         if ((this->fspec.at(2) & 0x02) == 0x02) {
             QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
-            //this->DecodePreProgrammedMessage(dataItem);
+            this->DecodePreProgrammedMessage(dataItem);
         }
     }
     if (this->fspec.length() > 3) {
 
         if ((this->fspec.at(3) & 0x80) == 0x80) {
             QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
-            //this->DecodeStandardDeviationOfPosition(dataItem);
+            this->DecodeStandardDeviationOfPosition(dataItem);
         }
         if ((this->fspec.at(3) & 0x40) == 0x40) {
-            //this->DecodePresence(dataItem);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetRepetitiveDataItem(this->data,2);
+            this->DecodePresence(dataItem);
         }
         if ((this->fspec.at(3) & 0x20) == 0x20) {
             QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
-            //this->DecodeAmplitudeOfPrimaryPlot(dataItem);
+            this->DecodeAmplitudeOfPrimaryPlot(dataItem);
         }
         if ((this->fspec.at(3) & 0x10) == 0x10) {
             QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
-            //this->DecodeCalculatedAcceleration(dataItem);
+            this->DecodeCalculatedAcceleration(dataItem);
         }
         if ((this->fspec.at(3) & 0x08) == 0x08) {
             //Spare
@@ -429,15 +431,10 @@ void Cat10::DecodePositionInWGS84Coordinates(QVector<unsigned char> &dataItem) {
 
 void Cat10::DecodeMeasuredPositionInPolarCoordinates(QVector<unsigned char> &dataItem) {
 
-    QVector<unsigned char> rhoBytes(2);
-    QVector<unsigned char> thetaBytes(2);
+    QVector<unsigned char> rhoBytes = {dataItem.at(0), dataItem.at(1)};
+    QVector<unsigned char> thetaBytes = {dataItem.at(2), dataItem.at(3)};
 
-    rhoBytes[0] = dataItem.at(0);
-    rhoBytes[1] = dataItem.at(1);
     double rhoResolution = 1;
-
-    thetaBytes[0] = dataItem.at(2);
-    thetaBytes[1] = dataItem.at(3);
     double thetaResolution = 360 / pow(2, 16);
 
     this->polarRho = Utilities::DataTools::DecodeUnsignedBytesToDouble(rhoBytes, rhoResolution);
@@ -446,15 +443,10 @@ void Cat10::DecodeMeasuredPositionInPolarCoordinates(QVector<unsigned char> &dat
 
 void Cat10::DecodePositionInCartesianCoordinates(QVector<unsigned char> &dataItem) {
 
-    QVector<unsigned char> xBytes(2);
-    QVector<unsigned char> yBytes(2);
+    QVector<unsigned char> xBytes = {dataItem.at(0), dataItem.at(1)};
+    QVector<unsigned char> yBytes = {dataItem.at(2), dataItem.at(3)};
 
-    xBytes[0] = dataItem.at(0);
-    xBytes[1] = dataItem.at(1);
     double xResolution = 1;
-
-    yBytes[0] = dataItem.at(2);
-    yBytes[1] = dataItem.at(3);
     double yResolution = 1;
 
     this->cartesianX = Utilities::DataTools::DecodeTwosComplementToDouble(xBytes,xResolution);
@@ -463,15 +455,10 @@ void Cat10::DecodePositionInCartesianCoordinates(QVector<unsigned char> &dataIte
 
 void Cat10::DecodeCalculatedTrackVelocityInPolarCoordinates(QVector<unsigned char> &dataItem) {
 
-    QVector<unsigned char> speedBytes(2);
-    QVector<unsigned char> angleBytes(2);
+    QVector<unsigned char> speedBytes = {dataItem.at(0), dataItem.at(1)};
+    QVector<unsigned char> angleBytes = {dataItem.at(2), dataItem.at(3)};
 
-    speedBytes[0] = dataItem.at(0);
-    speedBytes[1] = dataItem.at(1);
     double speedResolution = 0.22;
-
-    angleBytes[0] = dataItem.at(2);
-    angleBytes[1] = dataItem.at(3);
     double angleResolution = 360 / pow(2,16);
 
     this->polarGroundSpeed = Utilities::DataTools::DecodeUnsignedBytesToDouble(speedBytes, speedResolution);
@@ -479,26 +466,19 @@ void Cat10::DecodeCalculatedTrackVelocityInPolarCoordinates(QVector<unsigned cha
 }
 
 void Cat10::DecodeCalculatedTrackVelocityInCartesianCoordinates(QVector<unsigned char> &dataItem) {
-    QVector<unsigned char> xBytes(2);
-    QVector<unsigned char> yBytes(2);
 
-    xBytes[0] = dataItem.at(0);
-    xBytes[1] = dataItem.at(1);
+    QVector<unsigned char> xBytes = {dataItem.at(0), dataItem.at(1)};
+    QVector<unsigned char> yBytes = {dataItem.at(2), dataItem.at(3)};
+
     double xResolution = 0.25;
-
-    yBytes[0] = dataItem.at(2);
-    yBytes[1] = dataItem.at(3);
     double yResolution = 0.25;
 
     this->cartesianVx = Utilities::DataTools::DecodeTwosComplementToDouble(xBytes,xResolution);
     this->cartesianVy = Utilities::DataTools::DecodeTwosComplementToDouble(yBytes,yResolution);
-
 }
 
 void Cat10::DecodeTrackNumber(QVector<unsigned char> &dataItem) {
-    QVector<unsigned char> trackBytes(2);
-    trackBytes[0] = dataItem.at(0);
-    trackBytes[1] = dataItem.at(1);
+    QVector<unsigned char> trackBytes = {dataItem.at(0), dataItem.at(1)};
     double resolution = 1;
     this->trackNumber = (int) Utilities::DataTools::DecodeUnsignedBytesToDouble(trackBytes,resolution);
 }
@@ -669,10 +649,10 @@ void Cat10::DecodeMode3ACodeInOctalRepresentation(QVector<unsigned char> &dataIt
     switch (garbled)
     {
     case 0:
-        this->M3AValidated = "Default";
+        this->M3AGarbled = "Default";
         break;
     case 1:
-        this->M3AValidated = "Garbled Code";
+        this->M3AGarbled = "Garbled Code";
         break;
     }
     switch (derived)
@@ -713,57 +693,255 @@ void Cat10::DecodeTargetAddress(QVector<unsigned char> &dataItem) {
 
 void Cat10::DecodeTargetIdentification(QVector<unsigned char> &dataItem) {
 
-    QVector<unsigned char> bytes;
+
 
     unsigned char char1 = (dataItem.at(1) & 0xFC) >> 2;
-    bytes.append(char1);
     unsigned char char2 = ((dataItem.at(1) & 0x03) << 4) | ((dataItem.at(2) & 0xF0) >> 4);
-    bytes.append(char2);
     unsigned char char3 =((dataItem.at(3) & 0xC0) >> 6) | ((dataItem.at(2) & 0x0F) << 2);
-    bytes.append(char3);
     unsigned char char4 =(dataItem.at(3) & 0x3F);
-    bytes.append(char4);
     unsigned char char5 =(dataItem.at(4) & 0xFC) >> 2;
-    bytes.append(char5);
     unsigned char char6 = ((dataItem.at(4) & 0x03) << 4) | ((dataItem.at(5) & 0xF0) >> 4);
-    bytes.append(char6);
     unsigned char char7 = ((dataItem.at(6) & 0xC0) >> 6) | ((dataItem.at(5) & 0x0F) << 2);
-    bytes.append(char7);
     unsigned char char8 = (dataItem.at(6) & 0x3F);
-    bytes.append(char8);
+    QVector<unsigned char> bytes = {char1,char2,char3,char4,char5,char6,char7,char8};
     this->targetIdentification = Utilities::DataTools::GetAircraftIDFromBytes(bytes);
 }
 
 void Cat10::DecodeModeSMBData(QVector<unsigned char> &dataItem) {
 
+
+
 }
 
 void Cat10::DecodeVehicleFleetIdentification(QVector<unsigned char> &dataItem) {
 
+    switch (dataItem.at(0)) {
+    case 0:
+        this->vehicleFleetId= "Unknown";
+        break;
+    case 1:
+        this->vehicleFleetId = "ATC equipment maintenance";
+        break;
+    case 2:
+        this->vehicleFleetId = "Airport maintenance";
+        break;
+    case 3:
+        this->vehicleFleetId = "Fire";
+        break;
+    case 4:
+        this->vehicleFleetId = "Bird scarer";
+        break;
+    case 5:
+        this->vehicleFleetId = "Snow plough";
+        break;
+    case 6:
+        this->vehicleFleetId = "Runaway Sweeper";
+        break;
+    case 7:
+        this->vehicleFleetId = "Emergency";
+        break;
+    case 8:
+        this->vehicleFleetId = "Police";
+        break;
+    case 9:
+        this->vehicleFleetId = "Bus";
+        break;
+    case 10:
+        this->vehicleFleetId = "Tug(push/tow)";
+        break;
+    case 11:
+        this->vehicleFleetId = "Grass cutter";
+        break;
+    case 12:
+        this->vehicleFleetId = "Fuel";
+        break;
+    case 13:
+        this->vehicleFleetId = "Baggage";
+        break;
+    case 14:
+        this->vehicleFleetId = "Catering";
+        break;
+    case 15:
+        this->vehicleFleetId = "Aircraft maintenance";
+        break;
+    case 16:
+        this->vehicleFleetId = "Flyco (follow me)";
+        break;
+    }
 }
 
 void Cat10::DecodeFlightLevelInBinaryRepresentation(QVector<unsigned char> &dataItem) {
+    unsigned char vMask = 128;
+    unsigned char gMask = 64;
+    unsigned char flFirstByteMask = 63;
 
+
+
+    unsigned char validated = ((dataItem.at(0) & vMask) >> 7);
+    unsigned char garbled = ((dataItem.at(0) & gMask) >> 6);
+    unsigned char flFirstByte = (dataItem.at(0) & flFirstByteMask);
+
+    QVector<unsigned char> bytes = {flFirstByte, dataItem.at(1)};
+
+    switch (validated)
+    {
+    case 0:
+        this->flValidated = "Code Validated";
+        break;
+    case 1:
+        this->flValidated = "Code not Validated";
+        break;
+    }
+    switch (garbled)
+    {
+    case 0:
+        this->flGarbled = "Default";
+        break;
+    case 1:
+        this->flGarbled = "Garbled Code";
+        break;
+    }
+
+    double resolution = 0.25;
+    this->flFlightLevel = Utilities::DataTools::DecodeTwosComplementToDouble(bytes,resolution);
 }
 
 void Cat10::DecodeMeasuredHeight(QVector<unsigned char> &dataItem) {
 
+    double resolution = 6.25;
+    this->measuredHeight = Utilities::DataTools::DecodeTwosComplementToDouble(dataItem,resolution);
 }
 
 void Cat10::DecodeTargetSizeAndOrientation(QVector<unsigned char> &dataItem) {
 
+    unsigned char mask = 254;
+    QVector<unsigned char> length, orientation, width;
+    double lengthRes = 1;
+    double orRes = 360.0 / 128.0;
+    double widthRes = 1;
+    length.append((dataItem.at(0) & mask) >> 1);
+    this->targetLength = Utilities::DataTools::DecodeUnsignedBytesToDouble(length, lengthRes);
+
+    if (dataItem.length() >= 2) {
+        orientation.append((dataItem.at(1) & mask) >> 1);
+        this->targetOrientation = Utilities::DataTools::DecodeUnsignedBytesToDouble(orientation, orRes);
+    }
+
+    if (dataItem.length() >= 3) {
+        width.append((dataItem.at(2) & mask) >> 1);
+        this->targetWidth = Utilities::DataTools::DecodeUnsignedBytesToDouble(width, widthRes);
+    }
 }
 
 void Cat10::DecodeSystemStatus(QVector<unsigned char> &dataItem) {
 
+    unsigned char nogoMask = 192;
+    unsigned char ovlMask = 32;
+    unsigned char tsvMask = 16;
+    unsigned char divMask = 8;
+    unsigned char ttfMask = 4;
+
+    unsigned char nogo = ((dataItem[0] & nogoMask) >> 6);
+    unsigned char ovl = ((dataItem[0] & ovlMask) >> 5);
+    unsigned char tsv = ((dataItem[0] & tsvMask) >> 4);
+    unsigned char div = ((dataItem[0] & divMask) >> 3);
+    unsigned char ttf = ((dataItem[0] & ttfMask) >> 2);
+
+    switch(nogo)
+    {
+    case 0:
+        this->ssNOGO = "Operational";
+        break;
+    case 1:
+        this->ssNOGO = "Degraded";
+        break;
+
+    case 2:
+        this->ssNOGO = "NOGO";
+        break;
+    }
+    switch (ovl)
+    {
+    case 0:
+        this->ssOVL = "No overload";
+        break;
+    case 1:
+        this->ssOVL = "Overload";
+        break;
+    }
+    switch (tsv)
+    {
+    case 0:
+        this->ssTSV = "valid";
+        break;
+    case 1:
+        this->ssTSV = "invalid";
+        break;
+    }
+    switch (div)
+    {
+    case 0:
+        this->ssDIV = "Normal Operation";
+        break;
+    case 1:
+        this->ssDIV = "Diversity degraded";
+        break;
+    }
+    switch (ttf)
+    {
+    case 0:
+        this->ssTTF = "Test Target Operative";
+        break;
+    case 1:
+        this->ssTTF = "Test Target Failure";
+        break;
+    }
 }
 
 void Cat10::DecodePreProgrammedMessage(QVector<unsigned char> &dataItem) {
 
+    unsigned char trMask = 128;
+    unsigned char msgMask = 127;
+
+    unsigned char trouble = (dataItem.at(0) & trMask) >> 7;
+    unsigned char msg = (dataItem.at(0) & msgMask);
+
+    switch (trouble) {
+    case 0:
+        this->ppmTRB = "Default";
+        break;
+    case 1:
+        this->ppmTRB = "In Trouble";
+        break;
+    }
+
+    switch (msg) {
+    case 1:
+        this->ppMSG = "Towing Aircraft";
+        break;
+    case 2:
+        this->ppMSG = "'Follow me' operation";
+        break;
+    case 3:
+        this->ppMSG = "Runway check";
+        break;
+    case 4:
+        this->ppMSG = "Emergency operation(fire,medical...)";
+        break;
+    case 5:
+        this->ppMSG = "Work in progress(maintenance,birds scarer,sweepers...)";
+        break;
+    }
 }
 
 void Cat10::DecodeStandardDeviationOfPosition(QVector<unsigned char> &dataItem) {
+    QVector<unsigned char> xstandarddeviation = { dataItem.at(0) };
+    QVector<unsigned char> ystandarddeviation = { dataItem.at(1) };
+    QVector<unsigned char> xystandardeviation = {dataItem.at(2),dataItem.at(3)};
 
+    this->standardDeviationX = Utilities::DataTools::DecodeUnsignedBytesToDouble(xstandarddeviation, 0.25);
+    this->standardDeviationY= Utilities::DataTools::DecodeUnsignedBytesToDouble(ystandarddeviation, 0.25);
+    this->standardDeviationXY= Utilities::DataTools::DecodeUnsignedBytesToDouble(xystandardeviation, 0.25);
 }
 
 void Cat10::DecodePresence(QVector<unsigned char> &dataItem) {
@@ -772,10 +950,17 @@ void Cat10::DecodePresence(QVector<unsigned char> &dataItem) {
 
 void Cat10::DecodeAmplitudeOfPrimaryPlot(QVector<unsigned char> &dataItem) {
 
+    this->amplitudeOfPrimaryPlot = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem, 1);
 }
 
 void Cat10::DecodeCalculatedAcceleration(QVector<unsigned char> &dataItem) {
 
+    QVector<unsigned char> xBytes = { dataItem.at(0) };
+    double xResolution = 0.25;
+    this->calcAccelerationX = Utilities::DataTools::DecodeTwosComplementToDouble(xBytes, xResolution);
+    QVector<unsigned char> yBytes = { dataItem.at(1) };
+    double yResolution = 0.25;
+    this->calcAccelerationY = Utilities::DataTools::DecodeTwosComplementToDouble(yBytes, yResolution);
 }
 
 void Cat10::DecodeSpecialPurposeField(QVector<unsigned char> &dataItem) {

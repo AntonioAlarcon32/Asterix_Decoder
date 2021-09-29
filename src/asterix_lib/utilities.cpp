@@ -32,6 +32,23 @@ QVector<unsigned char> DataTools::GetVariableLengthDataItem(QVector<unsigned cha
     return dataItem;
 }
 
+QVector<unsigned char> DataTools::GetRepetitiveDataItem(QVector<unsigned char> &message, int factor) {
+
+    QVector<unsigned char> dataItem;
+    short repFactor = (short) message.at(0);
+    dataItem.append(message.at(0));
+    message.remove(0);
+
+    int i = 0;
+
+    while (i < (repFactor * factor)) {
+        dataItem.append(message.at(0));
+        message.remove(0);
+        i++;
+    }
+    return dataItem;
+}
+
 double DataTools::DecodeUnsignedBytesToDouble(QVector<unsigned char> bytes, double resolution) {
 
     double bytesValue = 0;

@@ -10,7 +10,7 @@ namespace Utilities
     public:
         static QVector<unsigned char> GetFixedLengthDataItem(QVector<unsigned char> &message, int length);
         static QVector<unsigned char> GetVariableLengthDataItem(QVector<unsigned char> &message);
-        static QVector<unsigned char> GetRepetitiveDataItem(QVector<unsigned char> message, int length);
+        static QVector<unsigned char> GetRepetitiveDataItem(QVector<unsigned char> &message,int factor);
         static double DecodeUnsignedBytesToDouble(QVector<unsigned char> bytes, double resolution);
         static double DecodeTwosComplementToDouble(QVector<unsigned char> bytes, double resolution);
         static QString GetAircraftIDFromBytes(QVector<unsigned char> bytes);
