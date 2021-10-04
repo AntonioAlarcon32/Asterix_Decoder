@@ -46,6 +46,7 @@ void AsterixFile::readFile(QString path) {
             }
             cat21Block->SetData(data);
             cat21Block->DecodeFSPEC();
+            cat21Block->FullDecode();
             dataBlocks->append(cat21Block);
         }
 

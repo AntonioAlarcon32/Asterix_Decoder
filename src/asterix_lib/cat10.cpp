@@ -426,7 +426,6 @@ void Cat10::DecodePositionInWGS84Coordinates(QVector<unsigned char> &dataItem) {
     double resolution = 180 / pow(2,31);
     this->wgs84latitude = Utilities::DataTools::DecodeTwosComplementToDouble(latitudeBytes, resolution);
     this->wgs84longitude = Utilities::DataTools::DecodeTwosComplementToDouble(longitudeBytes, resolution);
-    int c = 1;
 }
 
 void Cat10::DecodeMeasuredPositionInPolarCoordinates(QVector<unsigned char> &dataItem) {
