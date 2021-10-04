@@ -14,21 +14,21 @@ public:
     short systemAreaCode;
     short systemIdentificationCode;
 
-    QString trATP;
-    QString trARC;
-    QString trRC;
-    QString trRAB;
-    QString trDCR;
-    QString trGBS;
-    QString trSIM;
-    QString trTST;
-    QString trSAA;
-    QString trCL;
-    QString trIPC;
-    QString trNOGO;
-    QString trCPR;
-    QString trLDPJ;
-    QString trRCF;
+    QString trAtp;
+    QString trArc;
+    QString trRc;
+    QString trRab;
+    QString trDcr;
+    QString trGbs;
+    QString trSim;
+    QString trTst;
+    QString trSaa;
+    QString trCl;
+    QString trIpc;
+    QString trNogo;
+    QString trCpr;
+    QString trLdpj;
+    QString trRcf;
 
     int trackNumber;
 

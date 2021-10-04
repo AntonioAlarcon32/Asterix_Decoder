@@ -216,7 +216,7 @@ void Cat10::FullDecode() {
         if ((this->fspec.at(3) & 0x04) == 0x04) {
             //this->DecodeSpecialPurposeField(dataItem);
         }
-        if ((this->fspec.at(2) & 0x02) == 0x02) {
+        if ((this->fspec.at(3) & 0x02) == 0x02) {
             //Reserved Expansion Field
         }
     }
