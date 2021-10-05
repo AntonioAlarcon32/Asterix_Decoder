@@ -38,6 +38,32 @@ void AsterixFile::readFile(QString path) {
             dataBlocks->append(cat10Block);
         }
 
+        else if (category == 19) {
+            Cat19 *cat19Block = new Cat19();
+            cat19Block->SetLength(length);
+            for (int i = 3; i < length; i++) {
+                data[i-3] = fileBinary.at(offset + i);
+            }
+            cat19Block->SetData(data);
+            cat19Block->DecodeFSPEC();
+            cat19Block->FullDecode();
+            dataBlocks->append(cat19Block);
+
+        }
+
+        else if (category == 20) {
+            Cat20 *cat20Block = new Cat20();
+            cat20Block->SetLength(length);
+            for (int i = 3; i < length; i++) {
+                data[i-3] = fileBinary.at(offset + i);
+            }
+            cat20Block->SetData(data);
+            cat20Block->DecodeFSPEC();
+            cat20Block->FullDecode();
+            dataBlocks->append(cat20Block);
+
+        }
+
         else if (category == 21) {
             Cat21 *cat21Block = new Cat21();
             cat21Block->SetLength(length);

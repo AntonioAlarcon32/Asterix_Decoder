@@ -343,7 +343,7 @@ void Cat21::DecodeDataSourceIdentification(QVector<unsigned char> &dataItem) {
     this->systemIdentificationCode = (short)dataItem.at(1);
 }
 
-void Cat21::DecodeTargetReportDescriptor(QVector<unsigned char> &dataItem){
+void Cat21::DecodeTargetReportDescriptor(QVector<unsigned char> &dataItem) {
     unsigned char atpMask = 224;
 
                 unsigned char arcMask = 24;
@@ -571,16 +571,22 @@ void Cat21::DecodeTrackNumber(QVector<unsigned char> &dataItem){
     this->trackNumber = (int)number;
 }
 
-void Cat21::DecodeServiceIdentification(QVector<unsigned char> &dataItem){
+void Cat21::DecodeServiceIdentification(QVector<unsigned char> &dataItem) {
     double resolution = 1;
     double number = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem, resolution);
     this->serviceIdentification = (char)number;
 }
-void Cat21::DecodeTimeOfApplicabilityForPosition(QVector<unsigned char> &dataItem){}
-void Cat21::DecodePositionInWGS84Coordinates(QVector<unsigned char> &dataItem){
+void Cat21::DecodeTimeOfApplicabilityForPosition(QVector<unsigned char> &dataItem) {
+    double timeResolution = pow(2,-7);
+    double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
+    int mseconds = (int) seconds * 1000;
+    this->timeOfApplicabilityForPosition = QTime::fromMSecsSinceStartOfDay(mseconds);
+}
+void Cat21::DecodePositionInWGS84Coordinates(QVector<unsigned char> &dataItem) {
+
 }
 
-void Cat21::DecodePositionInWGS84CoordinatesHighRes(QVector<unsigned char> &dataItem){
+void Cat21::DecodePositionInWGS84CoordinatesHighRes(QVector<unsigned char> &dataItem) {
     int i = 0;
     QVector<unsigned char> latitudeBytes(4);
     QVector<unsigned char> longitudeBytes(4);
@@ -597,8 +603,14 @@ void Cat21::DecodePositionInWGS84CoordinatesHighRes(QVector<unsigned char> &data
     this->wgs84longitude = Utilities::DataTools::DecodeTwosComplementToDouble(longitudeBytes, resolution);
 }
 
-void Cat21::DecodeTimeOfApplicabilityForVelocity(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeAirSpeed(QVector<unsigned char> &dataItem){}
+void Cat21::DecodeTimeOfApplicabilityForVelocity(QVector<unsigned char> &dataItem) {
+    double timeResolution = pow(2,-7);
+    double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
+    int mseconds = (int) seconds * 1000;
+    this->timeOfApplicabilityForVelocity = QTime::fromMSecsSinceStartOfDay(mseconds);
+}
+
+void Cat21::DecodeAirSpeed(QVector<unsigned char> &dataItem) {}
 void Cat21::DecodeTrueAirSpeed(QVector<unsigned char> &dataItem){}
 void Cat21::DecodeTargetAddress(QVector<unsigned char> &dataItem){}
 void Cat21::DecodeTimeOfMessageReceptionOfPosition(QVector<unsigned char> &dataItem){}
@@ -618,17 +630,115 @@ void Cat21::DecodeGeometricVerticalRate(QVector<unsigned char> &dataItem){}
 void Cat21::DecodeAirborneGroundVector(QVector<unsigned char> &dataItem){}
 void Cat21::DecodeTrackAngleRate(QVector<unsigned char> &dataItem){}
 void Cat21::DecodeTimeOfReportTransmission(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeTargetIdentification(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeEmitterCategory(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeMetInformation(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeSelectedAltitude(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeFinalStateSelectedAltitude(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeTrajectoryIntent(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeServiceManagement(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeAircraftOperationalStatus(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeSurfaceCapabilitiesAndCharacteristics(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeMessageAmplitude(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeModeSMBData(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeACASResolutionAdvisoryReport(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeReceiverID(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeDataAges(QVector<unsigned char> &dataItem){}
+
+void Cat21::DecodeTargetIdentification(QVector<unsigned char> &dataItem) {
+    unsigned char char8 = (unsigned char)((dataItem.at(5) & 63));
+    unsigned char char7 = (unsigned char)(((dataItem.at(5) & 192) >> 6) + ((dataItem.at(4) & 15) << 2));
+    unsigned char char6 = (unsigned char)(((dataItem.at(4) & 240) >> 4) + ((dataItem.at(3) & 3) << 4));
+    unsigned char char5 = (unsigned char)((dataItem.at(3) & 252) >> 2);
+    unsigned char char4 = (unsigned char)((dataItem.at(2) & 63));
+    unsigned char char3 = (unsigned char)(((dataItem.at(2) & 192) >> 6) + ((dataItem.at(1) & 15) << 2));
+    unsigned char char2 = (unsigned char)(((dataItem.at(1) & 240) >> 4) + ((dataItem.at(0) & 3) << 4));
+    unsigned char char1 = (unsigned char)((dataItem.at(0) & 252) >> 2);
+
+
+    QVector<unsigned char> chars = { char1, char2, char3, char4, char5, char6, char7, char8 };
+
+    this->targetIdentification = Utilities::DataTools::GetAircraftIDFromBytes(chars);
+}
+
+void Cat21::DecodeEmitterCategory(QVector<unsigned char> &dataItem) {
+
+    int emitterCategory = (int)dataItem.at(0);
+    switch (emitterCategory)
+    {
+    case 0:
+        this->emitterCategory = "No ADS-B Emitter Category Information";
+        break;
+    case 1:
+        this->emitterCategory = "light aircraft<=15500 lbs";
+        break;
+    case 2:
+        this->emitterCategory = "15500 lbs<small aircraft<300000 lbs";
+        break;
+    case 3:
+        this->emitterCategory = "75000 lbs<medium a/c<300000 lbs";
+        break;
+    case 4:
+        this->emitterCategory = "High vortex Large";
+        break;
+    case 5:
+        this->emitterCategory = "300000lbs<=heavy aircraft";
+        break;
+    case 6:
+        this->emitterCategory = "highly manouvrable(5g acceleration capability) and high speed(>400knots cruise)";
+        break;
+    case 7:
+        this->emitterCategory = "reserved";
+        break;
+    case 8:
+        this->emitterCategory = "reserved";
+        break;
+    case 9:
+        this->emitterCategory = "reserved";
+        break;
+    case 10:
+        this->emitterCategory = "rotorcraft";
+        break;
+    case 11:
+        this->emitterCategory = "glider/sailplane";
+        break;
+    case 12:
+        this->emitterCategory = "lighter than air";
+        break;
+    case 13:
+        this->emitterCategory = "unmanned aerial vehicle";
+        break;
+    case 14:
+        this->emitterCategory = "space/transarmospheric vehicle";
+        break;
+    case 15:
+        this->emitterCategory = "ultralight/handglider/paraglider";
+        break;
+    case 16:
+        this->emitterCategory = "parachutist/skydiver";
+        break;
+    case 17:
+        this->emitterCategory = "reserved";
+        break;
+    case 18:
+        this->emitterCategory = "reserved";
+        break;
+    case 19:
+        this->emitterCategory = "reserved";
+        break;
+    case 20:
+        this->emitterCategory = "surface emergency vehicle";
+        break;
+    case 21:
+        this->emitterCategory = "surface service vehicle";
+        break;
+    case 22:
+        this->emitterCategory = "fixed ground or tethered obstruction";
+        break;
+    case 23:
+        this->emitterCategory = "cluster obstacle";
+        break;
+    case 24:
+        this->emitterCategory = "line obstacle";
+        break;
+    }
+}
+
+void Cat21::DecodeMetInformation(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeSelectedAltitude(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeFinalStateSelectedAltitude(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeTrajectoryIntent(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeServiceManagement(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeAircraftOperationalStatus(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeSurfaceCapabilitiesAndCharacteristics(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeMessageAmplitude(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeModeSMBData(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeACASResolutionAdvisoryReport(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeReceiverID(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeDataAges(QVector<unsigned char> &dataItem) {}

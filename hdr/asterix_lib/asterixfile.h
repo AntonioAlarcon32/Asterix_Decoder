@@ -7,6 +7,8 @@
 #include "QFile"
 #include "QByteRef"
 #include "cat10.h"
+#include "cat19.h"
+#include "cat20.h"
 #include "cat21.h"
 
 class AsterixFile
