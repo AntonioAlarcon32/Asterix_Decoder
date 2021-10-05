@@ -671,6 +671,7 @@ void Cat21::DecodeTimeOfMessageReceptionOfPosition(QVector<unsigned char> &dataI
     this->timeOfMessageReceptionOfPosition = QTime::fromMSecsSinceStartOfDay(mseconds);
 }
 void Cat21::DecodeTimeOfMessageReceptionOfPositionHighPrecision(QVector<unsigned char> &dataItem){}
+
 void Cat21::DecodeTimeOfMessageReceptionOfVelocity(QVector<unsigned char> &dataItem){
     double timeResolution = pow(2,-7);
     double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
@@ -684,7 +685,67 @@ void Cat21::DecodeGeometricHeight(QVector<unsigned char> &dataItem) {
     this->geometricHeight = Utilities::DataTools::DecodeTwosComplementToDouble(dataItem, resolution);
 }
 void Cat21::DecodeQualityIndicators(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeMOPSVersion(QVector<unsigned char> &dataItem){}
+void Cat21::DecodeMOPSVersion(QVector<unsigned char> &dataItem){
+
+    char vnsMask = 0b01000000;
+    char vnMask = 0b00111000;
+    char lttMask = 0b00000111;
+
+    unsigned char vns = (vnsMask & dataItem.at(0)) >> 6;
+    unsigned char vn = (vnMask & dataItem.at(0)) >> 3;
+    unsigned char ltt = (lttMask & dataItem.at(0));
+
+    switch (vn)
+    {
+    case 0:
+        this->mvVn = "ED102/DO-260[Ref.8]";
+        break;
+    case 1:
+        this->mvVn = "DO-260A[Ref.9]";
+        break;
+    case 2:
+        this->mvVn = "ED102A/DO-260B[Ref.11]";
+        break;
+    }
+
+    switch (vns)
+    {
+    case 0:
+        this->mvVns = "The MOPS Version is supported by the GS";
+        break;
+    case 1:
+        this->mvVns = "The MOPS Version is not supported by the GS";
+        break;
+    }
+
+    switch (ltt)
+    {
+    case 0:
+        this->mvLtt = "Other";
+        break;
+    case 1:
+        this->mvLtt = "UAT";
+        break;
+    case 2:
+        this->mvLtt = "1090 ES";
+        break;
+    case 3:
+        this->mvLtt = "VDL 4";
+        break;
+    case 4:
+        this->mvLtt = "Not assigned";
+        break;
+    case 5:
+        this->mvLtt = "Not assigned";
+        break;
+    case 6:
+        this->mvLtt = "Not assigned";
+        break;
+    case 7:
+        this->mvLtt = "Not assigned";
+        break;
+    }
+}
 
 void Cat21::DecodeMode3ACode(QVector<unsigned char> &dataItem){
     unsigned char aMask = 0x0E;
@@ -701,7 +762,11 @@ void Cat21::DecodeMode3ACode(QVector<unsigned char> &dataItem){
     this->m3ACode = QString::number(code);
 }
 
-void Cat21::DecodeRollAngle(QVector<unsigned char> &dataItem){}
+void Cat21::DecodeRollAngle(QVector<unsigned char> &dataItem){
+    double resolution = 0.01;
+    this->rollAngle = Utilities::DataTools::DecodeTwosComplementToDouble(dataItem, resolution);
+}
+
 void Cat21::DecodeFlightLevel(QVector<unsigned char> &dataItem) {
     double resolution = 0.25;
     this->flightLevel = Utilities::DataTools::DecodeTwosComplementToDouble(dataItem, resolution);
@@ -710,7 +775,79 @@ void Cat21::DecodeMagneticHeading(QVector<unsigned char> &dataItem) {
     double resolution = 360.0 / pow(2,16);
     this->magneticHeading = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem, resolution);
 }
-void Cat21::DecodeTargetStatus(QVector<unsigned char> &dataItem){}
+void Cat21::DecodeTargetStatus(QVector<unsigned char> &dataItem) {
+
+    char icfMask = 0b10000000;
+    char lnavMask = 0b01000000;
+    char psMask = 0b00011100;
+    char ssMask = 0b00000011;
+
+    unsigned char icf = (icfMask & dataItem.at(0)) >> 7;
+    unsigned char lnav = (lnavMask & dataItem.at(0)) >> 6;
+    unsigned char ps = (psMask & dataItem.at(0)) >> 2;
+    unsigned char ss = (ssMask & dataItem.at(0));
+
+    switch (icf)
+    {
+    case 0:
+        this->tsIcf = "No intent change active";
+        break;
+    case 1:
+        this->tsIcf = "Intent change flag raised";
+        break;
+    }
+
+    switch (lnav)
+    {
+    case 0:
+        this->tsLnav = "LNAV Mode engaged";
+        break;
+    case 1:
+        this->tsLnav = "LNAV Mode not engaged";
+        break;
+    }
+    switch (ps)
+    {
+    case 0:
+        this->tsPs = "No emergency/not reported";
+        break;
+    case 1:
+        this->tsPs = "General Emergency";
+        break;
+    case 2:
+        this->tsPs = "Lifeguard/medical emergency";
+        break;
+    case 3:
+        this->tsPs = "Minimum fuel";
+        break;
+    case 4:
+        this->tsPs = "No communications";
+        break;
+    case 5:
+        this->tsPs = "Unlawful interference";
+        break;
+    case 6:
+        this->tsPs = "'Downed' Aircraft";
+        break;
+    }
+    switch (ss)
+    {
+    case 0:
+        this->tsSs = "No condition reported";
+        break;
+    case 1:
+        this->tsSs = "Permanent Alert (Emergency condition)";
+        break;
+    case 2:
+        this->tsSs = "Temporary Alert (change in Mode 3/A Code other than emergency)";
+        break;
+    case 3:
+        this->tsSs = "SPI set";
+        break;
+
+    }
+}
+
 void Cat21::DecodeBarometricVerticalRate(QVector<unsigned char> &dataItem) {
     unsigned char rangeMask = 128;
     unsigned char valueMask = 127;
@@ -773,7 +910,9 @@ void Cat21::DecodeAirborneGroundVector(QVector<unsigned char> &dataItem){
     this->agvTrackAngle = Utilities::DataTools::DecodeUnsignedBytesToDouble(trackBytes,trackResolution);
 
 }
-void Cat21::DecodeTrackAngleRate(QVector<unsigned char> &dataItem){}
+void Cat21::DecodeTrackAngleRate(QVector<unsigned char> &dataItem) {
+
+}
 
 void Cat21::DecodeTimeOfReportTransmission(QVector<unsigned char> &dataItem) {
 
