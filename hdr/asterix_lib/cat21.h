@@ -44,9 +44,11 @@ public:
 
     QTime timeOfApplicabilityForVelocity;
 
-    double airSpeed;
+    QString asUnits;
+    double asAirSpeed;
 
-    double trueAirSpeed;
+    bool tasRangeExceeded;
+    double tasTrueAirSpeed;
 
     QString targetAddress;
 
@@ -146,7 +148,7 @@ public:
     QString ararTti;
     QString ararTid;
 
-    char receiverId;
+    unsigned char receiverId;
 
     QString dataAges; //REVISAR
 

@@ -38,9 +38,13 @@ Cat21::Cat21()
 
     this->timeOfApplicabilityForVelocity = QTime();
 
-    this->airSpeed = nan("");
 
-    this->trueAirSpeed = nan("");
+    this->asUnits = "N/A";
+    this->asAirSpeed = nan("");
+
+
+    this->tasRangeExceeded = false;
+    this->tasTrueAirSpeed = nan("");
 
     this->targetAddress = "N/A";
 
@@ -367,7 +371,7 @@ void Cat21::DecodeTargetReportDescriptor(QVector<unsigned char> &dataItem) {
                         this->trAtp = "Surface vehicle address";
                         break;
                     case 3:
-                        this->trAtp = "Anonmous address";
+                        this->trAtp = "Anonymous address";
                         break;
                     case 4:
                         this->trAtp = "Reserved for future use";
@@ -391,7 +395,7 @@ void Cat21::DecodeTargetReportDescriptor(QVector<unsigned char> &dataItem) {
                         this->trArc = "100 ft";
                         break;
                     case 2:
-                        this->trArc = "Uknown";
+                        this->trArc = "Unknown";
                         break;
                     case 3:
                         this->trArc = "Invalid";
@@ -409,7 +413,7 @@ void Cat21::DecodeTargetReportDescriptor(QVector<unsigned char> &dataItem) {
                 switch (rab)
                 {
                     case 0:
-                        this->trRab = "Report from taget transponder";
+                        this->trRab = "Report from target transponder";
                         break;
                     case 1:
                         this->trRab = "Report from field monitor(fixed transponder)";
@@ -584,23 +588,21 @@ void Cat21::DecodeTimeOfApplicabilityForPosition(QVector<unsigned char> &dataIte
 }
 void Cat21::DecodePositionInWGS84Coordinates(QVector<unsigned char> &dataItem) {
 
+    QVector<unsigned char> latitudeBytes = {dataItem.at(0), dataItem.at(1), dataItem.at(2)};
+    QVector<unsigned char> longitudeBytes = {dataItem.at(3), dataItem.at(4), dataItem.at(5)};
+
+    double resolution = 180.0 / pow(2,23);
+    this->wgs84latitude = Utilities::DataTools::DecodeTwosComplementToDouble(latitudeBytes, resolution);
+    this->wgs84longitude = Utilities::DataTools::DecodeTwosComplementToDouble(longitudeBytes, resolution);
 }
 
 void Cat21::DecodePositionInWGS84CoordinatesHighRes(QVector<unsigned char> &dataItem) {
     int i = 0;
-    QVector<unsigned char> latitudeBytes(4);
-    QVector<unsigned char> longitudeBytes(4);
-    while (i < dataItem.length())
-    {
-        if (i <= 3)
-            latitudeBytes[i] = dataItem[i];
-        else if (i > 3)
-            longitudeBytes[i - 4] = dataItem[i];
-        i++;
-    }
+    QVector<unsigned char> latitudeBytes = {dataItem.at(0), dataItem.at(1), dataItem.at(2),dataItem.at(3)};
+    QVector<unsigned char> longitudeBytes = {dataItem.at(4), dataItem.at(5), dataItem.at(6),dataItem.at(7)};
     double resolution = 180 / pow(2,30);
-    this->wgs84latitude = Utilities::DataTools::DecodeTwosComplementToDouble(latitudeBytes, resolution);
-    this->wgs84longitude = Utilities::DataTools::DecodeTwosComplementToDouble(longitudeBytes, resolution);
+    this->wgs84latitudeHighRes = Utilities::DataTools::DecodeTwosComplementToDouble(latitudeBytes, resolution);
+    this->wgs84longitudeHighRes = Utilities::DataTools::DecodeTwosComplementToDouble(longitudeBytes, resolution);
 }
 
 void Cat21::DecodeTimeOfApplicabilityForVelocity(QVector<unsigned char> &dataItem) {
@@ -610,26 +612,176 @@ void Cat21::DecodeTimeOfApplicabilityForVelocity(QVector<unsigned char> &dataIte
     this->timeOfApplicabilityForVelocity = QTime::fromMSecsSinceStartOfDay(mseconds);
 }
 
-void Cat21::DecodeAirSpeed(QVector<unsigned char> &dataItem) {}
-void Cat21::DecodeTrueAirSpeed(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeTargetAddress(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeTimeOfMessageReceptionOfPosition(QVector<unsigned char> &dataItem){}
+void Cat21::DecodeAirSpeed(QVector<unsigned char> &dataItem) {
+
+    unsigned char unitMask = 128;
+    unsigned char valueMask = 127;
+
+    unsigned char units = (dataItem.at(0) & unitMask) >> 7;
+    unsigned char firstByte = (dataItem.at(0) & valueMask);
+    QVector<unsigned char> bytes = {firstByte, dataItem.at(1)};
+    double speed = Utilities::DataTools::DecodeUnsignedBytesToDouble(bytes,1);
+
+    switch (units) {
+    case 0:
+        this->asUnits = "IAS";
+        this->asAirSpeed = speed * pow(2,-14);
+        break;
+    case 1:
+        this->asUnits = "Mach";
+        this->asAirSpeed = speed * 0.001;
+        break;
+    }
+}
+void Cat21::DecodeTrueAirSpeed(QVector<unsigned char> &dataItem) {
+
+    unsigned char rangeMask = 128;
+    unsigned char valueMask = 127;
+
+    unsigned char units = (dataItem.at(0) & rangeMask) >> 7;
+    unsigned char firstByte = (dataItem.at(0) & valueMask);
+    QVector<unsigned char> bytes = {firstByte, dataItem.at(1)};
+    this->tasTrueAirSpeed = Utilities::DataTools::DecodeUnsignedBytesToDouble(bytes,1);
+
+    switch (units) {
+    case 0:
+        this->tasRangeExceeded = false;
+        break;
+    case 1:
+        this->tasRangeExceeded = true;
+        break;
+    }
+}
+
+void Cat21::DecodeTargetAddress(QVector<unsigned char> &dataItem){
+    QString buildAddress = "0x";
+
+    for (unsigned char byte : dataItem) {
+        short a = (short) byte;
+        QString str = QString("%1").arg(a,0,16);
+        buildAddress.append(str);
+    }
+    this->targetAddress = buildAddress;
+}
+
+void Cat21::DecodeTimeOfMessageReceptionOfPosition(QVector<unsigned char> &dataItem) {
+    double timeResolution = pow(2,-7);
+    double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
+    int mseconds = (int) seconds * 1000;
+    this->timeOfMessageReceptionOfPosition = QTime::fromMSecsSinceStartOfDay(mseconds);
+}
 void Cat21::DecodeTimeOfMessageReceptionOfPositionHighPrecision(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeTimeOfMessageReceptionOfVelocity(QVector<unsigned char> &dataItem){}
+void Cat21::DecodeTimeOfMessageReceptionOfVelocity(QVector<unsigned char> &dataItem){
+    double timeResolution = pow(2,-7);
+    double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
+    int mseconds = (int) seconds * 1000;
+    this->timeOfMessageReceptionOfVelocity = QTime::fromMSecsSinceStartOfDay(mseconds);
+}
 void Cat21::DecodeTimeOfMessageReceptionOfVelocityHighPrecision(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeGeometricHeight(QVector<unsigned char> &dataItem){}
+
+void Cat21::DecodeGeometricHeight(QVector<unsigned char> &dataItem) {
+    double resolution = 6.25;
+    this->geometricHeight = Utilities::DataTools::DecodeTwosComplementToDouble(dataItem, resolution);
+}
 void Cat21::DecodeQualityIndicators(QVector<unsigned char> &dataItem){}
 void Cat21::DecodeMOPSVersion(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeMode3ACode(QVector<unsigned char> &dataItem){}
+
+void Cat21::DecodeMode3ACode(QVector<unsigned char> &dataItem){
+    unsigned char aMask = 0x0E;
+
+    unsigned char A = (dataItem.at(0) & aMask) >> 1;
+    unsigned char B4 = (dataItem.at(0) & 0x01) << 2;
+    unsigned char B21 = (dataItem.at(1) & 0xC0) >> 6;
+
+    unsigned char B = B4 | B21;
+
+    unsigned char C = (dataItem.at(1) & 0x38) >> 3;
+    unsigned char D = (dataItem.at(1) & 0x07);
+    int code = A * 1000 + B * 100 + C * 10 + D;
+    this->m3ACode = QString::number(code);
+}
+
 void Cat21::DecodeRollAngle(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeFlightLevel(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeMagneticHeading(QVector<unsigned char> &dataItem){}
+void Cat21::DecodeFlightLevel(QVector<unsigned char> &dataItem) {
+    double resolution = 0.25;
+    this->flightLevel = Utilities::DataTools::DecodeTwosComplementToDouble(dataItem, resolution);
+}
+void Cat21::DecodeMagneticHeading(QVector<unsigned char> &dataItem) {
+    double resolution = 360.0 / pow(2,16);
+    this->magneticHeading = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem, resolution);
+}
 void Cat21::DecodeTargetStatus(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeBarometricVerticalRate(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeGeometricVerticalRate(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeAirborneGroundVector(QVector<unsigned char> &dataItem){}
+void Cat21::DecodeBarometricVerticalRate(QVector<unsigned char> &dataItem) {
+    unsigned char rangeMask = 128;
+    unsigned char valueMask = 127;
+
+    unsigned char units = (dataItem.at(0) & rangeMask) >> 7;
+    unsigned char firstByte = (dataItem.at(0) & valueMask);
+    QVector<unsigned char> bytes = {firstByte, dataItem.at(1)};
+    double resolution = 6.25;
+    this->bvrBarometricVerticalRate = Utilities::DataTools::DecodeTwosComplementToDouble(bytes,resolution);
+
+    switch (units) {
+    case 0:
+        this->bvrRangeExceeded = false;
+        break;
+    case 1:
+        this->bvrRangeExceeded = true;
+        break;
+    }
+}
+void Cat21::DecodeGeometricVerticalRate(QVector<unsigned char> &dataItem){
+    unsigned char rangeMask = 128;
+    unsigned char valueMask = 127;
+
+    unsigned char units = (dataItem.at(0) & rangeMask) >> 7;
+    unsigned char firstByte = (dataItem.at(0) & valueMask);
+    QVector<unsigned char> bytes = {firstByte, dataItem.at(1)};
+    double resolution = 6.25;
+    this->gvrGeometricVerticalRate = Utilities::DataTools::DecodeTwosComplementToDouble(bytes,resolution);
+
+    switch (units) {
+    case 0:
+        this->gvrRangeExceeded = false;
+        break;
+    case 1:
+        this->gvrRangeExceeded = true;
+        break;
+    }
+}
+void Cat21::DecodeAirborneGroundVector(QVector<unsigned char> &dataItem){
+
+    unsigned char rangeMask = 128;
+    unsigned char valueMask = 127;
+
+    unsigned char units = (dataItem.at(0) & rangeMask) >> 7;
+    unsigned char firstByte = (dataItem.at(0) & valueMask);
+    QVector<unsigned char> bytes = {firstByte, dataItem.at(1)};
+    double resolution = pow(2,-14);
+    this->agvGroundSpeed = Utilities::DataTools::DecodeUnsignedBytesToDouble(bytes,resolution);
+
+    switch (units) {
+    case 0:
+        this->agvRangeExceeded = false;
+        break;
+    case 1:
+        this->agvRangeExceeded = true;
+        break;
+    }
+    QVector<unsigned char> trackBytes = {dataItem.at(2), dataItem.at(3)};
+    double trackResolution = 360.0 / pow(2,16);
+    this->agvTrackAngle = Utilities::DataTools::DecodeUnsignedBytesToDouble(trackBytes,trackResolution);
+
+}
 void Cat21::DecodeTrackAngleRate(QVector<unsigned char> &dataItem){}
-void Cat21::DecodeTimeOfReportTransmission(QVector<unsigned char> &dataItem){}
+
+void Cat21::DecodeTimeOfReportTransmission(QVector<unsigned char> &dataItem) {
+
+    double timeResolution = pow(2,-7);
+    double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
+    int mseconds = (int) seconds * 1000;
+    this->timeOfReportTransmission = QTime::fromMSecsSinceStartOfDay(mseconds);
+}
 
 void Cat21::DecodeTargetIdentification(QVector<unsigned char> &dataItem) {
     unsigned char char8 = (unsigned char)((dataItem.at(5) & 63));
@@ -737,8 +889,12 @@ void Cat21::DecodeTrajectoryIntent(QVector<unsigned char> &dataItem) {}
 void Cat21::DecodeServiceManagement(QVector<unsigned char> &dataItem) {}
 void Cat21::DecodeAircraftOperationalStatus(QVector<unsigned char> &dataItem) {}
 void Cat21::DecodeSurfaceCapabilitiesAndCharacteristics(QVector<unsigned char> &dataItem) {}
-void Cat21::DecodeMessageAmplitude(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeMessageAmplitude(QVector<unsigned char> &dataItem) {
+    this->messageAmplitude = (char) dataItem.at(0);
+}
 void Cat21::DecodeModeSMBData(QVector<unsigned char> &dataItem) {}
 void Cat21::DecodeACASResolutionAdvisoryReport(QVector<unsigned char> &dataItem) {}
-void Cat21::DecodeReceiverID(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeReceiverID(QVector<unsigned char> &dataItem) {
+    this->receiverId = dataItem.at(0);
+}
 void Cat21::DecodeDataAges(QVector<unsigned char> &dataItem) {}
