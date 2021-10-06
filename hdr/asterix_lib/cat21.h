@@ -107,7 +107,10 @@ public:
 
     QString emitterCategory;
 
-    QString metInfo; //REVISAR
+    short miWindSpeed;
+    short miWindDirection;
+    short miTemperature;
+    short miTurbulence;
 
     QString saSas;
     QString saSource;
@@ -223,6 +226,7 @@ public:
 
 private:
     QVector<unsigned char> GetDataAgesDataItem();
+    QVector<unsigned char> GetMetInformationDataItem();
 };
 
 #endif // CAT21_H

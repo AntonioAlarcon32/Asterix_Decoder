@@ -103,7 +103,10 @@ Cat21::Cat21()
 
     this->emitterCategory = "N/A";
 
-    this->metInfo = "N/A"; //REVISAR
+    this->miWindSpeed = -32768;
+    this->miWindDirection = -32768;
+    this->miTemperature = -32768;
+    this->miTurbulence = -32768;
 
     this->saSas = "N/A";
     this->saSource = "N/A";
@@ -1043,11 +1046,36 @@ void Cat21::DecodeEmitterCategory(QVector<unsigned char> &dataItem) {
     }
 }
 
-void Cat21::DecodeMetInformation(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeMetInformation(QVector<unsigned char> &dataItem) {
+
+    int offset = 1;
+    if ((dataItem.at(0) & 128) != 0) {
+        QVector<unsigned char> windBytes = {dataItem.at(offset), dataItem.at(offset+1)};
+        this->miWindSpeed = Utilities::DataTools::DecodeUnsignedBytesToDouble(windBytes,1);
+        offset +=2;
+    }
+    if ((dataItem.at(0) & 64) != 0) {
+        QVector<unsigned char> windBytes = {dataItem.at(offset), dataItem.at(offset+1)};
+        this->miWindDirection = Utilities::DataTools::DecodeUnsignedBytesToDouble(windBytes,1);
+        offset +=2;
+    }
+    if ((dataItem.at(0) & 32) != 0) {
+        QVector<unsigned char> windBytes = {dataItem.at(offset), dataItem.at(offset+1)};
+        this->miTemperature = Utilities::DataTools::DecodeUnsignedBytesToDouble(windBytes,1);
+        offset +=2;
+    }
+    if ((data.at(0) & 16) != 0) {
+        this->miTurbulence = dataItem.at(offset);
+    }
+}
+
 void Cat21::DecodeSelectedAltitude(QVector<unsigned char> &dataItem) {}
 void Cat21::DecodeFinalStateSelectedAltitude(QVector<unsigned char> &dataItem) {}
 void Cat21::DecodeTrajectoryIntent(QVector<unsigned char> &dataItem) {}
-void Cat21::DecodeServiceManagement(QVector<unsigned char> &dataItem) {}
+
+void Cat21::DecodeServiceManagement(QVector<unsigned char> &dataItem) {
+    this->serviceManagement = dataItem.at(0) * 0.5;
+}
 
 void Cat21::DecodeAircraftOperationalStatus(QVector<unsigned char> &dataItem) {
 
@@ -1140,7 +1168,128 @@ void Cat21::DecodeAircraftOperationalStatus(QVector<unsigned char> &dataItem) {
     }
 }
 
-void Cat21::DecodeSurfaceCapabilitiesAndCharacteristics(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeSurfaceCapabilitiesAndCharacteristics(QVector<unsigned char> &dataItem) {
+
+    unsigned char poaMask = 32;
+    unsigned char cdtiMask = 16;
+    unsigned char b2LowMask = 8;
+    unsigned char rasMask = 4;
+    unsigned char identMask = 2;
+
+    unsigned char poa = (dataItem.at(0) & poaMask) >> 5;
+    unsigned char cdti = (dataItem.at(0) & cdtiMask) >> 4;
+    unsigned char b2Low = (dataItem.at(0) & b2LowMask) >> 3;
+    unsigned char ras = (dataItem.at(0) & rasMask) >> 2;
+    unsigned char ident = (dataItem.at(0) & identMask) >> 1;
+
+    switch (poa)
+    {
+    case 0:
+        this->sccPoa = "Postion transmitted is not ADS-B position reference point";
+        break;
+    case 1:
+        this->sccPoa = "Postion transmitted is the ADS-B position reference point";
+        break;
+    }
+
+    switch (cdti)
+    {
+    case 0:
+        this->sccCdti = "CDTI not operational";
+        break;
+    case 1:
+        this->sccCdti = "CDTI operational";
+        break;
+    }
+
+    switch (b2Low)
+    {
+    case 0:
+        this->sccB2Low = ">=70 Watts";
+        break;
+    case 1:
+        this->sccB2Low = "<70 Watts";
+        break;
+    }
+
+    switch (ras)
+    {
+    case 0:
+        this->sccRas = "aircraft not receiving ATC-services";
+        break;
+    case 1:
+        this->sccRas = "aircraft receiving ATC-services";
+        break;
+    }
+
+    switch (ident)
+    {
+    case 0:
+        this->sccIdent = "IDENT switch not active";
+        break;
+    case 1:
+        this->sccIdent = "IDENT switch active";
+        break;
+    }
+
+    if (dataItem.length() >= 2) {
+        unsigned char lwMask = 15;
+        unsigned char lw = (dataItem.at(1) & lwMask);
+
+        switch (lw)
+        {
+        case 0:
+            this->sccLengthPlusWidth = "L<15 & W<11.5";
+            break;
+        case 1:
+            this->sccLengthPlusWidth = "L<15 & W<23";
+            break;
+        case 2:
+            this->sccLengthPlusWidth = "L<25 & W<28.5";
+            break;
+        case 3:
+            this->sccLengthPlusWidth = "L<25 & W<34";
+            break;
+        case 4:
+            this->sccLengthPlusWidth = "L<35 & W<33";
+            break;
+        case 5:
+            this->sccLengthPlusWidth = "L<35 & W<38";
+            break;
+        case 6:
+            this->sccLengthPlusWidth = "L<45 & W<39.5";
+            break;
+        case 7:
+            this->sccLengthPlusWidth = "L<45 & W<45";
+            break;
+        case 8:
+            this->sccLengthPlusWidth = "L<55 & W<45";
+            break;
+        case 9:
+            this->sccLengthPlusWidth = "L<55 & W<52";
+            break;
+        case 10:
+            this->sccLengthPlusWidth = "L<65 & W<59.5";
+            break;
+        case 11:
+            this->sccLengthPlusWidth = "L<65 & W<67";
+            break;
+        case 12:
+            this->sccLengthPlusWidth = "L<75 & W<72.5";
+            break;
+        case 13:
+            this->sccLengthPlusWidth = "L<75 & W<80";
+            break;
+        case 14:
+            this->sccLengthPlusWidth = "L<85 & W<80";
+            break;
+        case 15:
+            this->sccLengthPlusWidth = "L>85 & W>80";
+            break;
+        }
+    }
+}
+
 void Cat21::DecodeMessageAmplitude(QVector<unsigned char> &dataItem) {
     this->messageAmplitude = (char) dataItem.at(0);
 }
@@ -1281,3 +1430,25 @@ QVector<unsigned char> Cat21::GetDataAgesDataItem() {
     dataItemStatus.append(subDataItems);
     return dataItemStatus;
 }
+
+QVector<unsigned char> Cat21::GetMetInformationDataItem() {
+    QVector<unsigned char> dataItemStatus = Utilities::DataTools::GetVariableLengthDataItem(this->data);
+    int subItemsLenght = 0;
+
+    if ((dataItemStatus.at(0) & 128) != 0) {
+        subItemsLenght += 2;
+    }
+    if ((dataItemStatus.at(0) & 64) != 0) {
+        subItemsLenght += 2;
+    }
+    if ((dataItemStatus.at(0) & 32) != 0) {
+        subItemsLenght += 2;
+    }
+    if ((dataItemStatus.at(0) & 16) != 0) {
+        subItemsLenght += 1;
+    }
+    QVector<unsigned char> subDataItems = Utilities::DataTools::GetFixedLengthDataItem(this->data,subItemsLenght);
+    dataItemStatus.append(subDataItems);
+    return dataItemStatus;
+}
+
