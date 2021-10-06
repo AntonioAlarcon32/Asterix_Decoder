@@ -150,7 +150,30 @@ public:
 
     unsigned char receiverId;
 
-    QString dataAges; //REVISAR
+    float daAOS;
+    float daTRD;
+    float daM3A;
+    float daQI;
+    float daTrI;
+    float daMA;
+    float daGH;
+    float daFL;
+    float daISSA;
+    float daFSSA;
+    float daAS;
+    float daTAS;
+    float daMH;
+    float daBVR;
+    float daGVR;
+    float daGV;
+    float daTAR;
+    float daTaI;
+    float daTS;
+    float daMET;
+    float daROA;
+    float daARA;
+    float daSCC;
+
 
     Cat21();
     void FullDecode();
@@ -197,6 +220,9 @@ public:
     void DecodeACASResolutionAdvisoryReport(QVector<unsigned char> &dataItem);
     void DecodeReceiverID(QVector<unsigned char> &dataItem);
     void DecodeDataAges(QVector<unsigned char> &dataItem);
+
+private:
+    QVector<unsigned char> GetDataAgesDataItem();
 };
 
 #endif // CAT21_H

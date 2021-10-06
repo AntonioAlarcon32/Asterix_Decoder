@@ -146,7 +146,29 @@ Cat21::Cat21()
 
     this->receiverId = 1;
 
-    this->dataAges = "N/A"; //REVISAR
+    this->daAOS = nanf("");
+    this->daTRD = nanf("");
+    this->daM3A = nanf("");
+    this->daQI = nanf("");
+    this->daTrI = nanf("");
+    this->daMA = nanf("");
+    this->daGH = nanf("");
+    this->daFL = nanf("");
+    this->daISSA = nanf("");
+    this->daFSSA = nanf("");
+    this->daAS = nanf("");
+    this->daTAS = nanf("");
+    this->daMH = nanf("");
+    this->daBVR = nanf("");
+    this->daGVR = nanf("");
+    this->daGV = nanf("");
+    this->daTAR = nanf("");
+    this->daTaI = nanf("");
+    this->daTS = nanf("");
+    this->daMET = nanf("");
+    this->daROA = nanf("");
+    this->daARA = nanf("");
+    this->daSCC = nanf("");
 }
 
 void Cat21::FullDecode() {
@@ -336,7 +358,7 @@ void Cat21::FullDecode() {
             this->DecodeReceiverID(dataItem);
         }
         if ((this->fspec.at(5) & 0x02) == 0x02) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data);
+            QVector<unsigned char> dataItem = GetDataAgesDataItem();
             this->DecodeDataAges(dataItem);
         }
     }
@@ -1026,7 +1048,98 @@ void Cat21::DecodeSelectedAltitude(QVector<unsigned char> &dataItem) {}
 void Cat21::DecodeFinalStateSelectedAltitude(QVector<unsigned char> &dataItem) {}
 void Cat21::DecodeTrajectoryIntent(QVector<unsigned char> &dataItem) {}
 void Cat21::DecodeServiceManagement(QVector<unsigned char> &dataItem) {}
-void Cat21::DecodeAircraftOperationalStatus(QVector<unsigned char> &dataItem) {}
+
+void Cat21::DecodeAircraftOperationalStatus(QVector<unsigned char> &dataItem) {
+
+    unsigned char raMask = 0b10000000;
+    unsigned char tcMask = 0b01100000;
+    unsigned char tsMask = 0b00010000;
+    unsigned char arvMask = 0b00001000;
+    unsigned char cdtiMask = 0b0000100;
+    unsigned char nTcasMask = 0b00000010;
+    unsigned char saMask = 0b00000001;
+
+    unsigned char ra = ((dataItem.at(0) & raMask) >> 7);
+    unsigned char tc = ((dataItem.at(0) & tcMask) >> 5);
+    unsigned char ts = ((dataItem.at(0) & tsMask) >> 4);
+    unsigned char arv = ((dataItem.at(0) & arvMask) >> 3);
+    unsigned char cdtia = ((dataItem.at(0) & cdtiMask) >> 2);
+    unsigned char notTcas = ((dataItem.at(0) & nTcasMask) >> 1);
+    unsigned char sa = (dataItem.at(0) & saMask);
+
+    switch (ra)
+    {
+    case 0:
+        this->aosRa = "TCAS II or ACAS RA not active";
+        break;
+    case 1:
+        this->aosRa = "TCAS RA active";
+        break;
+    }
+    switch (tc)
+    {
+    case 0:
+        this->aosTc = "no capability for Trajectory change report";
+        break;
+    case 1:
+        this->aosTc = "support for TC+0 reports only";
+        break;
+    case 2:
+        this->aosTc = "support for multiple TC reports";
+        break;
+    case 3:
+        this->aosTc = "reserved";
+        break;
+    }
+    switch (ts)
+    {
+    case 0:
+        this->aosTs = "no capability to support Target State Reports";
+        break;
+    case 1:
+        this->aosTs = "capable of supporting target State Reports";
+        break;
+    }
+    switch (arv)
+    {
+    case 0:
+        this->aosArv = "no capability to generate ARV-reports";
+        break;
+    case 1:
+        this->aosArv = "capable of generate ARV-reports";
+        break;
+    }
+    switch (cdtia)
+    {
+    case 0:
+        this->aosCdti = "cdti not operational";
+        break;
+    case 1:
+        this->aosCdti = "cdti operational";
+        break;
+
+
+    }
+    switch (notTcas)
+    {
+    case 0:
+        this->aosNotTcas = "TCAS operational";
+        break;
+    case 1:
+        this->aosNotTcas = "TCAS not operational";
+        break;
+    }
+    switch (sa)
+    {
+    case 0:
+        this->aosSa = "Antenna diversity";
+        break;
+    case 1:
+        this->aosSa = "Single Antenna Only";
+        break;
+    }
+}
+
 void Cat21::DecodeSurfaceCapabilitiesAndCharacteristics(QVector<unsigned char> &dataItem) {}
 void Cat21::DecodeMessageAmplitude(QVector<unsigned char> &dataItem) {
     this->messageAmplitude = (char) dataItem.at(0);
@@ -1036,4 +1149,135 @@ void Cat21::DecodeACASResolutionAdvisoryReport(QVector<unsigned char> &dataItem)
 void Cat21::DecodeReceiverID(QVector<unsigned char> &dataItem) {
     this->receiverId = dataItem.at(0);
 }
-void Cat21::DecodeDataAges(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeDataAges(QVector<unsigned char> &dataItem) {
+
+    int dataAgesOffset = 1;
+    bool firstPresenceBit = false, secondPresenceBit = false, thirdPresenceBit = false;;
+    firstPresenceBit = dataItem.at(0) & 1;
+    if (firstPresenceBit) {
+        dataAgesOffset++;
+        secondPresenceBit = dataItem.at(1) & 1;
+        if (secondPresenceBit) {
+            dataAgesOffset++;
+            thirdPresenceBit = dataItem.at(2) & 1;
+            if (thirdPresenceBit) {
+                dataAgesOffset++;
+            }
+        }
+    }
+
+    if ((dataItem.at(0) & 128) != 0) {
+        this->daAOS = dataItem.at(dataAgesOffset) * 0.1;
+        dataAgesOffset++;
+    }
+    if ((dataItem.at(0) & 64) != 0) {
+        this->daTRD = dataItem.at(dataAgesOffset) * 0.1;
+        dataAgesOffset++;
+    }
+    if ((dataItem.at(0) & 32) != 0) {
+        this->daM3A = dataItem.at(dataAgesOffset) * 0.1;
+        dataAgesOffset++;
+    }
+    if ((dataItem.at(0) & 16) != 0) {
+        this->daQI = dataItem.at(dataAgesOffset) * 0.1;
+        dataAgesOffset++;
+    }
+    if ((dataItem.at(0) & 8) != 0) {
+        this->daTrI = dataItem.at(dataAgesOffset) * 0.1;
+        dataAgesOffset++;
+    }
+    if ((dataItem.at(0) & 4) != 0) {
+        this->daMA = dataItem.at(dataAgesOffset) * 0.1;
+        dataAgesOffset++;
+    }
+    if ((dataItem.at(0) & 2) != 0) {
+        this->daGH = dataItem.at(dataAgesOffset) * 0.1;
+        dataAgesOffset++;
+    }
+
+    if (firstPresenceBit) {
+        if ((dataItem.at(1) & 128) != 0) {
+            this->daFL = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+        if ((dataItem.at(1) & 64) != 0) {
+            this->daISSA = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+        if ((dataItem.at(1) & 32) != 0) {
+            this->daFSSA = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+        if ((dataItem.at(1) & 16) != 0) {
+            this->daAS = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+        if ((dataItem.at(1) & 8) != 0) {
+            this->daTAS = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+        if ((dataItem.at(1) & 4) != 0) {
+            this->daMH = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+        if ((dataItem.at(1) & 2) != 0) {
+            this->daBVR = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+    }
+    if (secondPresenceBit) {
+        if ((dataItem.at(2) & 128) != 0) {
+            this->daGVR = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+        if ((dataItem.at(2) & 64) != 0) {
+            this->daGV = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+        if ((dataItem.at(2) & 32) != 0) {
+            this->daTAR = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+        if ((dataItem.at(2) & 16) != 0) {
+            this->daTaI = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+        if ((dataItem.at(2) & 8) != 0) {
+            this->daTS = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+        if ((dataItem.at(2) & 4) != 0) {
+            this->daMET = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+        if ((dataItem.at(2) & 2) != 0) {
+            this->daROA = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+    }
+    if (thirdPresenceBit) {
+        if ((dataItem.at(3) & 128) != 0) {
+            this->daARA = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+        if ((dataItem.at(3) & 64) != 0) {
+            this->daSCC = dataItem.at(dataAgesOffset) * 0.1;
+            dataAgesOffset++;
+        }
+    }
+}
+
+QVector<unsigned char> Cat21::GetDataAgesDataItem() {
+    QVector<unsigned char> dataItemStatus = Utilities::DataTools::GetVariableLengthDataItem(this->data);
+    int count = 0;
+    for (unsigned char byte : dataItemStatus) {
+        while (byte != 0) {
+            if (byte & 0x1 == 1) count++;
+            byte = byte / 2;
+        }
+    }
+    count = count - (dataItemStatus.length() - 1);
+    QVector<unsigned char> subDataItems = Utilities::DataTools::GetFixedLengthDataItem(this->data,count);
+    dataItemStatus.append(subDataItems);
+    return dataItemStatus;
+}
