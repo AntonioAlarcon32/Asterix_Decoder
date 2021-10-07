@@ -96,13 +96,255 @@ void Cat19::FullDecode() {
     }
 }
 
-void Cat19::DecodeDataSourceIdentifier(QVector<unsigned char> &dataItem) {}
-void Cat19::DecodeMessageType(QVector<unsigned char> &dataItem) {}
-void Cat19::DecodeTimeOfDay(QVector<unsigned char> &dataItem) {}
-void Cat19::DecodeSystemStatus(QVector<unsigned char> &dataItem) {}
-void Cat19::DecodeTrackingProcessorDetailedStatus(QVector<unsigned char> &dataItem) {}
-void Cat19::DecodeRemoteSensorDetailedStatus(QVector<unsigned char> &dataItem) {}
-void Cat19::DecodeReferenceTrasponderDetailedStatus(QVector<unsigned char> &dataItem) {}
-void Cat19::DecodePositionOfTheMLTSystemReferencePoint(QVector<unsigned char> &dataItem) {}
-void Cat19::DecodeHeightOfTheMLTSystemReferencePoint(QVector<unsigned char> &dataItem) {}
-void Cat19::DecodeWGS84Undulation(QVector<unsigned char> &dataItem) {}
+void Cat19::DecodeDataSourceIdentifier(QVector<unsigned char> &dataItem) {
+    this->systemAreaCode = (short)dataItem.at(0);
+    this->systemIdentificationCode = (short)dataItem.at(1);
+}
+void Cat19::DecodeMessageType(QVector<unsigned char> &dataItem) {
+    switch (dataItem.at(0)) {
+    case 0x01:
+        this->typeOfMessage = "Start of Update Cycle";
+        break;
+    case 0x02:
+        this->typeOfMessage = "Periodic Status Message";
+        break;
+    case 0x03:
+        this->typeOfMessage = "Event-triggered Status Message";
+        break;
+    }
+}
+
+void Cat19::DecodeTimeOfDay(QVector<unsigned char> &dataItem) {
+    double timeResolution = pow(2,-7);
+    double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
+    int mseconds = (int) seconds * 1000;
+    this->timeOfDay = QTime::fromMSecsSinceStartOfDay(mseconds);
+}
+
+void Cat19::DecodeSystemStatus(QVector<unsigned char> &dataItem) {
+
+    unsigned char nogoMask = 0b11000000;
+    unsigned char ovlMask = 0b00100000;
+    unsigned char tsvMask = 0b00010000;
+    unsigned char ttfMask = 0b00001000;
+
+    unsigned char nogo = (dataItem.at(0) & nogoMask) >> 6;
+    unsigned char ovl = (dataItem.at(0) & ovlMask) >> 5;
+    unsigned char tsv = (dataItem.at(0) & tsvMask) >> 4;
+    unsigned char ttf = (dataItem.at(0) & ttfMask) >> 3;
+
+    switch (nogo) {
+    case 0:
+        this->ssNogo = "Operational";
+        break;
+    case 1:
+        this->ssNogo = "Degraded";
+        break;
+    case 2:
+        this->ssNogo = "NOGO";
+        break;
+    case 3:
+        this->ssNogo = "undefined";
+        break;
+    }
+
+    switch (ovl) {
+    case 0:
+        this->ssOvl = "No overload";
+        break;
+    case 1:
+        this->ssOvl = "Overload";
+        break;
+
+    }
+
+    switch (tsv) {
+    case 0:
+        this->ssTsv = "Valid";
+        break;
+    case 1:
+        this->ssTsv = "Invalid";
+        break;
+    }
+
+    switch (ttf) {
+    case 0:
+        this->ssTtf = "Test Target Operative";
+        break;
+    case 1:
+        this->ssTtf = "Test Target Failure";
+        break;
+    }
+}
+
+void Cat19::DecodeTrackingProcessorDetailedStatus(QVector<unsigned char> &dataItem) {
+
+    unsigned char tp1Mask = 0b11000000;
+    unsigned char tp2Mask = 0b00110000;
+    unsigned char tp3Mask = 0b00001100;
+    unsigned char tp4Mask = 0b00000011;
+
+    unsigned char tp1 = (dataItem.at(0) & tp1Mask) >> 6;
+    unsigned char tp2 = (dataItem.at(0) & tp2Mask) >> 4;
+    unsigned char tp3 = (dataItem.at(0) & tp3Mask) >> 2;
+    unsigned char tp4 = (dataItem.at(0) & tp4Mask) >> 3;
+
+    switch (tp1) {
+    case 0:
+        this->tp1Status = "TP not used";
+        break;
+    case 1:
+        this->tp1Status = "Standby/Good";
+        break;
+    case 2:
+        this->tp1Status = "Exec/Faulted";
+        break;
+    case 3:
+        this->tp1Status = "Exec/Standby";
+        break;
+    }
+
+    switch (tp2) {
+    case 0:
+        this->tp2Status = "TP not used";
+        break;
+    case 1:
+        this->tp2Status = "Standby/Good";
+        break;
+    case 2:
+        this->tp2Status = "Exec/Faulted";
+        break;
+    case 3:
+        this->tp2Status = "Exec/Standby";
+        break;
+    }
+
+    switch (tp3) {
+    case 0:
+        this->tp3Status = "TP not used";
+        break;
+    case 1:
+        this->tp3Status = "Standby/Good";
+        break;
+    case 2:
+        this->tp3Status = "Exec/Faulted";
+        break;
+    case 3:
+        this->tp3Status = "Exec/Standby";
+        break;
+    }
+
+    switch (tp4) {
+    case 0:
+        this->tp4Status = "TP not used";
+        break;
+    case 1:
+        this->tp4Status = "Standby/Good";
+        break;
+    case 2:
+        this->tp4Status = "Exec/Faulted";
+        break;
+    case 3:
+        this->tp4Status = "Exec/Standby";
+        break;
+    }
+}
+void Cat19::DecodeRemoteSensorDetailedStatus(QVector<unsigned char> &dataItem) {
+
+
+}
+
+void Cat19::DecodeReferenceTrasponderDetailedStatus(QVector<unsigned char> &dataItem) {
+    unsigned char rf1Mask = 0b11000000;
+    unsigned char rf2Mask = 0b00001100;
+
+    unsigned char rf1 = (dataItem.at(0) & rf1Mask) >> 6;
+    unsigned char rf2 = (dataItem.at(0) & rf2Mask) >> 2;
+
+    switch (rf1) {
+    case 0:
+        this->rt1Status = "";
+        break;
+    case 1:
+        this->rt1Status = "Warning";
+        break;
+    case 2:
+        this->rt1Status = "Faulted";
+        break;
+    case 3:
+        this->rt1Status = "Good";
+        break;
+    }
+
+    switch (rf2) {
+    case 0:
+        this->rt2Status = "";
+        break;
+    case 1:
+        this->rt2Status = "Warning";
+        break;
+    case 2:
+        this->rt2Status = "Faulted";
+        break;
+    case 3:
+        this->rt2Status = "Good";
+        break;
+    }
+
+    if (dataItem.length() > 1) {
+        unsigned char rf3 = (dataItem.at(0) & rf1Mask) >> 6;
+        unsigned char rf4 = (dataItem.at(0) & rf2Mask) >> 2;
+
+        switch (rf3) {
+        case 0:
+            this->rt3Status = "";
+            break;
+        case 1:
+            this->rt3Status = "Warning";
+            break;
+        case 2:
+            this->rt3Status = "Faulted";
+            break;
+        case 3:
+            this->rt3Status = "Good";
+            break;
+        }
+
+        switch (rf4) {
+        case 0:
+            this->rt4Status = "";
+            break;
+        case 1:
+            this->rt4Status = "Warning";
+            break;
+        case 2:
+            this->rt4Status = "Faulted";
+            break;
+        case 3:
+            this->rt4Status = "Good";
+            break;
+        }
+    }
+}
+
+void Cat19::DecodePositionOfTheMLTSystemReferencePoint(QVector<unsigned char> &dataItem) {
+
+    QVector<unsigned char> latitudeBytes = {dataItem.at(0), dataItem.at(1), dataItem.at(2),dataItem.at(3)};
+    QVector<unsigned char> longitudeBytes = {dataItem.at(4), dataItem.at(5), dataItem.at(6),dataItem.at(7)};
+    double resolution = 180 / pow(2,30);
+    this->wgs84latitude = Utilities::DataTools::DecodeTwosComplementToDouble(latitudeBytes, resolution);
+    this->wgs84longitude = Utilities::DataTools::DecodeTwosComplementToDouble(longitudeBytes, resolution);
+}
+
+void Cat19::DecodeHeightOfTheMLTSystemReferencePoint(QVector<unsigned char> &dataItem) {
+
+    double resolution = 0.25;
+    this->wgs84height = Utilities::DataTools::DecodeTwosComplementToDouble(dataItem, resolution);
+
+}
+
+void Cat19::DecodeWGS84Undulation(QVector<unsigned char> &dataItem) {
+
+    double resolution = 1;
+    this->wgs84undulation = Utilities::DataTools::DecodeTwosComplementToDouble(dataItem, resolution);
+}

@@ -622,7 +622,7 @@ void Cat21::DecodePositionInWGS84Coordinates(QVector<unsigned char> &dataItem) {
 }
 
 void Cat21::DecodePositionInWGS84CoordinatesHighRes(QVector<unsigned char> &dataItem) {
-    int i = 0;
+
     QVector<unsigned char> latitudeBytes = {dataItem.at(0), dataItem.at(1), dataItem.at(2),dataItem.at(3)};
     QVector<unsigned char> longitudeBytes = {dataItem.at(4), dataItem.at(5), dataItem.at(6),dataItem.at(7)};
     double resolution = 180 / pow(2,30);
