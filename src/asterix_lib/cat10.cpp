@@ -692,8 +692,6 @@ void Cat10::DecodeTargetAddress(QVector<unsigned char> &dataItem) {
 
 void Cat10::DecodeTargetIdentification(QVector<unsigned char> &dataItem) {
 
-
-
     unsigned char char1 = (dataItem.at(1) & 0xFC) >> 2;
     unsigned char char2 = ((dataItem.at(1) & 0x03) << 4) | ((dataItem.at(2) & 0xF0) >> 4);
     unsigned char char3 =((dataItem.at(3) & 0xC0) >> 6) | ((dataItem.at(2) & 0x0F) << 2);

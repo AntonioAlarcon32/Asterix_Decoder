@@ -740,8 +740,239 @@ void Cat20::DecodePreProgrammedMessage(QVector<unsigned char> &dataItem) {
 void Cat20::DecodePositionAccuracy(QVector<unsigned char> &dataItem) {}
 void Cat20::DecodeContributingDevices(QVector<unsigned char> &dataItem) {}
 void Cat20::DecodeBDSRegisterData(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeCommsACASCapabilityAndFlightStatus(QVector<unsigned char> &dataItem) {}
+
+void Cat20::DecodeCommsACASCapabilityAndFlightStatus(QVector<unsigned char> &dataItem) {
+
+    unsigned char comMask = 224;
+    unsigned char statMask = 28;
+    unsigned char msscMask = 128;
+    unsigned char arcMask = 64;
+    unsigned char aicMask = 32;
+    unsigned char b1aMask = 16;
+    unsigned char b1bMask = 15;
+
+    unsigned char com = (dataItem.at(0) & comMask) >> 5;
+    unsigned char stat = (dataItem.at(0) & statMask) >> 2;
+
+    unsigned char mssc = (dataItem.at(1) & msscMask) >> 7;
+    unsigned char arc = (dataItem.at(1) & arcMask) >> 6;
+    unsigned char aic = (dataItem.at(1) & aicMask) >> 5;
+    unsigned char b1a = (dataItem.at(1) & b1aMask) >> 4;
+    unsigned char b1b = (dataItem.at(1) & b1bMask);
+
+    switch (com)
+    {
+    case 0:
+        this->cacfsCom= "No communications capability (surveillance only)";
+        break;
+    case 1:
+        this->cacfsCom = "Comm. A and Comm. B capability";
+        break;
+    case 2:
+        this->cacfsCom = "Comm. A, Comm. B and Uplink ELM";
+        break;
+    case 3:
+        this->cacfsCom = "Comm. A, Comm. B, Uplink ELM and Downlink ELM";
+        break;
+    case 4:
+        this->cacfsCom = "Level 5 Transponder capability";
+        break;
+    case 5:
+        this->cacfsCom = "Not Assigned";
+        break;
+    case 6:
+        this->cacfsCom = "Not Assigned";
+        break;
+    case 7:
+        this->cacfsCom = "Not Assigned";
+        break;
+    }
+
+    switch (stat)
+    {
+    case 0:
+        this->cacfsStat= "No alert, no SPI, aircraft airborne";
+        break;
+    case 1:
+        this->cacfsStat = "No alert, no SPI, aircraft on ground";
+        break;
+    case 2:
+        this->cacfsStat = "Alert, no SPI, aircraft airborne";
+        break;
+    case 3:
+        this->cacfsStat = "Alert, no SPI, aircraft on ground";
+        break;
+    case 4:
+        this->cacfsStat = "Alert, SPI, aircraft airborne or on ground";
+        break;
+    case 5:
+        this->cacfsStat = "No alert, SPI, aircraft airborne or on ground";
+        break;
+    case 6:
+        this->cacfsStat = "Not Assigned";
+        break;
+    case 7:
+        this->cacfsStat = "Information not yet extracted";
+        break;
+    }
+
+    switch (mssc) {
+    case 0:
+        this->cacfsMssc = "No";
+        break;
+    case 1:
+        this->cacfsMssc = "Yes";
+        break;
+    }
+
+    switch (arc) {
+    case 0:
+        this->cacfsArc = "100 ft resolution";
+        break;
+    case 1:
+        this->cacfsArc = "25 ft resolution";
+        break;
+    }
+
+    switch (aic) {
+    case 0:
+        this->cacfsAic = "No";
+        break;
+    case 1:
+        this->cacfsAic = "Yes";
+        break;
+    }
+
+    //REVISAR LOS B1A y B1B
+
+}
+
 void Cat20::DecodeACASResolutionAdvisoryReport(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeWarningErrorConditions(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeMode1CodeInOctalRepresentation(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeMode2CodeInOctalRepresentation(QVector<unsigned char> &dataItem) {}
+void Cat20::DecodeWarningErrorConditions(QVector<unsigned char> &dataItem) {
+
+    for (unsigned char byte : dataItem) {
+        unsigned char errorCode = (byte & 254) >> 1;
+        switch (errorCode) {
+        case 0:
+            this->errors.append("Not defined; never used");
+            break;
+        case 1:
+            this->errors.append("Multipath Reply (Reflection)");
+            break;
+        case 3:
+            this->errors.append("Split plot");
+            break;
+        case 10:
+            this->errors.append("Phantom SSR plot");
+            break;
+        case 11:
+            this->errors.append("Non-Matching Mode-3/A Code");
+            break;
+        case 12:
+            this->errors.append("Mode C code / Mode S altitude code abnormal value compared to the track");
+            break;
+        case 15:
+            this->errors.append("Transponder anomaly detected");
+            break;
+        case 16:
+            this->errors.append("Duplicated or Illegal Mode S Aircraft Address");
+            break;
+        case 17:
+            this->errors.append("Mode S error correction applied");
+            break;
+        case 18:
+            this->errors.append("Undecodable Mode C code / Mode S altitude cod");
+            break;
+        }
+    }
+}
+void Cat20::DecodeMode1CodeInOctalRepresentation(QVector<unsigned char> &dataItem) {
+
+    unsigned char vMask = 0x80;
+    unsigned char gMask = 0x40;
+    unsigned char lMask = 0x20;
+
+    unsigned char validated = ((dataItem.at(0) & vMask) >> 6);
+    unsigned char garbled = ((dataItem.at(0) & gMask) >> 3);
+    unsigned char derived = ((dataItem.at(0) & lMask) >> 1);
+
+    switch (validated)
+    {
+    case 0:
+        this->M1Validated = "Code Validated";
+        break;
+    case 1:
+        this->M1Validated = "Code Not Validated";
+        break;
+    }
+    switch (garbled)
+    {
+    case 0:
+        this->M1Garbled = "Default";
+        break;
+    case 1:
+        this->M1Garbled = "Garbled Code";
+        break;
+    }
+    switch (derived)
+    {
+    case 0:
+        this->M1Derivation = "Mode-2 code derived from the reply of the transponder";
+        break;
+    case 1:
+        this->M1Derivation = "Mode-2 code not extracted during the last scan";
+        break;
+    }
+
+}
+
+void Cat20::DecodeMode2CodeInOctalRepresentation(QVector<unsigned char> &dataItem) {
+    unsigned char vMask = 0x80;
+    unsigned char gMask = 0x40;
+    unsigned char lMask = 0x20;
+
+    unsigned char validated = ((dataItem.at(0) & vMask) >> 6);
+    unsigned char garbled = ((dataItem.at(0) & gMask) >> 3);
+    unsigned char derived = ((dataItem.at(0) & lMask) >> 1);
+
+    switch (validated)
+    {
+    case 0:
+        this->M2Validated = "Code Validated";
+        break;
+    case 1:
+        this->M2Validated = "Code Not Validated";
+        break;
+    }
+    switch (garbled)
+    {
+    case 0:
+        this->M2Garbled = "Default";
+        break;
+    case 1:
+        this->M2Garbled = "Garbled Code";
+        break;
+    }
+    switch (derived)
+    {
+    case 0:
+        this->M2Derivation = "Mode-2 code derived from the reply of the transponder";
+        break;
+    case 1:
+        this->M2Derivation = "Mode-2 code not extracted during the last scan";
+        break;
+    }
+
+    unsigned char aMask = 0x0E;
+
+    unsigned char A = (dataItem.at(0) & aMask) >> 1;
+    unsigned char B4 = (dataItem.at(0) & 0x01) << 2;
+    unsigned char B21 = (dataItem.at(1) & 0xC0) >> 6;
+
+    unsigned char B = B4 | B21;
+
+    unsigned char C = (dataItem.at(1) & 0x38) >> 3;
+    unsigned char D = (dataItem.at(1) & 0x07);
+    int code = A * 1000 + B * 100 + C * 10 + D;
+    this->M2Code = QString::number(code);
+}
