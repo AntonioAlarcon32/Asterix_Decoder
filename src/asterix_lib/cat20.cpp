@@ -227,24 +227,516 @@ void Cat20::FullDecode() {
 }
 
 
-void Cat20::DecodeDataSourceIdentifier(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeTargetReportDescriptor(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeTimeOfDay(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodePositionInWGS84Coordinates(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodePositionInCartesianCoordinates(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeTrackNumber(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeTrackStatus(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeMode3ACodeInOctalRepresentation(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeCalculatedTrackVelocityInCartesianCoordinates(QVector<unsigned char> &dataItem) {}
+void Cat20::DecodeDataSourceIdentifier(QVector<unsigned char> &dataItem) {
+    this->systemAreaCode = (short)dataItem.at(0);
+    this->systemIdentificationCode = (short)dataItem.at(1);
+}
+
+void Cat20::DecodeTargetReportDescriptor(QVector<unsigned char> &dataItem) {
+    unsigned char ssrMask = 128;
+    unsigned char msMask = 64;
+    unsigned char hfMask = 32;
+    unsigned char vdl4Mask = 16;
+    unsigned char uatMask = 8;
+    unsigned char dmeMask = 4;
+    unsigned char otMask = 2;
+
+    unsigned char ssr = (dataItem.at(0) & ssrMask) >> 7;
+    unsigned char ms = (dataItem.at(0) & msMask) >> 6;
+    unsigned char hf = (dataItem.at(0) & hfMask) >> 5;
+    unsigned char vdl4 = (dataItem.at(0) & vdl4Mask) >> 4;
+    unsigned char uat = (dataItem.at(0) & uatMask) >> 3;
+    unsigned char dme = (dataItem.at(0) & dmeMask) >> 2;
+    unsigned char ot = (dataItem.at(0) & otMask) >> 1;
+
+    switch (ssr) {
+    case 0:
+        this->trSsr = "No Non-Mode S 1090MHz multilat.";
+        break;
+    case 1:
+        this->trSsr = "Non-Mode S 1090MHz multilateration";
+        break;
+    }
+
+    switch (ms) {
+    case 0:
+        this->trMs = "No Mode-S 1090 MHz multilateration";
+        break;
+    case 1:
+        this->trMs = "Mode-S 1090 MHz multilateration";
+        break;
+    }
+
+    switch (hf) {
+    case 0:
+        this->trHf = "No HF multilateration";
+        break;
+    case 1:
+        this->trHf = "HF multilateration";
+        break;
+    }
+
+    switch (vdl4) {
+    case 0:
+        this->trVdl4 = "No VDL Mode 4 multilateration";
+        break;
+    case 1:
+        this->trVdl4 = "VDL Mode 4 multilateration";
+        break;
+    }
+
+    switch (uat) {
+    case 0:
+        this->trUat = "No UAT multilateration";
+        break;
+    case 1:
+        this->trUat = "UAT multilateration";
+        break;
+    }
+
+    switch (dme) {
+    case 0:
+        this->trDme = "No DME/TACAN multilateration";
+        break;
+    case 1:
+        this->trDme = "DME/TACAN multilateration";
+        break;
+    }
+
+    switch (ot) {
+    case 0:
+        this->trOt = "No Other Technology multilateration";
+        break;
+    case 1:
+        this->trOt = "Other Technology multilateration";
+        break;
+    }
+
+    if (dataItem.length() > 1) {
+
+        unsigned char rabMask = 128;
+        unsigned char spiMask = 64;
+        unsigned char chnMask = 32;
+        unsigned char gbsMask = 16;
+        unsigned char crtMask = 8;
+        unsigned char simMask = 4;
+        unsigned char tstMask = 2;
+
+        unsigned char rab = (dataItem.at(1) & rabMask) >> 7;
+        unsigned char spi = (dataItem.at(1) & spiMask) >> 6;
+        unsigned char chn = (dataItem.at(1) & chnMask) >> 5;
+        unsigned char gbs = (dataItem.at(1) & gbsMask) >> 4;
+        unsigned char crt = (dataItem.at(1) & crtMask) >> 3;
+        unsigned char sim = (dataItem.at(1) & simMask) >> 2;
+        unsigned char tst = (dataItem.at(1) & tstMask) >> 1;
+
+        switch (rab) {
+        case 0:
+            this->trRab = "Report from Target Transponder";
+            break;
+        case 1:
+            this->trRab = "Report from Field Monitor";
+            break;
+        }
+
+        switch (spi) {
+        case 0:
+            this->trSpi = "Absence of SPI";
+            break;
+        case 1:
+            this->trSpi = "Special Position Identification";
+            break;
+        }
+
+        switch (chn) {
+        case 0:
+            this->trChn = "Chain 1";
+            break;
+        case 1:
+            this->trChn = "Chain 2";
+            break;
+        }
+
+        switch (gbs) {
+        case 0:
+            this->trGbs = "Transponder Ground Bit not set";
+            break;
+        case 1:
+            this->trGbs = "Transponder Ground Bit set";
+            break;
+        }
+
+        switch (crt) {
+        case 0:
+            this->trCrt = "No Corrupted reply in multilateration";
+            break;
+        case 1:
+            this->trCrt = "Corrupted Replies in multilateration";
+            break;
+        }
+
+        switch (sim) {
+        case 0:
+            this->trSim = "Actual Target Report";
+            break;
+        case 1:
+            this->trSim = "Simulated Target Report";
+            break;
+        }
+
+        switch (tst) {
+        case 0:
+            this->trTst = "Default";
+            break;
+        case 1:
+            this->trTst = "Test Target";
+            break;
+        }
+    }
+
+    if (dataItem.length() > 2) {
+        unsigned char cfMask = 192;
+
+        unsigned char cf = (dataItem.at(2) & cfMask) >> 6;
+
+        switch (cf) {
+        case 0:
+            this->trCf = "Target with 24-bit ICAO Address";
+            break;
+        case 1:
+            this->trCf = "Target with a non-ICAO 24-bit Address";
+            break;
+        case 2:
+            this->trCf = "non-ADS-B Message";
+            break;
+        case 3:
+            this->trCf = "Information not available";
+            break;
+        }
+    }
+}
+
+void Cat20::DecodeTimeOfDay(QVector<unsigned char> &dataItem) {
+    double timeResolution = pow(2,-7);
+    double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
+    int mseconds = (int) seconds * 1000;
+    this->timeOfDay = QTime::fromMSecsSinceStartOfDay(mseconds);
+}
+
+void Cat20::DecodePositionInWGS84Coordinates(QVector<unsigned char> &dataItem) {
+    QVector<unsigned char> latitudeBytes = {dataItem.at(0), dataItem.at(1), dataItem.at(2),dataItem.at(3)};
+    QVector<unsigned char> longitudeBytes = {dataItem.at(4), dataItem.at(5), dataItem.at(6),dataItem.at(7)};
+    double resolution = 180 / pow(2,30);
+    this->wgs84latitude = Utilities::DataTools::DecodeTwosComplementToDouble(latitudeBytes, resolution);
+    this->wgs84longitude = Utilities::DataTools::DecodeTwosComplementToDouble(longitudeBytes, resolution);
+}
+
+void Cat20::DecodePositionInCartesianCoordinates(QVector<unsigned char> &dataItem) {
+
+    QVector<unsigned char> latitudeBytes = {dataItem.at(0), dataItem.at(1), dataItem.at(2)};
+    QVector<unsigned char> longitudeBytes = {dataItem.at(3), dataItem.at(4), dataItem.at(5)};
+    double resolution = 0.5;
+    this->cartesianX = Utilities::DataTools::DecodeTwosComplementToDouble(latitudeBytes, resolution);
+    this->cartesianY = Utilities::DataTools::DecodeTwosComplementToDouble(longitudeBytes, resolution);
+
+}
+
+void Cat20::DecodeTrackNumber(QVector<unsigned char> &dataItem) {
+    QVector<unsigned char> trackBytes = {dataItem.at(0), dataItem.at(1)};
+    double resolution = 1;
+    this->trackNumber = (int) Utilities::DataTools::DecodeUnsignedBytesToDouble(trackBytes,resolution);
+}
+
+void Cat20::DecodeTrackStatus(QVector<unsigned char> &dataItem) {
+    unsigned char cnfMask = 128;
+    unsigned char treMask = 64;
+    unsigned char cstMask = 32;
+    unsigned char cdmMask = 24;
+    unsigned char mahMask = 4;
+    unsigned char sthMask = 2;
+
+    unsigned char cnf = (dataItem.at(0) & cnfMask) >> 7;
+    unsigned char tre = (dataItem.at(0) & treMask) >> 6;
+    unsigned char cst = (dataItem.at(0) & cstMask) >> 5;
+    unsigned char cdm = (dataItem.at(0) & cdmMask) >> 3;
+    unsigned char mah = (dataItem.at(0) & mahMask) >> 2;
+    unsigned char sth = (dataItem.at(0) & sthMask) >> 1;
+
+    switch (cnf) {
+    case 0:
+        this->tsCnf = "Confirmed Track";
+        break;
+    case 1:
+        this->tsCnf = "Track in initiation phase";
+        break;
+    }
+
+    switch (tre) {
+    case 0:
+        this->tsTre = "Default";
+        break;
+    case 1:
+        this->tsTre = "Last report for a track";
+        break;
+    }
+
+    switch (cst) {
+    case 0:
+        this->tsCst = "Not Coasted";
+        break;
+    case 1:
+        this->tsCst = "Coasted";
+        break;
+    }
+
+    switch (cdm) {
+    case 0:
+        this->tsCdm = "Maintaining";
+        break;
+    case 1:
+        this->tsCdm = "Climbing";
+        break;
+    case 2:
+        this->tsCdm = "Descending";
+        break;
+    case 3:
+        this->tsCdm = "Invalid";
+        break;
+    }
+
+    switch (mah) {
+    case 0:
+        this->tsMah = "Default";
+        break;
+    case 1:
+        this->tsMah = "Horizontal Manoeuvre";
+        break;
+    }
+
+    switch (sth) {
+    case 0:
+        this->tsSth = "Measured Position";
+        break;
+    case 1:
+        this->tsSth = "Smoothed Position";
+        break;
+    }
+
+    if (dataItem.length() > 1) {
+
+        unsigned char ghoMask = 128;
+        unsigned char gho = (dataItem.at(1) & ghoMask) >> 7;
+
+        switch (gho) {
+        case 0:
+            this->tsGho = "Default";
+            break;
+        case 1:
+            this->tsGho = "Ghost Track";
+            break;
+        }
+    }
+}
+
+void Cat20::DecodeMode3ACodeInOctalRepresentation(QVector<unsigned char> &dataItem) {
+    unsigned char vMask = 0x80;
+    unsigned char gMask = 0x40;
+    unsigned char lMask = 0x20;
+
+    unsigned char validated = ((dataItem.at(0) & vMask) >> 6);
+    unsigned char garbled = ((dataItem.at(0) & gMask) >> 3);
+    unsigned char derived = ((dataItem.at(0) & lMask) >> 1);
+
+    switch (validated)
+    {
+    case 0:
+        this->M3AValidated = "Code Validated";
+        break;
+    case 1:
+        this->M3AValidated = "Code Not Validated";
+        break;
+    }
+    switch (garbled)
+    {
+    case 0:
+        this->M3AGarbled = "Default";
+        break;
+    case 1:
+        this->M3AGarbled = "Garbled Code";
+        break;
+    }
+    switch (derived)
+    {
+    case 0:
+        this->M3ADerivation = "Mode-3/A code derived from the reply of the transponder";
+        break;
+    case 1:
+        this->M3ADerivation = "Mode-3/A code not extracted during the last scan";
+        break;
+    }
+
+    unsigned char aMask = 0x0E;
+
+    unsigned char A = (dataItem.at(0) & aMask) >> 1;
+    unsigned char B4 = (dataItem.at(0) & 0x01) << 2;
+    unsigned char B21 = (dataItem.at(1) & 0xC0) >> 6;
+
+    unsigned char B = B4 | B21;
+
+    unsigned char C = (dataItem.at(1) & 0x38) >> 3;
+    unsigned char D = (dataItem.at(1) & 0x07);
+    int code = A * 1000 + B * 100 + C * 10 + D;
+    this->M3ACode = QString::number(code);
+}
+
+void Cat20::DecodeCalculatedTrackVelocityInCartesianCoordinates(QVector<unsigned char> &dataItem) {
+
+    QVector<unsigned char> xBytes = { dataItem.at(0), dataItem.at(1) };
+    double xResolution = 0.25;
+    this->cartesianVx = Utilities::DataTools::DecodeTwosComplementToDouble(xBytes, xResolution);
+    QVector<unsigned char> yBytes = { dataItem.at(2), dataItem.at(3) };
+    double yResolution = 0.25;
+    this->cartesianVy = Utilities::DataTools::DecodeTwosComplementToDouble(yBytes, yResolution);
+
+}
+
 void Cat20::DecodeFlightLevelInBinaryRepresentation(QVector<unsigned char> &dataItem) {}
 void Cat20::DecodeModeCCode(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeTargetAddress(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeTargetIdentification(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeMeasuredHeight(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeGeometricHeight(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeCalculatedAcceleration(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeVehicleFleetIdentification(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodePreProgrammedMessage(QVector<unsigned char> &dataItem) {}
+void Cat20::DecodeTargetAddress(QVector<unsigned char> &dataItem) {
+    QString buildAddress = "0x";
+
+    for (unsigned char byte : dataItem) {
+        short a = (short) byte;
+        QString str = QString("%1").arg(a,0,16);
+        buildAddress.append(str);
+    }
+    this->targetAddress = buildAddress;
+}
+
+void Cat20::DecodeTargetIdentification(QVector<unsigned char> &dataItem) {
+    unsigned char char1 = (dataItem.at(1) & 0xFC) >> 2;
+    unsigned char char2 = ((dataItem.at(1) & 0x03) << 4) | ((dataItem.at(2) & 0xF0) >> 4);
+    unsigned char char3 =((dataItem.at(3) & 0xC0) >> 6) | ((dataItem.at(2) & 0x0F) << 2);
+    unsigned char char4 =(dataItem.at(3) & 0x3F);
+    unsigned char char5 =(dataItem.at(4) & 0xFC) >> 2;
+    unsigned char char6 = ((dataItem.at(4) & 0x03) << 4) | ((dataItem.at(5) & 0xF0) >> 4);
+    unsigned char char7 = ((dataItem.at(6) & 0xC0) >> 6) | ((dataItem.at(5) & 0x0F) << 2);
+    unsigned char char8 = (dataItem.at(6) & 0x3F);
+    QVector<unsigned char> bytes = {char1,char2,char3,char4,char5,char6,char7,char8};
+    this->targetIdentification = Utilities::DataTools::GetAircraftIDFromBytes(bytes);
+}
+
+void Cat20::DecodeMeasuredHeight(QVector<unsigned char> &dataItem) {
+    double resolution = 6.25;
+    this->measuredHeight = Utilities::DataTools::DecodeTwosComplementToDouble(dataItem,resolution);
+}
+
+void Cat20::DecodeGeometricHeight(QVector<unsigned char> &dataItem) {
+    double resolution = 6.25;
+    this->geometricHeight = Utilities::DataTools::DecodeTwosComplementToDouble(dataItem,resolution);
+}
+
+void Cat20::DecodeCalculatedAcceleration(QVector<unsigned char> &dataItem) {
+    QVector<unsigned char> xBytes = { dataItem.at(0) };
+    double xResolution = 0.25;
+    this->cartesianAx = Utilities::DataTools::DecodeTwosComplementToDouble(xBytes, xResolution);
+    QVector<unsigned char> yBytes = { dataItem.at(1) };
+    double yResolution = 0.25;
+    this->cartesianAy = Utilities::DataTools::DecodeTwosComplementToDouble(yBytes, yResolution);
+}
+
+void Cat20::DecodeVehicleFleetIdentification(QVector<unsigned char> &dataItem) {
+    switch (dataItem.at(0)) {
+    case 0:
+        this->VehicleFleetIdentification= "Unknown";
+        break;
+    case 1:
+        this->VehicleFleetIdentification = "ATC equipment maintenance";
+        break;
+    case 2:
+        this->VehicleFleetIdentification = "Airport maintenance";
+        break;
+    case 3:
+        this->VehicleFleetIdentification = "Fire";
+        break;
+    case 4:
+        this->VehicleFleetIdentification = "Bird scarer";
+        break;
+    case 5:
+        this->VehicleFleetIdentification = "Snow plough";
+        break;
+    case 6:
+        this->VehicleFleetIdentification = "Runaway Sweeper";
+        break;
+    case 7:
+        this->VehicleFleetIdentification = "Emergency";
+        break;
+    case 8:
+        this->VehicleFleetIdentification = "Police";
+        break;
+    case 9:
+        this->VehicleFleetIdentification = "Bus";
+        break;
+    case 10:
+        this->VehicleFleetIdentification = "Tug(push/tow)";
+        break;
+    case 11:
+        this->VehicleFleetIdentification = "Grass cutter";
+        break;
+    case 12:
+        this->VehicleFleetIdentification = "Fuel";
+        break;
+    case 13:
+        this->VehicleFleetIdentification = "Baggage";
+        break;
+    case 14:
+        this->VehicleFleetIdentification = "Catering";
+        break;
+    case 15:
+        this->VehicleFleetIdentification = "Aircraft maintenance";
+        break;
+    case 16:
+        this->VehicleFleetIdentification = "Flyco (follow me)";
+        break;
+    }
+}
+
+void Cat20::DecodePreProgrammedMessage(QVector<unsigned char> &dataItem) {
+
+    unsigned char trMask = 128;
+    unsigned char msgMask = 127;
+
+    unsigned char trouble = (dataItem.at(0) & trMask) >> 7;
+    unsigned char msg = (dataItem.at(0) & msgMask);
+
+    switch (trouble) {
+    case 0:
+        this->ppmTrb = "Default";
+        break;
+    case 1:
+        this->ppmTrb = "In Trouble";
+        break;
+    }
+
+    switch (msg) {
+    case 1:
+        this->ppmMsg = "Towing Aircraft";
+        break;
+    case 2:
+        this->ppmMsg = "'Follow me' operation";
+        break;
+    case 3:
+        this->ppmMsg = "Runway check";
+        break;
+    case 4:
+        this->ppmMsg = "Emergency operation(fire,medical...)";
+        break;
+    case 5:
+        this->ppmMsg = "Work in progress(maintenance,birds scarer,sweepers...)";
+        break;
+    }
+}
+
 void Cat20::DecodePositionAccuracy(QVector<unsigned char> &dataItem) {}
 void Cat20::DecodeContributingDevices(QVector<unsigned char> &dataItem) {}
 void Cat20::DecodeBDSRegisterData(QVector<unsigned char> &dataItem) {}
