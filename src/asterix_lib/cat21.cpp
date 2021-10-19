@@ -710,6 +710,7 @@ void Cat21::DecodeGeometricHeight(QVector<unsigned char> &dataItem) {
     this->geometricHeight = Utilities::DataTools::DecodeTwosComplementToDouble(dataItem, resolution);
 }
 void Cat21::DecodeQualityIndicators(QVector<unsigned char> &dataItem){}
+
 void Cat21::DecodeMOPSVersion(QVector<unsigned char> &dataItem){
 
     char vnsMask = 0b01000000;
@@ -877,11 +878,14 @@ void Cat21::DecodeBarometricVerticalRate(QVector<unsigned char> &dataItem) {
     unsigned char rangeMask = 128;
     unsigned char valueMask = 127;
 
+    unsigned char maskForFunction = 0b00111111;
+    int valueForLimit = 64;
+
     unsigned char units = (dataItem.at(0) & rangeMask) >> 7;
     unsigned char firstByte = (dataItem.at(0) & valueMask);
     QVector<unsigned char> bytes = {firstByte, dataItem.at(1)};
     double resolution = 6.25;
-    this->bvrBarometricVerticalRate = Utilities::DataTools::DecodeTwosComplementToDouble(bytes,resolution);
+    this->bvrBarometricVerticalRate = Utilities::DataTools::DecodeSpecialTwosComplement(bytes,resolution,maskForFunction, valueForLimit);
 
     switch (units) {
     case 0:
@@ -896,11 +900,14 @@ void Cat21::DecodeGeometricVerticalRate(QVector<unsigned char> &dataItem){
     unsigned char rangeMask = 128;
     unsigned char valueMask = 127;
 
+    unsigned char maskForFunction = 0b00111111;
+    int valueForLimit = 64;
+
     unsigned char units = (dataItem.at(0) & rangeMask) >> 7;
     unsigned char firstByte = (dataItem.at(0) & valueMask);
     QVector<unsigned char> bytes = {firstByte, dataItem.at(1)};
     double resolution = 6.25;
-    this->gvrGeometricVerticalRate = Utilities::DataTools::DecodeTwosComplementToDouble(bytes,resolution);
+    this->gvrGeometricVerticalRate = Utilities::DataTools::DecodeSpecialTwosComplement(bytes,resolution,maskForFunction, valueForLimit);
 
     switch (units) {
     case 0:
@@ -936,7 +943,15 @@ void Cat21::DecodeAirborneGroundVector(QVector<unsigned char> &dataItem){
 
 }
 void Cat21::DecodeTrackAngleRate(QVector<unsigned char> &dataItem) {
+    unsigned char valueMask = 127;
 
+    unsigned char maskForFunction = 0b00000001;
+    int valueForLimit = 2;
+
+    unsigned char firstByte = (dataItem.at(0) & valueMask);
+    QVector<unsigned char> bytes = {firstByte, dataItem.at(1)};
+    double resolution = 1.0/32.0;
+    this->trackAngleRate = Utilities::DataTools::DecodeSpecialTwosComplement(bytes,resolution,maskForFunction, valueForLimit);
 }
 
 void Cat21::DecodeTimeOfReportTransmission(QVector<unsigned char> &dataItem) {
@@ -1069,8 +1084,92 @@ void Cat21::DecodeMetInformation(QVector<unsigned char> &dataItem) {
     }
 }
 
-void Cat21::DecodeSelectedAltitude(QVector<unsigned char> &dataItem) {}
-void Cat21::DecodeFinalStateSelectedAltitude(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeSelectedAltitude(QVector<unsigned char> &dataItem) {
+
+    unsigned char sasMask = 128;
+    unsigned char sourceMask = 96;
+
+    unsigned char sas = (dataItem.at(0) & sasMask) >> 7;
+    unsigned char source = (dataItem.at(0) & sourceMask) >> 5;
+
+
+    unsigned char valueMask = 0b00011111;
+
+    unsigned char maskForFunction = 0b00001111;
+    int valueForLimit = 16;
+
+    unsigned char firstByte = (dataItem.at(0) & valueMask);
+    QVector<unsigned char> bytes = {firstByte, dataItem.at(1)};
+    double resolution = 25;
+    this->saAltitude = Utilities::DataTools::DecodeSpecialTwosComplement(bytes,resolution,maskForFunction, valueForLimit);
+
+    switch (sas) {
+    case 0:
+        this->saSas = "No source information provided";
+    case 1:
+        this->saSas = "Source information provided";
+    break;
+    }
+
+    switch (source) {
+    case 0:
+        this->saSource = "Unknown";
+        break;
+    case 1:
+        this->saSource = "Aircraft Altitude (Holding Altitude)";
+        break;
+    case 2:
+        this->saSource = "MCP/FCU Selected Altitude";
+        break;
+    case 3:
+        this->saSource = "FMS Selected Altitude";
+        break;
+    }
+}
+
+void Cat21::DecodeFinalStateSelectedAltitude(QVector<unsigned char> &dataItem) {
+
+    unsigned char mvMask = 128;
+    unsigned char ahMask = 64;
+    unsigned char amMask = 32;
+
+    unsigned char mv = (dataItem.at(0) & mvMask) >> 7;
+    unsigned char ah = (dataItem.at(0) & ahMask) >> 6;
+    unsigned char am = (dataItem.at(0) & amMask) >> 5;
+
+    unsigned char valueMask = 0b00011111;
+
+    unsigned char maskForFunction = 0b00001111;
+    int valueForLimit = 16;
+
+    unsigned char firstByte = (dataItem.at(0) & valueMask);
+    QVector<unsigned char> bytes = {firstByte, dataItem.at(1)};
+    double resolution = 25;
+    this->fssaAltitude = Utilities::DataTools::DecodeSpecialTwosComplement(bytes,resolution,maskForFunction, valueForLimit);
+
+    switch (mv) {
+    case 0:
+        this->fssaMv = "Not active or unknown";
+    case 1:
+        this->fssaMv = "Active";
+    break;
+    }
+    switch (ah) {
+    case 0:
+        this->fssaAh = "Not active or unknown";
+    case 1:
+        this->fssaAh = "Active";
+    break;
+    }
+    switch (am) {
+    case 0:
+        this->fssaAm = "Not active or unknown";
+    case 1:
+        this->fssaAm = "Active";
+    break;
+    }
+}
+
 void Cat21::DecodeTrajectoryIntent(QVector<unsigned char> &dataItem) {}
 
 void Cat21::DecodeServiceManagement(QVector<unsigned char> &dataItem) {

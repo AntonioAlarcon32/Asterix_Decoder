@@ -600,7 +600,41 @@ void Cat20::DecodeCalculatedTrackVelocityInCartesianCoordinates(QVector<unsigned
 
 }
 
-void Cat20::DecodeFlightLevelInBinaryRepresentation(QVector<unsigned char> &dataItem) {}
+void Cat20::DecodeFlightLevelInBinaryRepresentation(QVector<unsigned char> &dataItem) {
+    unsigned char valueMask = 0b00111111;
+
+    unsigned char maskForFunction = 0b00011111;
+    int valueForLimit = 32;
+
+    unsigned char firstByte = (dataItem.at(0) & valueMask);
+    QVector<unsigned char> bytes = {firstByte, dataItem.at(1)};
+    double resolution = 0.25;
+    this->flFlightLevel = Utilities::DataTools::DecodeSpecialTwosComplement(bytes,resolution,maskForFunction, valueForLimit);
+
+    unsigned char vMask = 128;
+    unsigned char gMask = 64;
+    unsigned char validated = (dataItem.at(0) & vMask) >> 7;
+    unsigned char garbled = (dataItem.at(0) & gMask) >> 6;
+
+    switch (validated) {
+    case 0:
+        this->flValidated = "Code Validated";
+        break;
+    case 1:
+        this->flValidated = "Code not validated";
+        break;
+    }
+
+    switch (garbled) {
+    case 0:
+        this->flGarbled = "Default";
+        break;
+    case 1:
+        this->flGarbled = "Garbled Code";
+        break;
+    }
+}
+
 void Cat20::DecodeModeCCode(QVector<unsigned char> &dataItem) {}
 void Cat20::DecodeTargetAddress(QVector<unsigned char> &dataItem) {
     QString buildAddress = "0x";

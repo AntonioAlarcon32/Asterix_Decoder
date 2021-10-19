@@ -13,6 +13,7 @@ namespace Utilities
         static QVector<unsigned char> GetRepetitiveDataItem(QVector<unsigned char> &message,int factor);
         static double DecodeUnsignedBytesToDouble(QVector<unsigned char> bytes, double resolution);
         static double DecodeTwosComplementToDouble(QVector<unsigned char> bytes, double resolution);
+        static double DecodeSpecialTwosComplement(QVector<unsigned char> bytes, double resolution, unsigned char  mask, int signIndicator);
         static QString GetAircraftIDFromBytes(QVector<unsigned char> bytes);
     };
 };

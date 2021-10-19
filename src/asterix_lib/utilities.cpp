@@ -214,4 +214,37 @@ QString DataTools::GetAircraftIDFromBytes(QVector<unsigned char> bytes) {
     return result;
 }
 
+double DataTools::DecodeSpecialTwosComplement(QVector<unsigned char> bytes, double resolution, unsigned char  mask, int signIndicator) {
+
+    bool negative = false;
+    if ((unsigned char)bytes.at(0) >= signIndicator) {
+        negative = true;
+    }
+    unsigned char noSign = (unsigned char)(bytes.at(0) & mask);
+    double bytesValue = 0;
+    double multiplier = 1;
+
+    for (int c = bytes.length() - 1; c >= 0; c--)
+    {
+        if (c == 0)
+        {
+            bytesValue += noSign * multiplier;
+            break;
+        }
+        bytesValue += ((unsigned char)bytes.at(c) * multiplier);
+        multiplier = multiplier * pow(2, 8);
+    }
+
+    int extraDigits = log2(signIndicator);
+
+    int totalDigits = (bytes.length()-1) * 8 + extraDigits;
+
+    if (negative) {
+        bytesValue = bytesValue - pow(2, totalDigits);
+    }
+
+    return bytesValue * resolution;
+
+}
+
 }
