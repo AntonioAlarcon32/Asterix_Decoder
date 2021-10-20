@@ -183,7 +183,7 @@ void Cat20::FullDecode() {
             this->DecodePreProgrammedMessage(dataItem);
         }
         if ((this->fspec.at(2) & 0x08) == 0x08) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data);
+            QVector<unsigned char> dataItem = this->GetPositionAccuracyDataItem();
             this->DecodePositionAccuracy(dataItem);
         }
         if ((this->fspec.at(2) & 0x04) == 0x04) {
@@ -1009,4 +1009,23 @@ void Cat20::DecodeMode2CodeInOctalRepresentation(QVector<unsigned char> &dataIte
     unsigned char D = (dataItem.at(1) & 0x07);
     int code = A * 1000 + B * 100 + C * 10 + D;
     this->M2Code = QString::number(code);
+}
+
+QVector<unsigned char> Cat20::GetPositionAccuracyDataItem() {
+    QVector<unsigned char> dataItemStatus = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+    int subItemsLenght = 0;
+
+    if ((dataItemStatus.at(0) & 128) != 0) {
+        subItemsLenght += 6;
+    }
+    if ((dataItemStatus.at(0) & 64) != 0) {
+        subItemsLenght += 6;
+    }
+    if ((dataItemStatus.at(0) & 32) != 0) {
+        subItemsLenght += 2;
+    }
+
+    QVector<unsigned char> subDataItems = Utilities::DataTools::GetFixedLengthDataItem(this->data,subItemsLenght);
+    dataItemStatus.append(subDataItems);
+    return dataItemStatus;
 }

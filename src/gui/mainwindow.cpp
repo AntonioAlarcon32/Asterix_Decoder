@@ -28,5 +28,6 @@ void MainWindow::on_actionOpen_File_triggered()
 {
     QString filePath = QFileDialog::getOpenFileName(this,tr("Open Asterix File"));
     astFile->readFile(filePath);
+    ui->loadedPackets->setText("Loaded " + QString::number(astFile->numberOfPackets) + " packets");
 }
 

@@ -13,19 +13,19 @@ void DataBlock::SetLength(int len) {
     this->length = len;
 };
 
-QVector<unsigned char> DataBlock::GetData() {
+QByteArray DataBlock::GetData() {
     return this->data;
 }
 
-void DataBlock::SetData(QVector<unsigned char> data) {
+void DataBlock::SetData(QByteArray data) {
     this->data = data;
 }
 
 void DataBlock::DecodeFSPEC() {
     while((data[0] & 1) != 0) {
         this->fspec.append(data[0]);
-        data.remove(0);
+        data.remove(0,1);
     }
     this->fspec.append(data[0]);
-    data.remove(0);
+    data.remove(0,1);
 }

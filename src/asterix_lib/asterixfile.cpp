@@ -6,11 +6,12 @@
 AsterixFile::AsterixFile()
 {
     dataBlocks = new QVector<DataBlock*>();
-
 }
 
 
 void AsterixFile::readFile(QString path) {
+
+    dataBlocks->clear();
 
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)) return;
@@ -23,15 +24,12 @@ void AsterixFile::readFile(QString path) {
 
         int category = fileBinary[offset];
         int length =  fileBinary[offset + 2] << fileBinary[offset + 1] ;
-        QVector<unsigned char> data(QVector<unsigned char>(length - 3));
 
         if (category == 10) {
 
             Cat10 *cat10Block = new Cat10();
             cat10Block->SetLength(length);
-            for (int i = 3; i < length; i++) {
-                data[i-3] = fileBinary.at(offset + i);
-            }
+            QByteArray data = fileBinary.mid(offset + 3,length - 3);
             cat10Block->SetData(data);
             cat10Block->DecodeFSPEC();
             cat10Block->FullDecode();
@@ -41,9 +39,7 @@ void AsterixFile::readFile(QString path) {
         else if (category == 19) {
             Cat19 *cat19Block = new Cat19();
             cat19Block->SetLength(length);
-            for (int i = 3; i < length; i++) {
-                data[i-3] = fileBinary.at(offset + i);
-            }
+            QByteArray data = fileBinary.mid(offset + 3,length - 3);
             cat19Block->SetData(data);
             cat19Block->DecodeFSPEC();
             cat19Block->FullDecode();
@@ -54,9 +50,7 @@ void AsterixFile::readFile(QString path) {
         else if (category == 20) {
             Cat20 *cat20Block = new Cat20();
             cat20Block->SetLength(length);
-            for (int i = 3; i < length; i++) {
-                data[i-3] = fileBinary.at(offset + i);
-            }
+            QByteArray data = fileBinary.mid(offset + 3,length - 3);
             cat20Block->SetData(data);
             cat20Block->DecodeFSPEC();
             cat20Block->FullDecode();
@@ -67,9 +61,7 @@ void AsterixFile::readFile(QString path) {
         else if (category == 21) {
             Cat21 *cat21Block = new Cat21();
             cat21Block->SetLength(length);
-            for (int i = 3; i < length; i++) {
-                data[i-3] = fileBinary.at(offset + i);
-            }
+            QByteArray data = fileBinary.mid(offset + 3,length - 3);
             cat21Block->SetData(data);
             cat21Block->DecodeFSPEC();
             cat21Block->FullDecode();
@@ -78,9 +70,11 @@ void AsterixFile::readFile(QString path) {
 
         //Cat10 *inten = static_cast<Cat10*>(dataBlocks->at(0));
         //Cat10 *inten2 = dynamic_cast<Cat10*>(dataBlocks->at(0));
+
         numOfPackets++;
         offset += length;
     }
      qDebug() << "Loading took" << testTime->elapsed() << "milliseconds";
      qDebug() << "Loaded " << numOfPackets << " packets";
+     this->numberOfPackets = numOfPackets;
 }

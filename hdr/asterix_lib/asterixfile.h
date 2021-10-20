@@ -19,6 +19,7 @@ public:
     AsterixFile();
 
     QVector<DataBlock *> *dataBlocks;
+    int numberOfPackets;
     void readFile(QString path);
     void decodeFlights();
 

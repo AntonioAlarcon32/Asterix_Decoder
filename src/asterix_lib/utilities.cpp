@@ -4,46 +4,46 @@
 namespace Utilities {
 
 
-QVector<unsigned char> DataTools::GetFixedLengthDataItem(QVector<unsigned char> &message, int length) {
+QVector<unsigned char> DataTools::GetFixedLengthDataItem(QByteArray &message, int length) {
 
     int i = 0;
     QVector<unsigned char> dataItem(length);
 
     while (i < length) {
         dataItem[i] = message.at(0);
-        message.remove(0);
+        message.remove(0,1);
         i++;
     }
     return dataItem;
 }
 
-QVector<unsigned char> DataTools::GetVariableLengthDataItem(QVector<unsigned char> &message) {
+QVector<unsigned char> DataTools::GetVariableLengthDataItem(QByteArray &message) {
     int i = 0;
     QVector<unsigned char> dataItem;
 
     dataItem.append(message.at(0));
-    message.remove(0);
+    message.remove(0,1);
 
     while ((dataItem.at(i) & 0x01) == 1) {
         dataItem.append(message.at(0));
-        message.remove(0);
+        message.remove(0,1);
         i++;
     }
     return dataItem;
 }
 
-QVector<unsigned char> DataTools::GetRepetitiveDataItem(QVector<unsigned char> &message, int factor) {
+QVector<unsigned char> DataTools::GetRepetitiveDataItem(QByteArray &message, int factor) {
 
     QVector<unsigned char> dataItem;
     short repFactor = (short) message.at(0);
     dataItem.append(message.at(0));
-    message.remove(0);
+    message.remove(0,1);
 
     int i = 0;
 
     while (i < (repFactor * factor)) {
         dataItem.append(message.at(0));
-        message.remove(0);
+        message.remove(0,1);
         i++;
     }
     return dataItem;

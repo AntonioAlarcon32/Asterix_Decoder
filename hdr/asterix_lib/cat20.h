@@ -136,6 +136,9 @@ public:
         void DecodeMode1CodeInOctalRepresentation(QVector<unsigned char> &dataItem);
         void DecodeMode2CodeInOctalRepresentation(QVector<unsigned char> &dataItem);
 
+private:
+        QVector<unsigned char> GetPositionAccuracyDataItem();
+
 };
 
 #endif // CAT20_H

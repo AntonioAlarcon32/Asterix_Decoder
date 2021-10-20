@@ -10,15 +10,15 @@ public:
 
     int category;
     int length;
-    QVector<unsigned char> data;
+    QByteArray data;
     QVector<unsigned char> fspec;
 
     void SetLength(int len);
     int GetLength();
     int GetCategory();
-    void SetData(QVector<unsigned char> data);
+    void SetData(QByteArray data);
     void DecodeFSPEC();
-    QVector<unsigned char> GetData();
+    QByteArray GetData();
     //virtual QString GetTypeOfMessage() = 0;
     virtual void FullDecode() = 0;
 
