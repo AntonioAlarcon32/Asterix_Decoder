@@ -72,7 +72,15 @@ Cat20::Cat20()
     this->ppmTrb = "N/A";
     this->ppmMsg = "N/A";
 
-    this->positionAccuracy = "N/A"; //REVISA =;
+    this->paDopX = nanf("");
+    this->paDopY = nanf("");
+    this->paDopXY = nanf("");
+
+    this->paSigmaX = nanf("");
+    this->paSigmaY = nanf("");
+    this->paSigmaXY = nanf("");
+
+    this->paSigmaGh = nanf("");
 
     this->contributingDevices = "N/A"; //REVISA ;
 
@@ -636,6 +644,7 @@ void Cat20::DecodeFlightLevelInBinaryRepresentation(QVector<unsigned char> &data
 }
 
 void Cat20::DecodeModeCCode(QVector<unsigned char> &dataItem) {}
+
 void Cat20::DecodeTargetAddress(QVector<unsigned char> &dataItem) {
     QString buildAddress = "0x";
 
@@ -771,7 +780,42 @@ void Cat20::DecodePreProgrammedMessage(QVector<unsigned char> &dataItem) {
     }
 }
 
-void Cat20::DecodePositionAccuracy(QVector<unsigned char> &dataItem) {}
+void Cat20::DecodePositionAccuracy(QVector<unsigned char> &dataItem) {
+
+
+    if ((dataItem.at(0) & 128) != 0) {
+
+        QVector<unsigned char> xBytes = { dataItem.at(1), dataItem.at(2) };
+        QVector<unsigned char> yBytes = { dataItem.at(3), dataItem.at(4) };
+        QVector<unsigned char> xyBytes = { dataItem.at(5), dataItem.at(6) };
+
+        dataItem.remove(1,6);
+
+        this->paDopX = Utilities::DataTools::DecodeUnsignedBytesToDouble(xBytes, 0.25);
+        this->paDopY = Utilities::DataTools::DecodeUnsignedBytesToDouble(yBytes, 0.25);
+        this->paDopXY = Utilities::DataTools::DecodeUnsignedBytesToDouble(xyBytes, 0.25);
+    }
+
+    if ((dataItem.at(0) & 64) != 0) {
+
+        QVector<unsigned char> xBytes = { dataItem.at(1), dataItem.at(2) };
+        QVector<unsigned char> yBytes = { dataItem.at(3), dataItem.at(4) };
+        QVector<unsigned char> xyBytes = { dataItem.at(5), dataItem.at(6) };
+
+        dataItem.remove(1,6);
+
+        this->paSigmaX = Utilities::DataTools::DecodeUnsignedBytesToDouble(xBytes, 0.25);
+        this->paSigmaY = Utilities::DataTools::DecodeUnsignedBytesToDouble(yBytes, 0.25);
+        this->paSigmaXY = Utilities::DataTools::DecodeUnsignedBytesToDouble(xyBytes, 0.25);
+    }
+
+    if ((dataItem.at(0) & 32) != 0) {
+
+        QVector<unsigned char> ghBytes = { dataItem.at(1), dataItem.at(2) };
+        this->paSigmaGh = Utilities::DataTools::DecodeUnsignedBytesToDouble(ghBytes, 0.5);
+    }
+}
+
 void Cat20::DecodeContributingDevices(QVector<unsigned char> &dataItem) {}
 void Cat20::DecodeBDSRegisterData(QVector<unsigned char> &dataItem) {}
 
@@ -882,6 +926,7 @@ void Cat20::DecodeCommsACASCapabilityAndFlightStatus(QVector<unsigned char> &dat
 }
 
 void Cat20::DecodeACASResolutionAdvisoryReport(QVector<unsigned char> &dataItem) {}
+
 void Cat20::DecodeWarningErrorConditions(QVector<unsigned char> &dataItem) {
 
     for (unsigned char byte : dataItem) {

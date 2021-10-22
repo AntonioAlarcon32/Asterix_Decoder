@@ -77,7 +77,16 @@ public:
     QString ppmTrb;
     QString ppmMsg;
 
-    QString positionAccuracy; //REVISAR
+    float paDopX;
+    float paDopY;
+    float paDopXY;
+
+    float paSigmaX;
+    float paSigmaY;
+    float paSigmaXY;
+
+    float paSigmaGh;
+
 
     QString contributingDevices; //REVISAR
 
