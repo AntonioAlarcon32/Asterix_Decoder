@@ -50,11 +50,11 @@ Cat21::Cat21()
 
     this->timeOfMessageReceptionOfPosition = QTime();
 
-    this->timeOfMessageReceptionOfPositionHighRes = QTime();
+    this->timeOfMessageReceptionOfPositionHighRes = nan("");
 
     this->timeOfMessageReceptionOfVelocity = QTime();
 
-    this->timeOfMessageReceptionOfVelocityHighRes = QTime();
+    this->timeOfMessageReceptionOfVelocityHighRes = nan("");
 
     this->geometricHeight = nan("");
 
@@ -137,6 +137,9 @@ Cat21::Cat21()
     this->sccLengthPlusWidth = "N/A";
 
     this->messageAmplitude = 1;
+
+    this->modeSMBData = QVector<QByteArray>();
+    this->modeSStoreAddress = QVector<unsigned char>();
 
     this->ararTyp = "N/A";
     this->ararStyp = "N/A";
@@ -325,7 +328,7 @@ void Cat21::FullDecode() {
             this->DecodeFinalStateSelectedAltitude(dataItem);
         }
         if ((this->fspec.at(4) & 0x04) == 0x04) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data);
+            QVector<unsigned char> dataItem = this->GetTrajectoryIntentDataItem();
             this->DecodeTrajectoryIntent(dataItem);
         }
         if ((this->fspec.at(4) & 0x02) == 0x02) {
@@ -695,7 +698,14 @@ void Cat21::DecodeTimeOfMessageReceptionOfPosition(QVector<unsigned char> &dataI
     int mseconds = (int) seconds * 1000;
     this->timeOfMessageReceptionOfPosition = QTime::fromMSecsSinceStartOfDay(mseconds);
 }
-void Cat21::DecodeTimeOfMessageReceptionOfPositionHighPrecision(QVector<unsigned char> &dataItem){}
+void Cat21::DecodeTimeOfMessageReceptionOfPositionHighPrecision(QVector<unsigned char> &dataItem){
+
+    unsigned char firstByte = (dataItem.at(0) & 0b00111111);
+    QVector<unsigned char> bytes = {firstByte, dataItem.at(1), dataItem.at(2), dataItem.at(3)};
+    double timeResolution = pow(2,-30);
+    this->timeOfMessageReceptionOfPositionHighRes = Utilities::DataTools::DecodeUnsignedBytesToDouble(bytes,timeResolution);
+
+}
 
 void Cat21::DecodeTimeOfMessageReceptionOfVelocity(QVector<unsigned char> &dataItem){
     double timeResolution = pow(2,-7);
@@ -703,7 +713,13 @@ void Cat21::DecodeTimeOfMessageReceptionOfVelocity(QVector<unsigned char> &dataI
     int mseconds = (int) seconds * 1000;
     this->timeOfMessageReceptionOfVelocity = QTime::fromMSecsSinceStartOfDay(mseconds);
 }
-void Cat21::DecodeTimeOfMessageReceptionOfVelocityHighPrecision(QVector<unsigned char> &dataItem){}
+void Cat21::DecodeTimeOfMessageReceptionOfVelocityHighPrecision(QVector<unsigned char> &dataItem){
+
+    unsigned char firstByte = (dataItem.at(0) & 0b00111111);
+    QVector<unsigned char> bytes = {firstByte, dataItem.at(1), dataItem.at(2), dataItem.at(3)};
+    double timeResolution = pow(2,-30);
+    this->timeOfMessageReceptionOfVelocityHighRes = Utilities::DataTools::DecodeUnsignedBytesToDouble(bytes,timeResolution);
+}
 
 void Cat21::DecodeGeometricHeight(QVector<unsigned char> &dataItem) {
     double resolution = 6.25;
@@ -1392,7 +1408,26 @@ void Cat21::DecodeSurfaceCapabilitiesAndCharacteristics(QVector<unsigned char> &
 void Cat21::DecodeMessageAmplitude(QVector<unsigned char> &dataItem) {
     this->messageAmplitude = (char) dataItem.at(0);
 }
-void Cat21::DecodeModeSMBData(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeModeSMBData(QVector<unsigned char> &dataItem) {
+    int c = 0;
+    unsigned char repetitions = dataItem.at(0);
+    dataItem.removeFirst();
+    while (c < repetitions) {
+        int i = 0;
+        QByteArray data;
+        data.resize(7);
+        while (i < 7) {
+            data[i] = dataItem.at(0);
+            dataItem.removeFirst();
+            i++;
+        }
+        this->modeSMBData.append(data);
+        this->modeSStoreAddress.append(dataItem.at(0));
+        dataItem.removeFirst();
+        c++;
+    }
+}
+
 void Cat21::DecodeACASResolutionAdvisoryReport(QVector<unsigned char> &dataItem) {}
 void Cat21::DecodeReceiverID(QVector<unsigned char> &dataItem) {
     this->receiverId = dataItem.at(0);
@@ -1549,5 +1584,19 @@ QVector<unsigned char> Cat21::GetMetInformationDataItem() {
     QVector<unsigned char> subDataItems = Utilities::DataTools::GetFixedLengthDataItem(this->data,subItemsLenght);
     dataItemStatus.append(subDataItems);
     return dataItemStatus;
+}
+
+QVector<unsigned char> Cat21::GetTrajectoryIntentDataItem() {
+    QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+
+    if ((dataItem.at(0) & 128) != 0 ) {
+        QVector<unsigned char> subDataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+        dataItem.append(subDataItem);
+    }
+    if ((dataItem.at(0) & 64) != 0 ) {
+        QVector<unsigned char> subDataItem = Utilities::DataTools::GetRepetitiveDataItem(this->data,15);
+        dataItem.append(subDataItem);
+    }
+    return dataItem;
 }
 

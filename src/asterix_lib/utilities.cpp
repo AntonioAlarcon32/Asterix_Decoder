@@ -9,12 +9,19 @@ QVector<unsigned char> DataTools::GetFixedLengthDataItem(QByteArray &message, in
     int i = 0;
     QVector<unsigned char> dataItem(length);
 
-    while (i < length) {
-        dataItem[i] = message.at(0);
-        message.remove(0,1);
-        i++;
+    if (message.length() >= length) {
+
+        while (i < length) {
+            dataItem[i] = message.at(0);
+            message.remove(0,1);
+            i++;
+        }
+        return dataItem;
     }
-    return dataItem;
+
+    else {
+        throw -1;
+    }
 }
 
 QVector<unsigned char> DataTools::GetVariableLengthDataItem(QByteArray &message) {
@@ -41,12 +48,19 @@ QVector<unsigned char> DataTools::GetRepetitiveDataItem(QByteArray &message, int
 
     int i = 0;
 
-    while (i < (repFactor * factor)) {
-        dataItem.append(message.at(0));
-        message.remove(0,1);
-        i++;
+    if (factor * repFactor <= message.length()) {
+
+        while (i < (repFactor * factor)) {
+            dataItem.append(message.at(0));
+            message.remove(0,1);
+            i++;
+        }
+        return dataItem;
     }
-    return dataItem;
+
+    else {
+        throw -1;
+    }
 }
 
 double DataTools::DecodeUnsignedBytesToDouble(QVector<unsigned char> bytes, double resolution) {

@@ -84,7 +84,8 @@ Cat20::Cat20()
 
     this->contributingDevices = "N/A"; //REVISA ;
 
-    this->bdsRegisterData = "N/A"; //REVISA ;
+    this->modeSMBData = QVector<QByteArray>();
+    this->modeSStoreAddress = QVector<unsigned char>();
 
     this->cacfsCom = "N/A";
     this->cacfsStat = "N/A";
@@ -816,8 +817,40 @@ void Cat20::DecodePositionAccuracy(QVector<unsigned char> &dataItem) {
     }
 }
 
-void Cat20::DecodeContributingDevices(QVector<unsigned char> &dataItem) {}
-void Cat20::DecodeBDSRegisterData(QVector<unsigned char> &dataItem) {}
+void Cat20::DecodeContributingDevices(QVector<unsigned char> &dataItem) {
+    QString devices;
+    int numberOfDevice = 1;
+    dataItem.removeFirst();
+
+    for(unsigned char byte : dataItem) {
+        if (byte != 0) {
+            devices.append(QString::number(numberOfDevice) + ",");
+        }
+        numberOfDevice++;
+    }
+    devices.remove(devices.length()-1);
+    this->contributingDevices = devices;
+}
+
+void Cat20::DecodeBDSRegisterData(QVector<unsigned char> &dataItem) {
+    int c = 0;
+    unsigned char repetitions = dataItem.at(0);
+    dataItem.removeFirst();
+    while (c < repetitions) {
+        int i = 0;
+        QByteArray data;
+        data.resize(7);
+        while (i < 7) {
+            data[i] = dataItem.at(0);
+            dataItem.removeFirst();
+            i++;
+        }
+        this->modeSMBData.append(data);
+        this->modeSStoreAddress.append(dataItem.at(0));
+        dataItem.removeFirst();
+        c++;
+    }
+}
 
 void Cat20::DecodeCommsACASCapabilityAndFlightStatus(QVector<unsigned char> &dataItem) {
 
@@ -1002,6 +1035,7 @@ void Cat20::DecodeMode1CodeInOctalRepresentation(QVector<unsigned char> &dataIte
         this->M1Derivation = "Mode-2 code not extracted during the last scan";
         break;
     }
+
 
 }
 

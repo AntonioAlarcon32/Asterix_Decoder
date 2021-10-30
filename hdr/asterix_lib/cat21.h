@@ -54,11 +54,11 @@ public:
 
     QTime timeOfMessageReceptionOfPosition;
 
-    QTime timeOfMessageReceptionOfPositionHighRes;
+    double timeOfMessageReceptionOfPositionHighRes;
 
     QTime timeOfMessageReceptionOfVelocity;
 
-    QTime timeOfMessageReceptionOfVelocityHighRes;
+    double timeOfMessageReceptionOfVelocityHighRes;
 
     double geometricHeight;
 
@@ -141,6 +141,9 @@ public:
     QString sccLengthPlusWidth;
 
     char messageAmplitude;
+
+    QVector<QByteArray> modeSMBData;
+    QVector<unsigned char> modeSStoreAddress;
 
     QString ararTyp;
     QString ararStyp;
@@ -227,6 +230,7 @@ public:
 private:
     QVector<unsigned char> GetDataAgesDataItem();
     QVector<unsigned char> GetMetInformationDataItem();
+    QVector<unsigned char> GetTrajectoryIntentDataItem();
 };
 
 #endif // CAT21_H

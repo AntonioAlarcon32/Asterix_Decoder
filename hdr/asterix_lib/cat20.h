@@ -90,7 +90,8 @@ public:
 
     QString contributingDevices; //REVISAR
 
-    QString bdsRegisterData; //REVISAR
+    QVector<QByteArray> modeSMBData;
+    QVector<unsigned char> modeSStoreAddress;
 
     QString cacfsCom;
     QString cacfsStat;
