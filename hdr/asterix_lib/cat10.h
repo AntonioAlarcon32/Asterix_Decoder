@@ -84,6 +84,9 @@ public:
     QString ssDIV;
     QString ssTTF;
 
+    QVector<QByteArray> modeSMBData;
+    QVector<unsigned char> modeSStoreAddress;
+
     QString vehicleFleetId;
 
     double measuredHeight;
@@ -94,6 +97,9 @@ public:
     double standardDeviationX;
     double standardDeviationY;
     double standardDeviationXY;
+
+    QVector<unsigned char> presenceDRho;
+    QVector<unsigned char> presenceDTheta;
 
     double amplitudeOfPrimaryPlot;
 

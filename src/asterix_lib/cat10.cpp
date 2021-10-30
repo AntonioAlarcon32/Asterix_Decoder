@@ -81,6 +81,9 @@ Cat10::Cat10()
 
     this->vehicleFleetId= "N/A";
 
+    this->modeSMBData = QVector<QByteArray>();
+    this->modeSStoreAddress = QVector<unsigned char>();
+
     this->measuredHeight = nan("");
 
     this->ppmTRB = "N/A";
@@ -91,9 +94,8 @@ Cat10::Cat10()
     this->standardDeviationXY = nan("");
     this->amplitudeOfPrimaryPlot= nan("");
 
-
-    //this->ModeSMBData = new List<byte[]>();
-    //this->ModeSMBCodes = new List<byte[]>();
+    this->presenceDRho = QVector<unsigned char>();
+    this->presenceDTheta = QVector<unsigned char>();
 }
 
 void Cat10::FullDecode() {
@@ -705,9 +707,23 @@ void Cat10::DecodeTargetIdentification(QVector<unsigned char> &dataItem) {
 }
 
 void Cat10::DecodeModeSMBData(QVector<unsigned char> &dataItem) {
-
-
-
+    int c = 0;
+    unsigned char repetitions = dataItem.at(0);
+    dataItem.removeFirst();
+    while (c < repetitions) {
+        int i = 0;
+        QByteArray data;
+        data.resize(7);
+        while (i < 7) {
+            data[i] = dataItem.at(0);
+            dataItem.removeFirst();
+            i++;
+        }
+        this->modeSMBData.append(data);
+        this->modeSStoreAddress.append(dataItem.at(0));
+        dataItem.removeFirst();
+        c++;
+    }
 }
 
 void Cat10::DecodeVehicleFleetIdentification(QVector<unsigned char> &dataItem) {
@@ -942,7 +958,16 @@ void Cat10::DecodeStandardDeviationOfPosition(QVector<unsigned char> &dataItem) 
 }
 
 void Cat10::DecodePresence(QVector<unsigned char> &dataItem) {
+    int rep = dataItem.at(0);
+    dataItem.remove(0);
 
+    int c = 0;
+
+    while (c <= rep) {
+        this->presenceDRho.append(dataItem.at(c*2));
+        this->presenceDTheta.append(dataItem.at(c*2+1));
+        c++;
+    }
 }
 
 void Cat10::DecodeAmplitudeOfPrimaryPlot(QVector<unsigned char> &dataItem) {
@@ -960,8 +985,5 @@ void Cat10::DecodeCalculatedAcceleration(QVector<unsigned char> &dataItem) {
     this->calcAccelerationY = Utilities::DataTools::DecodeTwosComplementToDouble(yBytes, yResolution);
 }
 
-void Cat10::DecodeSpecialPurposeField(QVector<unsigned char> &dataItem) {
-
-}
 
 

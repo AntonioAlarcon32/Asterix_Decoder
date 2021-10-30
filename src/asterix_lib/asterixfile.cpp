@@ -22,6 +22,10 @@ void AsterixFile::readFile(QString path) {
 
     for (int offset = 0; offset < fileBinary.length(); ) {
 
+        if (numOfPackets == 154347) {
+            int c = 1;
+        }
+
         int category = fileBinary[offset];
         int length =  fileBinary[offset + 2] << fileBinary[offset + 1] ;
 
