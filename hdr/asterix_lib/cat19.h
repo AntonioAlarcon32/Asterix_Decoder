@@ -28,7 +28,7 @@ public:
     QString tp4Status;
 
     QVector<unsigned char> rsIds;
-    QVector<unsigned char> rsTypes; //REVISAR
+    QVector<QString> rsTypes; //REVISAR
     QVector<QString> rsOperationals;
 
 

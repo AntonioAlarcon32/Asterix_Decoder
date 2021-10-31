@@ -251,7 +251,51 @@ void Cat19::DecodeTrackingProcessorDetailedStatus(QVector<unsigned char> &dataIt
 }
 void Cat19::DecodeRemoteSensorDetailedStatus(QVector<unsigned char> &dataItem) {
 
+    unsigned char repetitions = dataItem.first();
+    dataItem.removeFirst();
 
+    for (int c = 0; c < repetitions; c++) {
+
+        this->rsIds.append(dataItem.at(0));
+        dataItem.removeFirst();
+
+        QString type = "";
+        QString status = "";
+
+        unsigned char r1090MHz = (dataItem.at(0) & 0b01000000) >> 6;
+        unsigned char t1030MHz = (dataItem.at(0) & 0b00100000) >> 5;
+        unsigned char t1090MHz = (dataItem.at(0) & 0b00010000) >> 4;
+
+        unsigned char rsStatus = (dataItem.at(0) & 0b00001000) >> 3;
+        unsigned char rsOperational = (dataItem.at(0) & 0b00000100) >> 2;
+
+        if (r1090MHz == 1) {
+            type.append("Receiver 1090MHz present,");
+        }
+        if (t1030MHz == 1) {
+            type.append("Transmitter 1030MHz present,");
+        }
+        if (t1090MHz == 1) {
+            type.append("Transmitter 1090MHz present,");
+        }
+
+        if (rsStatus == 1) {
+            status.append("RS Status: Good,");
+        }
+        else if (rsStatus == 0) {
+            status.append("RS Status: Faulted,");
+        }
+
+        if (rsOperational == 1) {
+            status.append("RS Operational: Online,");
+        }
+        else if (rsOperational == 0) {
+            status.append("RS Status: Offline,");
+        }
+
+        this->rsOperationals.append(status);
+        this->rsTypes.append(type);
+    }
 }
 
 void Cat19::DecodeReferenceTrasponderDetailedStatus(QVector<unsigned char> &dataItem) {

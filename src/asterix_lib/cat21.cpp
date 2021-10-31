@@ -1429,6 +1429,7 @@ void Cat21::DecodeModeSMBData(QVector<unsigned char> &dataItem) {
 }
 
 void Cat21::DecodeACASResolutionAdvisoryReport(QVector<unsigned char> &dataItem) {}
+
 void Cat21::DecodeReceiverID(QVector<unsigned char> &dataItem) {
     this->receiverId = dataItem.at(0);
 }
@@ -1553,13 +1554,18 @@ void Cat21::DecodeDataAges(QVector<unsigned char> &dataItem) {
 QVector<unsigned char> Cat21::GetDataAgesDataItem() {
     QVector<unsigned char> dataItemStatus = Utilities::DataTools::GetVariableLengthDataItem(this->data);
     int count = 0;
+
     for (unsigned char byte : dataItemStatus) {
-        while (byte != 0) {
-            if (byte & 0x1 == 1) count++;
-            byte = byte / 2;
+        int jumps = 1;
+        while (jumps <= 7) {
+            bool presence = (byte >> jumps) & 1;
+            if (presence) {
+                count++;
+            }
+            jumps++;
         }
     }
-    count = count - (dataItemStatus.length() - 1);
+
     QVector<unsigned char> subDataItems = Utilities::DataTools::GetFixedLengthDataItem(this->data,count);
     dataItemStatus.append(subDataItems);
     return dataItemStatus;
