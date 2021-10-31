@@ -644,7 +644,9 @@ void Cat20::DecodeFlightLevelInBinaryRepresentation(QVector<unsigned char> &data
     }
 }
 
-void Cat20::DecodeModeCCode(QVector<unsigned char> &dataItem) {}
+void Cat20::DecodeModeCCode(QVector<unsigned char> &dataItem) {
+
+}
 
 void Cat20::DecodeTargetAddress(QVector<unsigned char> &dataItem) {
     QString buildAddress = "0x";
@@ -1036,6 +1038,11 @@ void Cat20::DecodeMode1CodeInOctalRepresentation(QVector<unsigned char> &dataIte
         break;
     }
 
+    unsigned char A = (dataItem.at(0) & 0b00011100) >> 2;
+    unsigned char B = (dataItem.at(0) & 0b00000011);
+
+    int code = A * 10 + B;
+    this->M1Code = QString::number(code);
 
 }
 

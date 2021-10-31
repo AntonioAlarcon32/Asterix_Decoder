@@ -99,6 +99,7 @@ void AsterixFile::readFile(QString path) {
             offset += 10;
         }
     }
+
      qDebug() << "Loading took" << testTime->elapsed() << "milliseconds";
      qDebug() << "Loaded " << numOfPackets << " packets";
      this->numberOfPackets = numOfPackets;

@@ -117,7 +117,21 @@ Cat21::Cat21()
     this->fssaAm = "N/A";
     this->fssaAltitude = nan("");
 
-    this->trajectoryIntent = "N/A"; //REVISAR
+    this->tiNav = "N/A";
+    this->tiNvb = "N/A";
+
+    this->tiTca = QVector<QString>();
+    this->tiNc = QVector<QString>();
+    this->tiTcpNumber = QVector<unsigned char>();
+    this->tiAltitude = QVector<double>();
+    this->tiLatitude = QVector<double>();
+    this->tiLongitude = QVector<double>();
+    this->tiPointType = QVector<QString>();
+    this->tiTd = QVector<QString>();
+    this->tiTra = QVector<QString>();
+    this->tiToa = QVector<QString>();
+    this->tiTov = QVector<int>();
+    this->tiTtr = QVector<double>();
 
     this->serviceManagement = nan("");
 
@@ -1186,7 +1200,160 @@ void Cat21::DecodeFinalStateSelectedAltitude(QVector<unsigned char> &dataItem) {
     }
 }
 
-void Cat21::DecodeTrajectoryIntent(QVector<unsigned char> &dataItem) {}
+void Cat21::DecodeTrajectoryIntent(QVector<unsigned char> &dataItem) {
+
+    bool firstSubfield = false;
+    bool secondSubfield = false;
+
+    if ((dataItem.at(0) & 128) != 0) {
+        firstSubfield = true;
+    }
+    if ((dataItem.at(0) & 64) != 0) {
+        secondSubfield = true;
+    }
+    dataItem.removeFirst();
+
+    if (firstSubfield) {
+        unsigned char nav = (dataItem.first() & 128) >> 7;
+        unsigned char nvb = (dataItem.first() & 64) >> 6;
+        dataItem.removeFirst();
+
+        switch (nav) {
+        case 0:
+            this->tiNav = "Trajectory Intent Data is available for this aircraft";
+            break;
+        case 1:
+            this->tiNav = "Trajectory Intent Data is not available for this aircraft";
+            break;
+        }
+        switch (nvb) {
+        case 0:
+            this->tiNvb = "Trajectory Intent Data is valid";
+            break;
+        case 1:
+            this->tiNvb = "Trajectory Intent Data is not valid";
+            break;
+        }
+    }
+
+    if (secondSubfield) {
+        int repetitions = dataItem.first();
+        dataItem.removeFirst();
+
+        for (int c = 0; c < repetitions; c++) {
+
+            bool tca = (dataItem.first() & 128) >> 7;
+            bool nc = (dataItem.first() & 64) >> 6;
+            unsigned char tcpNumber = dataItem.first() & 0b00111111;
+            dataItem.removeFirst();
+            QVector<unsigned char> altBytes = {dataItem.first(), dataItem.at(1)};
+            QVector<unsigned char> latitudeBytes = {dataItem.at(2), dataItem.at(3),dataItem.at(4)};
+            QVector<unsigned char> longitudeBytes = {dataItem.at(5), dataItem.at(6),dataItem.at(7)};
+            dataItem.remove(0,7);
+            unsigned char pointType = (dataItem.at(0) & 0b11110000) >> 4;
+            unsigned char td = (dataItem.at(0) & 0b00001100) >> 2;
+            bool tra = (dataItem.at(0) & 0b00000010) >> 1;
+            bool toa = (dataItem.at(0) & 0b00000001);
+            dataItem.removeFirst();
+            QVector<unsigned char> tov = {dataItem.at(0), dataItem.at(1),dataItem.at(2)};
+            QVector<unsigned char> ttr = {dataItem.at(3), dataItem.at(4)};
+            dataItem.remove(0,5);
+
+            if (!tca) {
+                this->tiTca.append("TCP number available");
+            }
+            else if (tca) {
+                this->tiTca.append("TCP number not available");
+            }
+
+            if (!nc) {
+                this->tiTca.append("TCP compliance");
+            }
+            else if (nc) {
+                this->tiTca.append("TCP non-compliance");
+            }
+
+            double altRes = 10;
+            double wgs84Res = 180.0 / pow(2,23);
+
+            this->tiTcpNumber.append(tcpNumber);
+            this->tiAltitude.append(Utilities::DataTools::DecodeTwosComplementToDouble(altBytes,altRes));
+            this->tiLatitude.append(Utilities::DataTools::DecodeTwosComplementToDouble(latitudeBytes,wgs84Res));
+            this->tiLongitude.append(Utilities::DataTools::DecodeTwosComplementToDouble(longitudeBytes,wgs84Res));
+
+            switch (pointType) {
+            case 0:
+                this->tiPointType.append("Unknown");
+                break;
+            case 1:
+                this->tiPointType.append("Fly by waipoint (LT)");
+                break;
+            case 2:
+                this->tiPointType.append("Fly over waipoint (LT)");
+                break;
+            case 3:
+                this->tiPointType.append("Hold pattern (LT)");
+                break;
+            case 4:
+                this->tiPointType.append("Procedure Hold (LT)");
+                break;
+            case 5:
+                this->tiPointType.append("Procedure Turn (LT)");
+                break;
+            case 6:
+                this->tiPointType.append("RF Leg (LT)");
+                break;
+            case 7:
+                this->tiPointType.append("Top of Climb (VT)");
+                break;
+            case 8:
+                this->tiPointType.append("Top of descent (VT)");
+                break;
+            case 9:
+                this->tiPointType.append("Start of Level (VT)");
+                break;
+            case 10:
+                this->tiPointType.append("Cross-over altitude (VT)");
+                break;
+            case 11:
+                this->tiPointType.append("Transition altitude (VT)");
+                break;
+            }
+
+            switch (td) {
+            case 0:
+                this->tiTd.append("N/A");
+                break;
+            case 1:
+                this->tiTd.append("Turn right");
+                break;
+            case 2:
+                this->tiTd.append("Turn left");
+                break;
+            case 3:
+                this->tiTd.append("No turn");
+                break;
+            }
+
+            if (!tra) {
+                this->tiTra.append("TTR not available");
+            }
+            else if (tra) {
+                this->tiTra.append("TTR available");
+            }
+
+            if (!toa) {
+                this->tiToa.append("TOV available");
+            }
+            else if (toa) {
+                this->tiToa.append("TOV not available");
+            }
+
+            this->tiTov.append(Utilities::DataTools::DecodeUnsignedBytesToDouble(tov,1));
+            this->tiTtr.append(Utilities::DataTools::DecodeUnsignedBytesToDouble(ttr,0.01));
+        }
+    }
+}
 
 void Cat21::DecodeServiceManagement(QVector<unsigned char> &dataItem) {
     this->serviceManagement = dataItem.at(0) * 0.5;

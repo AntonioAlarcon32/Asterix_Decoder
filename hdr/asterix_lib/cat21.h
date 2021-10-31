@@ -121,7 +121,21 @@ public:
     QString fssaAm;
     double fssaAltitude;
 
-    QString trajectoryIntent; //REVISAR
+    QString tiNav;
+    QString tiNvb;
+
+    QVector<QString> tiTca;
+    QVector<QString> tiNc;
+    QVector<unsigned char> tiTcpNumber;
+    QVector<double> tiAltitude;
+    QVector<double> tiLatitude;
+    QVector<double> tiLongitude;
+    QVector<QString> tiPointType;
+    QVector<QString> tiTd;
+    QVector<QString> tiTra;
+    QVector<QString> tiToa;
+    QVector<int> tiTov;
+    QVector<double> tiTtr;
 
     double serviceManagement;
 
