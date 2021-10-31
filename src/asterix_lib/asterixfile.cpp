@@ -1,5 +1,6 @@
 #include <hdr/asterix_lib/asterixfile.h>
 #include "QElapsedTimer"
+#include "QFileInfo"
 #include "QDebug"
 
 
@@ -14,13 +15,25 @@ void AsterixFile::readFile(QString path) {
     dataBlocks->clear();
 
     QFile file(path);
-    if (!file.open(QIODevice::ReadOnly)) return;
+    if (!file.open(QIODevice::ReadOnly))
+        return;
+    QFileInfo fileInfo = QFileInfo(file);
     QByteArray fileBinary = file.readAll();
     int numOfPackets = 0;
     QElapsedTimer* testTime = new QElapsedTimer();
     testTime->start();
+    int offset;
+    if (fileInfo.completeSuffix() == "ast") {
+        offset = 0;
+    }
+    else if (fileInfo.completeSuffix() == "gps") {
+        offset = 2200;
+    }
+    else {
+        return;
+    }
 
-    for (int offset = 0; offset < fileBinary.length(); ) {
+    for (; offset < fileBinary.length(); ) {
 
 
         int category = fileBinary[offset];
@@ -82,6 +95,9 @@ void AsterixFile::readFile(QString path) {
 
         numOfPackets++;
         offset += length;
+        if (fileInfo.completeSuffix() == "gps") {
+            offset += 10;
+        }
     }
      qDebug() << "Loading took" << testTime->elapsed() << "milliseconds";
      qDebug() << "Loaded " << numOfPackets << " packets";
