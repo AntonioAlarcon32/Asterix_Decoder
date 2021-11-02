@@ -6,10 +6,13 @@
 #include "QVector"
 #include "QFile"
 #include "QByteRef"
+#include "QStandardItemModel"
 #include "cat10.h"
 #include "cat19.h"
 #include "cat20.h"
 #include "cat21.h"
+
+#include "appconfig.h"
 
 class AsterixFile
 {
@@ -22,6 +25,8 @@ public:
     int numberOfPackets;
     void readFile(QString path);
     void decodeFlights();
+
+    QStandardItemModel* table;
 
 };
 

@@ -7,12 +7,14 @@
 AsterixFile::AsterixFile()
 {
     dataBlocks = new QVector<DataBlock*>();
+    table = new QStandardItemModel;
 }
 
 
 void AsterixFile::readFile(QString path) {
 
     dataBlocks->clear();
+    table->clear();
 
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly))
@@ -93,14 +95,25 @@ void AsterixFile::readFile(QString path) {
         //Cat10 *inten = static_cast<Cat10*>(dataBlocks->at(0));
         //Cat10 *inten2 = dynamic_cast<Cat10*>(dataBlocks->at(0));
 
+
         numOfPackets++;
+        table->appendRow({new QStandardItem(QString::number(numOfPackets)),new QStandardItem(QString::number(length)),new QStandardItem(QString::number(category))});
         offset += length;
         if (fileInfo.completeSuffix() == "gps") {
             offset += 10;
         }
     }
+    table->setHorizontalHeaderLabels({"Packet", "Length", "Category"});
+
+    AppConfig* instance = AppConfig::GetInstance();
+    int value = instance->GetValue();
+
 
      qDebug() << "Loading took" << testTime->elapsed() << "milliseconds";
      qDebug() << "Loaded " << numOfPackets << " packets";
      this->numberOfPackets = numOfPackets;
 }
+
+
+
+

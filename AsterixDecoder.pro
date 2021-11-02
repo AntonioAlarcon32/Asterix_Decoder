@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    appconfig.cpp \
     src/asterix_lib/cat19.cpp \
     src/asterix_lib/cat20.cpp \
     src/asterix_lib/cat21.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
     src/asterix_lib/cat10.cpp
 
 HEADERS += \
+    appconfig.h \
     hdr/asterix_lib/cat19.h \
     hdr/asterix_lib/cat20.h \
     hdr/asterix_lib/cat21.h \
