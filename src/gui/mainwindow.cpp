@@ -1,6 +1,8 @@
 #include "hdr/gui/mainwindow.h"
 #include "ui_mainwindow.h"
 #include "QFileDialog"
+#include "QXmlStreamReader"
+#include "QDebug"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -10,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     AsterixFile *ast = new AsterixFile();
     astFile = ast;
+    appConfig_ = nullptr;
+    this->InitialConfig();
 }
 
 MainWindow::~MainWindow()
@@ -34,5 +38,10 @@ void MainWindow::on_actionOpen_File_triggered()
     ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->loadedPackets->setText("Loaded " + QString::number(astFile->numberOfPackets) + " packets");
+}
+
+void MainWindow::InitialConfig() {
+    appConfig_ = AppConfig::GetInstance();
+    appConfig_->SetInitialConfig();
 }
 

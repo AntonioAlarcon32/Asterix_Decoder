@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <../AsterixDecoder/hdr/asterix_lib/asterixfile.h>
+#include <appconfig.h>
+#include <sensor.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,5 +26,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     AsterixFile *astFile;
+    AppConfig *appConfig_;
+
+    void InitialConfig();
 };
 #endif // MAINWINDOW_H

@@ -105,9 +105,6 @@ void AsterixFile::readFile(QString path) {
     }
     table->setHorizontalHeaderLabels({"Packet", "Length", "Category"});
 
-    AppConfig* instance = AppConfig::GetInstance();
-    int value = instance->GetValue();
-
 
      qDebug() << "Loading took" << testTime->elapsed() << "milliseconds";
      qDebug() << "Loaded " << numOfPackets << " packets";

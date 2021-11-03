@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     appconfig.cpp \
+    sensor.cpp \
     src/asterix_lib/cat19.cpp \
     src/asterix_lib/cat20.cpp \
     src/asterix_lib/cat21.cpp \
@@ -29,7 +30,8 @@ HEADERS += \
     hdr/asterix_lib/utilities.h \
     hdr/asterix_lib/asterixfile.h \
     hdr/asterix_lib/datablock.h \
-    hdr/asterix_lib/cat10.h
+    hdr/asterix_lib/cat10.h \
+    sensor.h
 
 FORMS += \
     ui/mainwindow.ui
