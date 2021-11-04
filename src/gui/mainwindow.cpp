@@ -62,3 +62,10 @@ void MainWindow::InitialConfig() {
     }
 }
 
+
+void MainWindow::on_actionPreferences_triggered()
+{
+    PreferencesWindow *prefWindow = new PreferencesWindow();
+    prefWindow->show();
+}
+

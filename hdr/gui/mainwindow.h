@@ -31,6 +31,8 @@ private slots:
 
     void on_actionOpen_File_triggered();
 
+    void on_actionPreferences_triggered();
+
 private:
     Ui::MainWindow *ui;
     AsterixFile *astFile;

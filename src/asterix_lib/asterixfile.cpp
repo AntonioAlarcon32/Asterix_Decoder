@@ -45,45 +45,45 @@ void AsterixFile::readFile(QString path) {
 
             if (category == 10) {
 
-                Cat10 *cat10Block = new Cat10();
-                cat10Block->SetLength(length);
+                Cat10 cat10Block = Cat10();
+                cat10Block.SetLength(length);
                 QByteArray data = fileBinary.mid(offset + 3,length - 3);
-                cat10Block->SetData(data);
-                cat10Block->DecodeFSPEC();
-                cat10Block->FullDecode();
-                dataBlocks->append(cat10Block);
+                cat10Block.SetData(data);
+                cat10Block.DecodeFSPEC();
+                cat10Block.FullDecode();
+                dataBlocks->append(&cat10Block);
             }
 
             else if (category == 19) {
-                Cat19 *cat19Block = new Cat19();
-                cat19Block->SetLength(length);
+                Cat19 cat19Block = Cat19();
+                cat19Block.SetLength(length);
                 QByteArray data = fileBinary.mid(offset + 3,length - 3);
-                cat19Block->SetData(data);
-                cat19Block->DecodeFSPEC();
-                cat19Block->FullDecode();
-                dataBlocks->append(cat19Block);
+                cat19Block.SetData(data);
+                cat19Block.DecodeFSPEC();
+                cat19Block.FullDecode();
+                dataBlocks->append(&cat19Block);
 
             }
 
             else if (category == 20) {
-                Cat20 *cat20Block = new Cat20();
-                cat20Block->SetLength(length);
+                Cat20 cat20Block = Cat20();
+                cat20Block.SetLength(length);
                 QByteArray data = fileBinary.mid(offset + 3,length - 3);
-                cat20Block->SetData(data);
-                cat20Block->DecodeFSPEC();
-                cat20Block->FullDecode();
-                dataBlocks->append(cat20Block);
+                cat20Block.SetData(data);
+                cat20Block.DecodeFSPEC();
+                cat20Block.FullDecode();
+                dataBlocks->append(&cat20Block);
 
             }
 
             else if (category == 21) {
-                Cat21 *cat21Block = new Cat21();
-                cat21Block->SetLength(length);
+                Cat21 cat21Block = Cat21();
+                cat21Block.SetLength(length);
                 QByteArray data = fileBinary.mid(offset + 3,length - 3);
-                cat21Block->SetData(data);
-                cat21Block->DecodeFSPEC();
-                cat21Block->FullDecode();
-                dataBlocks->append(cat21Block);
+                cat21Block.SetData(data);
+                cat21Block.DecodeFSPEC();
+                cat21Block.FullDecode();
+                dataBlocks->append(&cat21Block);
             }
 
         }  catch (...) {
@@ -94,7 +94,6 @@ void AsterixFile::readFile(QString path) {
 
         //Cat10 *inten = static_cast<Cat10*>(dataBlocks->at(0));
         //Cat10 *inten2 = dynamic_cast<Cat10*>(dataBlocks->at(0));
-
 
         numOfPackets++;
         table->appendRow({new QStandardItem(QString::number(numOfPackets)),new QStandardItem(QString::number(length)),new QStandardItem(QString::number(category))});

@@ -10,6 +10,11 @@ class Cat20: public DataBlock
 {
 public:
 
+    Cat20();
+    void FullDecode();
+
+private:
+
     short systemAreaCode;
     short systemIdentificationCode;
 
@@ -115,39 +120,35 @@ public:
     QString M2Derivation;
     QString M2Code;
 
-
-    Cat20();
-    void FullDecode();
-
     void DecodeDataSourceIdentifier(QVector<unsigned char> &dataItem);
-        void DecodeTargetReportDescriptor(QVector<unsigned char> &dataItem);
-        void DecodeTimeOfDay(QVector<unsigned char> &dataItem);
-        void DecodePositionInWGS84Coordinates(QVector<unsigned char> &dataItem);
-        void DecodePositionInCartesianCoordinates(QVector<unsigned char> &dataItem);
-        void DecodeTrackNumber(QVector<unsigned char> &dataItem);
-        void DecodeTrackStatus(QVector<unsigned char> &dataItem);
-        void DecodeMode3ACodeInOctalRepresentation(QVector<unsigned char> &dataItem);
-        void DecodeCalculatedTrackVelocityInCartesianCoordinates(QVector<unsigned char> &dataItem);
-        void DecodeFlightLevelInBinaryRepresentation(QVector<unsigned char> &dataItem);
-        void DecodeModeCCode(QVector<unsigned char> &dataItem);
-        void DecodeTargetAddress(QVector<unsigned char> &dataItem);
-        void DecodeTargetIdentification(QVector<unsigned char> &dataItem);
-        void DecodeMeasuredHeight(QVector<unsigned char> &dataItem);
-        void DecodeGeometricHeight(QVector<unsigned char> &dataItem);
-        void DecodeCalculatedAcceleration(QVector<unsigned char> &dataItem);
-        void DecodeVehicleFleetIdentification(QVector<unsigned char> &dataItem);
-        void DecodePreProgrammedMessage(QVector<unsigned char> &dataItem);
-        void DecodePositionAccuracy(QVector<unsigned char> &dataItem);
-        void DecodeContributingDevices(QVector<unsigned char> &dataItem);
-        void DecodeBDSRegisterData(QVector<unsigned char> &dataItem);
-        void DecodeCommsACASCapabilityAndFlightStatus(QVector<unsigned char> &dataItem);
-        void DecodeACASResolutionAdvisoryReport(QVector<unsigned char> &dataItem);
-        void DecodeWarningErrorConditions(QVector<unsigned char> &dataItem);
-        void DecodeMode1CodeInOctalRepresentation(QVector<unsigned char> &dataItem);
-        void DecodeMode2CodeInOctalRepresentation(QVector<unsigned char> &dataItem);
+    void DecodeTargetReportDescriptor(QVector<unsigned char> &dataItem);
+    void DecodeTimeOfDay(QVector<unsigned char> &dataItem);
+    void DecodePositionInWGS84Coordinates(QVector<unsigned char> &dataItem);
+    void DecodePositionInCartesianCoordinates(QVector<unsigned char> &dataItem);
+    void DecodeTrackNumber(QVector<unsigned char> &dataItem);
+    void DecodeTrackStatus(QVector<unsigned char> &dataItem);
+    void DecodeMode3ACodeInOctalRepresentation(QVector<unsigned char> &dataItem);
+    void DecodeCalculatedTrackVelocityInCartesianCoordinates(QVector<unsigned char> &dataItem);
+    void DecodeFlightLevelInBinaryRepresentation(QVector<unsigned char> &dataItem);
+    void DecodeModeCCode(QVector<unsigned char> &dataItem);
+    void DecodeTargetAddress(QVector<unsigned char> &dataItem);
+    void DecodeTargetIdentification(QVector<unsigned char> &dataItem);
+    void DecodeMeasuredHeight(QVector<unsigned char> &dataItem);
+    void DecodeGeometricHeight(QVector<unsigned char> &dataItem);
+    void DecodeCalculatedAcceleration(QVector<unsigned char> &dataItem);
+    void DecodeVehicleFleetIdentification(QVector<unsigned char> &dataItem);
+    void DecodePreProgrammedMessage(QVector<unsigned char> &dataItem);
+    void DecodePositionAccuracy(QVector<unsigned char> &dataItem);
+    void DecodeContributingDevices(QVector<unsigned char> &dataItem);
+    void DecodeBDSRegisterData(QVector<unsigned char> &dataItem);
+    void DecodeCommsACASCapabilityAndFlightStatus(QVector<unsigned char> &dataItem);
+    void DecodeACASResolutionAdvisoryReport(QVector<unsigned char> &dataItem);
+    void DecodeWarningErrorConditions(QVector<unsigned char> &dataItem);
+    void DecodeMode1CodeInOctalRepresentation(QVector<unsigned char> &dataItem);
+    void DecodeMode2CodeInOctalRepresentation(QVector<unsigned char> &dataItem);
 
-private:
-        QVector<unsigned char> GetPositionAccuracyDataItem();
+
+    QVector<unsigned char> GetPositionAccuracyDataItem();
 
 };
 

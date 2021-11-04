@@ -10,6 +10,11 @@ class Cat19: public DataBlock
 {
 public:
 
+    Cat19();
+    void FullDecode();
+
+private:
+
     short systemAreaCode;
     short systemIdentificationCode;
 
@@ -44,8 +49,6 @@ public:
 
     char wgs84undulation;
 
-    Cat19();
-    void FullDecode();
 
     void DecodeDataSourceIdentifier(QVector<unsigned char> &dataItem);
     void DecodeMessageType(QVector<unsigned char> &dataItem);

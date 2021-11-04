@@ -11,6 +11,11 @@ class Cat21: public DataBlock
 {
 public:
 
+    Cat21();
+    void FullDecode();
+
+private:
+
     short systemAreaCode;
     short systemIdentificationCode;
 
@@ -194,10 +199,6 @@ public:
     float daARA;
     float daSCC;
 
-
-    Cat21();
-    void FullDecode();
-
     void DecodeDataSourceIdentification(QVector<unsigned char> &dataItem);
     void DecodeTargetReportDescriptor(QVector<unsigned char> &dataItem);
     void DecodeTrackNumber(QVector<unsigned char> &dataItem);
@@ -241,7 +242,6 @@ public:
     void DecodeReceiverID(QVector<unsigned char> &dataItem);
     void DecodeDataAges(QVector<unsigned char> &dataItem);
 
-private:
     QVector<unsigned char> GetDataAgesDataItem();
     QVector<unsigned char> GetMetInformationDataItem();
     QVector<unsigned char> GetTrajectoryIntentDataItem();

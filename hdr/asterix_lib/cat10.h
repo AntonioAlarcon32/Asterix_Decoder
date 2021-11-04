@@ -12,6 +12,11 @@ class Cat10: public DataBlock
 {
 public:
 
+    Cat10();
+    void FullDecode();
+
+private:
+
     short systemAreaCode;
     short systemIdentificationCode;
 
@@ -103,9 +108,6 @@ public:
     QVector<unsigned char> presenceDTheta;
 
     double amplitudeOfPrimaryPlot;
-
-    Cat10();
-    void FullDecode();
 
     void DecodeDataSourceIdentifier(QVector<unsigned char> &dataItem);
     void DecodeMessageType(QVector<unsigned char> &dataItem);
