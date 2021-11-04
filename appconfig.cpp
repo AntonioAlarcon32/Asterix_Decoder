@@ -14,15 +14,6 @@ AppConfig* AppConfig::GetInstance() {
         return appConfig_;
 }
 
-void AppConfig::TrackUse() {
-    this->value++;
-}
-
-int AppConfig::GetValue() {
-    this->TrackUse();
-    return this->value;
-}
-
 QList<short> AppConfig::GetSystemAreaCodes() {
     return this->dataList.keys();
 }
@@ -30,7 +21,49 @@ QList<short> AppConfig::GetSystemAreaCodes() {
 void AppConfig::AddSensor(Sensor sensor, short systemAreaCode) {
 
     this->dataList.insert(systemAreaCode, sensor);
+}
 
+void AppConfig::DeleteSensor(short systemAreaCode) {
+    this->dataList.remove(systemAreaCode);
+    int c = 1;
+}
+
+Sensor AppConfig::GetSensorInfo(short systemAreaCode) {
+    return this->dataList.value(systemAreaCode);
+}
+
+void AppConfig::SaveXMLFile(QString path) {
+
+    QFile file(path);
+
+    if (file.exists()) {
+        file.remove();
+    }
+
+    file.open(QIODevice::WriteOnly);
+
+    QXmlStreamWriter xmlWriter(&file);
+    xmlWriter.setAutoFormatting(true);
+    xmlWriter.writeStartDocument();
+
+    xmlWriter.writeStartElement("AppConfig");
+    xmlWriter.writeStartElement("Sensors");
+
+    QList<short> systemAreaCodes = this->GetSystemAreaCodes();
+
+    for (short sic : systemAreaCodes) {
+        Sensor sensor = this->GetSensorInfo(sic);
+        xmlWriter.writeStartElement("Sensor");
+        xmlWriter.writeTextElement("id",sensor.sensorId);
+        xmlWriter.writeTextElement("ip",sensor.sensorIp);
+        xmlWriter.writeTextElement("latitude",QString::number(sensor.sensorLatitude,'g',8));
+        xmlWriter.writeTextElement("longitude",QString::number(sensor.sensorLongitude,'g',8));
+        xmlWriter.writeTextElement("category",QString::number(sensor.category));
+        xmlWriter.writeTextElement("system_area_code",QString::number(sic));
+        xmlWriter.writeEndElement();
+    }
+    xmlWriter.writeEndElement();
+    xmlWriter.writeEndElement();
 }
 
 void AppConfig::LoadXMLFile(QString path) {
@@ -81,10 +114,6 @@ void AppConfig::LoadXMLFile(QString path) {
     }
 }
 
-void AppConfig::SetInitialConfig() {
 
-    this->LoadXMLFile("/Users/antonioalarcon/Documents/TFG/xml_config");
-
-}
 
 AppConfig* AppConfig::appConfig_ = nullptr;;

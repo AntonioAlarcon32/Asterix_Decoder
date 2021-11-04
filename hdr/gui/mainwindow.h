@@ -2,9 +2,17 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "QFileDialog"
+#include "QXmlStreamReader"
+#include "QDebug"
+#include "QDir"
+#include "QMessageBox"
+
 #include <../AsterixDecoder/hdr/asterix_lib/asterixfile.h>
 #include <appconfig.h>
 #include <sensor.h>
+
+#include <hdr/gui/preferenceswindow.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

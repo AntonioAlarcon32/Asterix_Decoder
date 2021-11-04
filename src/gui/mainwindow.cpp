@@ -1,8 +1,6 @@
 #include "hdr/gui/mainwindow.h"
 #include "ui_mainwindow.h"
-#include "QFileDialog"
-#include "QXmlStreamReader"
-#include "QDebug"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -41,7 +39,26 @@ void MainWindow::on_actionOpen_File_triggered()
 }
 
 void MainWindow::InitialConfig() {
+
     appConfig_ = AppConfig::GetInstance();
-    appConfig_->SetInitialConfig();
+
+    if (QFile::exists(QDir::currentPath() + "/config.xml")) {
+        appConfig_->LoadXMLFile(QDir::currentPath() + "/config.xml");
+    }
+
+    else {
+        QMessageBox msgBox;
+        msgBox.setText("There is no sensor configuration, go to preferences to introduce them");
+        msgBox.setStandardButtons(QMessageBox::Cancel | QMessageBox::Open);
+        msgBox.setDefaultButton(QMessageBox::Open);
+        int option = msgBox.exec();
+
+        switch (option) {
+        case QMessageBox::Open:
+            PreferencesWindow *prefWindow = new PreferencesWindow();
+            prefWindow->show();
+            break;
+        }
+    }
 }
 
