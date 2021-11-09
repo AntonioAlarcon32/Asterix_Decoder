@@ -14,65 +14,47 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="loadedPackets">
+   <widget class="QToolButton" name="openFileButton">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>510</y>
-      <width>281</width>
-      <height>20</height>
+      <x>220</x>
+      <y>200</y>
+      <width>341</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string>Open File</string>
     </property>
    </widget>
-   <widget class="QTableView" name="tableView">
+   <widget class="QToolButton" name="preferencesButton">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>30</y>
-      <width>761</width>
-      <height>471</height>
+      <x>220</x>
+      <y>250</y>
+      <width>341</width>
+      <height>41</height>
      </rect>
     </property>
-   </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
+    <property name="text">
+     <string>Preferences</string>
     </property>
-    <addaction name="actionOpen_File"/>
-    <addaction name="actionPreferences"/>
-    <addaction name="actionExit"/>
    </widget>
-   <addaction name="menuFile"/>
+   <widget class="QToolButton" name="exitButton">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>300</y>
+      <width>341</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Exit</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionOpen_File">
-   <property name="text">
-    <string>Open File</string>
-   </property>
-  </action>
-  <action name="actionExit">
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </action>
-  <action name="actionPreferences">
-   <property name="text">
-    <string>Preferences</string>
-   </property>
-  </action>
  </widget>
  <resources/>
  <connections/>

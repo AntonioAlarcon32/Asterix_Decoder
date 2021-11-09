@@ -4,12 +4,9 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow),
-      astFile()
+    , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    AsterixFile *ast = new AsterixFile();
-    astFile = ast;
     appConfig_ = nullptr;
     this->InitialConfig();
 }
@@ -17,21 +14,6 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-
-void MainWindow::on_actionExit_triggered()
-{
-    QApplication::quit();
-}
-
-
-void MainWindow::on_actionOpen_File_triggered()
-{
-    QString filePath = QFileDialog::getOpenFileName(this,tr("Open Asterix File"));
-    FileWindow *fileWindow = new FileWindow(this, filePath);
-    fileWindow->show();
-
 }
 
 void MainWindow::InitialConfig() {
@@ -59,11 +41,22 @@ void MainWindow::InitialConfig() {
     }
 }
 
-
-void MainWindow::on_actionPreferences_triggered()
+void MainWindow::on_openFileButton_clicked()
 {
-    PreferencesWindow *fileWindow = new PreferencesWindow(this);
+    QString filePath = QFileDialog::getOpenFileName(this,tr("Open Asterix File"));
+    FileWindow *fileWindow = new FileWindow(this, filePath);
     fileWindow->show();
-    fileWindow->setFocus();
+}
+
+void MainWindow::on_preferencesButton_clicked()
+{
+    PreferencesWindow *prefWindow = new PreferencesWindow(this);
+    prefWindow->show();
+    prefWindow->setFocus();
+}
+
+void MainWindow::on_exitButton_clicked()
+{
+    QApplication::quit();
 }
 

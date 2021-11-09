@@ -1,4 +1,4 @@
-#include "filewindow.h"
+#include "hdr/gui/filewindow.h"
 #include "ui_filewindow.h"
 
 FileWindow::FileWindow(QWidget *parent, QString filePath) :

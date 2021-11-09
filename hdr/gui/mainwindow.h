@@ -13,7 +13,7 @@
 #include <sensor.h>
 
 #include <hdr/gui/preferenceswindow.h>
-#include <filewindow.h>
+#include <hdr/gui/filewindow.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,15 +28,15 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_actionExit_triggered();
 
-    void on_actionOpen_File_triggered();
+    void on_openFileButton_clicked();
 
-    void on_actionPreferences_triggered();
+    void on_preferencesButton_clicked();
+
+    void on_exitButton_clicked();
 
 private:
     Ui::MainWindow *ui;
-    AsterixFile *astFile;
     AppConfig *appConfig_;
 
     void InitialConfig();
