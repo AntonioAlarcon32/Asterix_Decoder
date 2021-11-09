@@ -13,6 +13,7 @@
 #include <sensor.h>
 
 #include <hdr/gui/preferenceswindow.h>
+#include <filewindow.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

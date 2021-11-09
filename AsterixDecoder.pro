@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     appconfig.cpp \
+    filewindow.cpp \
     src/gui/preferenceswindow.cpp \
     sensor.cpp \
     src/asterix_lib/cat19.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
 
 HEADERS += \
     appconfig.h \
+    filewindow.h \
     hdr/asterix_lib/cat19.h \
     hdr/asterix_lib/cat20.h \
     hdr/asterix_lib/cat21.h \
@@ -36,6 +38,7 @@ HEADERS += \
     sensor.h
 
 FORMS += \
+    filewindow.ui \
     ui/preferenceswindow.ui \
     ui/mainwindow.ui
 
