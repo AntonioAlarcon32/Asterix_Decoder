@@ -20,6 +20,7 @@ public:
 
     void AddSensor(Sensor sensor, short systemAreaCode);
     QList<short> GetSystemAreaCodes();
+    void ClearSensors();
     Sensor GetSensorInfo(short systemAreaCode);
     void LoadXMLFile(QString path);
     void SaveXMLFile(QString path);

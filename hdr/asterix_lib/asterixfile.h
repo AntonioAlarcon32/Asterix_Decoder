@@ -20,6 +20,7 @@ class AsterixFile
 
 public:
     AsterixFile();
+    ~AsterixFile();
 
     QVector<DataBlock *> *dataBlocks;
     int numberOfPackets;

@@ -114,6 +114,10 @@ void AppConfig::LoadXMLFile(QString path) {
     }
 }
 
+void AppConfig::ClearSensors() {
+    this->dataList.clear();
+}
+
 
 
 AppConfig* AppConfig::appConfig_ = nullptr;;

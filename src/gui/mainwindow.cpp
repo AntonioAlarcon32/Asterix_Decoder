@@ -4,7 +4,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow),
+      prefWindow_(nullptr)
 {
     ui->setupUi(this);
     appConfig_ = nullptr;
@@ -14,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete prefWindow_;
 }
 
 void MainWindow::InitialConfig() {
@@ -33,9 +35,9 @@ void MainWindow::InitialConfig() {
 
         switch (option) {
         case QMessageBox::Open:
-            PreferencesWindow *prefWindow = new PreferencesWindow();
-            prefWindow->show();
-            prefWindow->setFocus();
+            prefWindow_ = new PreferencesWindow(this);
+            prefWindow_->show();
+            prefWindow_->raise();
             break;
         }
     }
@@ -50,9 +52,16 @@ void MainWindow::on_openFileButton_clicked()
 
 void MainWindow::on_preferencesButton_clicked()
 {
-    PreferencesWindow *prefWindow = new PreferencesWindow(this);
-    prefWindow->show();
-    prefWindow->setFocus();
+    if (prefWindow_ == nullptr) {
+        prefWindow_ = new PreferencesWindow(this);
+        prefWindow_->show();
+        prefWindow_->raise();
+    }
+    else {
+        prefWindow_->LoadSensorsToTable();
+        prefWindow_->show();
+        prefWindow_->raise();
+    }
 }
 
 void MainWindow::on_exitButton_clicked()

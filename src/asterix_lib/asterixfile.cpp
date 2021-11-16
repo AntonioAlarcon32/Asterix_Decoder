@@ -10,6 +10,10 @@ AsterixFile::AsterixFile()
     table = new QStandardItemModel;
 }
 
+AsterixFile::~AsterixFile() {
+    delete dataBlocks;
+    delete table;
+}
 
 void AsterixFile::readFile(QString path) {
 

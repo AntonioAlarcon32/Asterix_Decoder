@@ -23,6 +23,7 @@ class PreferencesWindow : public QDialog
 public:
     explicit PreferencesWindow(QWidget *parent = nullptr);
     ~PreferencesWindow();
+    void LoadSensorsToTable();
 
 private slots:
     void on_addRowButton_clicked();
@@ -31,12 +32,17 @@ private slots:
 
     void on_saveButton_clicked();
 
+    void on_cancelButton_clicked();
+
 private:
 
     Ui::PreferencesWindow *ui;
     AppConfig *appConfig_;
     QStandardItemModel* table_;
-    void LoadSensorsToTable();
+    bool changesMade_;
+
+    void SaveSensorsToConfig();
+    void reject();
 
 
 };

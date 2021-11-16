@@ -7,22 +7,28 @@ FileWindow::FileWindow(QWidget *parent, QString filePath) :
 {
     ui->setupUi(this);
     ui->setupUi(this);
-    astFile_ = AsterixFile();;
+    astFile_ = new AsterixFile();
     appConfig_ = AppConfig::GetInstance();
     this->DecodeFile(filePath);
 }
 
 FileWindow::~FileWindow()
 {
+    delete astFile_;
     delete ui;
+
 }
 
 void FileWindow::DecodeFile(QString filePath) {
-    astFile_.readFile(filePath);
-    ui->tableView->setModel(astFile_.table);
+    astFile_->readFile(filePath);
+    ui->tableView->setModel(astFile_->table);
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->loadedPackets->setText("Loaded " + QString::number(astFile_.numberOfPackets) + " packets");
+    ui->loadedPackets->setText("Loaded " + QString::number(astFile_->numberOfPackets) + " packets");
+}
+
+void FileWindow::closeEvent(QCloseEvent *event) {
+    delete this;
 }

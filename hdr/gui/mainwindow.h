@@ -39,6 +39,8 @@ private:
     Ui::MainWindow *ui;
     AppConfig *appConfig_;
 
+    PreferencesWindow *prefWindow_;
+
     void InitialConfig();
 };
 #endif // MAINWINDOW_H

@@ -28,10 +28,11 @@ public:
 
 private:
     Ui::FileWindow *ui;
-    AsterixFile astFile_;
+    AsterixFile *astFile_;
     AppConfig *appConfig_;
 
     void DecodeFile(QString filePath);
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // FILEWINDOW_H
