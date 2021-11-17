@@ -45,9 +45,25 @@ void MainWindow::InitialConfig() {
 
 void MainWindow::on_openFileButton_clicked()
 {
-    QString filePath = QFileDialog::getOpenFileName(this,tr("Open Asterix File"));
-    FileWindow *fileWindow = new FileWindow(this, filePath);
-    fileWindow->show();
+
+    QFileDialog dialog(this);
+
+    dialog.setFileMode(QFileDialog::ExistingFile);
+    dialog.setNameFilter(tr("Valid Files (*.ast *.gps)"));
+    dialog.setViewMode(QFileDialog::Detail);
+    dialog.setAcceptMode(QFileDialog::AcceptOpen);
+
+    QStringList fileNames;
+
+    if (dialog.exec())
+        fileNames = dialog.selectedFiles();
+
+    if (fileNames.length() == 1) {
+        QString filePath = fileNames.at(0);
+        FileWindow *fileWindow = new FileWindow(this, filePath);
+        fileWindow->show();
+    }
+
 }
 
 void MainWindow::on_preferencesButton_clicked()

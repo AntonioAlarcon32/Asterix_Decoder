@@ -13,68 +13,39 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QTableView" name="tableView">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>40</y>
-     <width>631</width>
-     <height>301</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="saveButton">
-   <property name="geometry">
-    <rect>
-     <x>590</x>
-     <y>380</y>
-     <width>113</width>
-     <height>32</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Save Sensors</string>
-   </property>
-  </widget>
-  <widget class="QToolButton" name="addRowButton">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>340</y>
-     <width>21</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>+</string>
-   </property>
-  </widget>
-  <widget class="QToolButton" name="deleteSelectedRowButton">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>340</y>
-     <width>21</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>-</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="cancelButton">
-   <property name="geometry">
-    <rect>
-     <x>470</x>
-     <y>380</y>
-     <width>113</width>
-     <height>32</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Cancel</string>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0">
+    <widget class="QToolButton" name="addRowButton">
+     <property name="text">
+      <string>+</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QPushButton" name="cancelButton">
+     <property name="text">
+      <string>Cancel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="5">
+    <widget class="QTableView" name="tableView"/>
+   </item>
+   <item row="2" column="4">
+    <widget class="QPushButton" name="saveButton">
+     <property name="text">
+      <string>Save Sensors</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QToolButton" name="deleteSelectedRowButton">
+     <property name="text">
+      <string>-</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

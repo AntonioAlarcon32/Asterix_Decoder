@@ -6,53 +6,79 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>340</width>
+    <height>303</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>328</width>
+    <height>273</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QToolButton" name="openFileButton">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>200</y>
-      <width>341</width>
-      <height>41</height>
-     </rect>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>8</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetMaximumSize</enum>
     </property>
-    <property name="text">
-     <string>Open File</string>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="preferencesButton">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>250</y>
-      <width>341</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Preferences</string>
-    </property>
-   </widget>
-   <widget class="QToolButton" name="exitButton">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>300</y>
-      <width>341</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Exit</string>
-    </property>
-   </widget>
+    <item row="1" column="0" alignment="Qt::AlignHCenter">
+     <widget class="QToolButton" name="openFileButton">
+      <property name="text">
+       <string>Open File</string>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+      <property name="autoRaise">
+       <bool>false</bool>
+      </property>
+      <property name="arrowType">
+       <enum>Qt::NoArrow</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" alignment="Qt::AlignHCenter">
+     <widget class="QToolButton" name="exitButton">
+      <property name="text">
+       <string>Exit</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" alignment="Qt::AlignHCenter">
+     <widget class="QToolButton" name="preferencesButton">
+      <property name="minimumSize">
+       <size>
+        <width>74</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>74</width>
+        <height>22</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Preferences</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
