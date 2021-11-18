@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     appConfig_ = nullptr;
     this->InitialConfig();
+    numberOfPackets_ = 0;
 }
 
 MainWindow::~MainWindow()
@@ -60,8 +61,15 @@ void MainWindow::on_openFileButton_clicked()
 
     if (fileNames.length() == 1) {
         QString filePath = fileNames.at(0);
-        FileWindow *fileWindow = new FileWindow(this, filePath);
-        fileWindow->show();
+        FileWindow *fileWindow = new FileWindow(this);
+
+        int packets = fileWindow->GetFileLength(filePath);
+
+        this->ui->progressBar->setMinimum(0);
+        this->ui->progressBar->setMaximum(packets);
+
+        connect(fileWindow, &FileWindow::packetLoaded, this, &MainWindow::on_PacketLoaded);
+        fileWindow->DecodeFile(filePath);
     }
 
 }
@@ -85,3 +93,8 @@ void MainWindow::on_exitButton_clicked()
     QApplication::quit();
 }
 
+void MainWindow::on_PacketLoaded() {
+
+    numberOfPackets_+= 1000;
+    this->ui->progressBar->setValue(numberOfPackets_);
+}

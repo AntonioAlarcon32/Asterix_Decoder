@@ -100,6 +100,10 @@ void AsterixFile::readFile(QString path) {
         //Cat10 *inten2 = dynamic_cast<Cat10*>(dataBlocks->at(0));
 
         numOfPackets++;
+
+        if ((numOfPackets % 1000) == 0) {
+            emit packetLoaded();
+        }
         table->appendRow({new QStandardItem(QString::number(numOfPackets)),new QStandardItem(QString::number(length)),new QStandardItem(QString::number(category))});
         offset += length;
         if (fileInfo.completeSuffix() == "gps") {
@@ -109,9 +113,42 @@ void AsterixFile::readFile(QString path) {
     table->setHorizontalHeaderLabels({"Packet", "Length", "Category"});
 
 
+    emit finishLoading();
      qDebug() << "Loading took" << testTime->elapsed() << "milliseconds";
      qDebug() << "Loaded " << numOfPackets << " packets";
      this->numberOfPackets = numOfPackets;
+}
+
+int AsterixFile::GetTotalPackets(QString path) {
+
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly))
+        return 0;
+    QFileInfo fileInfo = QFileInfo(file);
+    QByteArray fileBinary = file.readAll();
+    int numOfPackets = 0;
+    QElapsedTimer* testTime = new QElapsedTimer();
+    testTime->start();
+    int offset;
+    if (fileInfo.completeSuffix() == "ast") {
+        offset = 0;
+    }
+    else if (fileInfo.completeSuffix() == "gps") {
+        offset = 2200;
+    }
+    else {
+        return 0;
+    }
+
+    for (; offset < fileBinary.length(); ) {
+        int length =  fileBinary[offset + 2] << fileBinary[offset + 1];
+        numOfPackets++;
+        offset += length;
+        if (fileInfo.completeSuffix() == "gps") {
+            offset += 10;
+        }
+    }
+    return numOfPackets;
 }
 
 

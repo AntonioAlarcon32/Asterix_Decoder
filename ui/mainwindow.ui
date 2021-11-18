@@ -36,45 +36,31 @@
     <property name="sizeConstraint">
      <enum>QLayout::SetMaximumSize</enum>
     </property>
-    <item row="1" column="0" alignment="Qt::AlignHCenter">
-     <widget class="QToolButton" name="openFileButton">
+    <item row="1" column="0">
+     <widget class="QPushButton" name="openFileButton">
       <property name="text">
        <string>Open File</string>
       </property>
-      <property name="checkable">
-       <bool>false</bool>
-      </property>
-      <property name="autoRaise">
-       <bool>false</bool>
-      </property>
-      <property name="arrowType">
-       <enum>Qt::NoArrow</enum>
-      </property>
      </widget>
     </item>
-    <item row="5" column="0" alignment="Qt::AlignHCenter">
-     <widget class="QToolButton" name="exitButton">
+    <item row="3" column="0">
+     <widget class="QPushButton" name="exitButton">
       <property name="text">
        <string>Exit</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0" alignment="Qt::AlignHCenter">
-     <widget class="QToolButton" name="preferencesButton">
-      <property name="minimumSize">
-       <size>
-        <width>74</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>74</width>
-        <height>22</height>
-       </size>
-      </property>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="preferencesButton">
       <property name="text">
        <string>Preferences</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QProgressBar" name="progressBar">
+      <property name="value">
+       <number>24</number>
       </property>
      </widget>
     </item>

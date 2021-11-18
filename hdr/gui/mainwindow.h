@@ -35,9 +35,12 @@ private slots:
 
     void on_exitButton_clicked();
 
+    void on_PacketLoaded();
+
 private:
     Ui::MainWindow *ui;
     AppConfig *appConfig_;
+    int numberOfPackets_;
 
     PreferencesWindow *prefWindow_;
 

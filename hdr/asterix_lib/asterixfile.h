@@ -14,8 +14,9 @@
 
 #include "appconfig.h"
 
-class AsterixFile
+class AsterixFile: public QObject
 {
+    Q_OBJECT
 
 
 public:
@@ -24,10 +25,20 @@ public:
 
     QVector<DataBlock *> *dataBlocks;
     int numberOfPackets;
-    void readFile(QString path);
     void decodeFlights();
 
+    int GetTotalPackets(QString path);
+
     QStandardItemModel* table;
+
+public slots:
+
+    void readFile(QString path);
+
+signals:
+
+    void packetLoaded();
+    void finishLoading();
 
 };
 
