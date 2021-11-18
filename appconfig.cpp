@@ -3,7 +3,6 @@
 
 AppConfig::AppConfig()
 {
-    this->value = 0;
 }
 
 AppConfig* AppConfig::GetInstance() {
@@ -15,21 +14,60 @@ AppConfig* AppConfig::GetInstance() {
 }
 
 QList<short> AppConfig::GetSystemAreaCodes() {
-    return this->dataList.keys();
+
+    QList<short> systemAreaCodes = QList<short>();
+
+    for (Sensor sensor : this->sensorList_) {
+        systemAreaCodes.append(sensor.systemAreaCode);
+    }
+    return systemAreaCodes;
 }
 
-void AppConfig::AddSensor(Sensor sensor, short systemAreaCode) {
+QList<short> AppConfig::GetSystemIdCodes() {
 
-    this->dataList.insert(systemAreaCode, sensor);
+    QList<short> systemIdCodes = QList<short>();
+
+    for (Sensor sensor : this->sensorList_) {
+        systemIdCodes.append(sensor.systemIdCode);
+    }
+    return systemIdCodes;
 }
 
-void AppConfig::DeleteSensor(short systemAreaCode) {
-    this->dataList.remove(systemAreaCode);
-    int c = 1;
+void AppConfig::AddSensor(Sensor sensor) {
+    this->sensorList_.append(sensor);
 }
 
-Sensor AppConfig::GetSensorInfo(short systemAreaCode) {
-    return this->dataList.value(systemAreaCode);
+QList<int> AppConfig::GetUniqueIds() {
+
+    QList<int> sensorList = QList<int>();
+
+    for (Sensor sensor : this->sensorList_) {
+        sensorList.append(sensor.uniqueId);
+    }
+    return sensorList;
+}
+
+void AppConfig::DeleteSensor(int uniqueId) {
+
+    int i = 0;
+    while (i < this->sensorList_.length()) {
+        if (sensorList_.at(i).uniqueId == uniqueId) {
+            sensorList_.removeAt(i);
+            return;
+        }
+        i++;
+    }
+}
+
+Sensor AppConfig::GetSensorInfo(int uniqueId) {
+    int i = 0;
+    while (i < this->sensorList_.length()) {
+        if (sensorList_.at(i).uniqueId == uniqueId) {
+            return sensorList_.at(i);
+        }
+        i++;
+    }
+    return Sensor();
 }
 
 void AppConfig::SaveXMLFile(QString path) {
@@ -49,17 +87,19 @@ void AppConfig::SaveXMLFile(QString path) {
     xmlWriter.writeStartElement("AppConfig");
     xmlWriter.writeStartElement("Sensors");
 
-    QList<short> systemAreaCodes = this->GetSystemAreaCodes();
+    QList<int> uniqueIds = this->GetUniqueIds();
 
-    for (short sic : systemAreaCodes) {
-        Sensor sensor = this->GetSensorInfo(sic);
+    for (int id : uniqueIds) {
+        Sensor sensor = this->GetSensorInfo(id);
         xmlWriter.writeStartElement("Sensor");
-        xmlWriter.writeTextElement("id",sensor.sensorId);
+        xmlWriter.writeTextElement("unique_id",QString::number(sensor.uniqueId));
+        xmlWriter.writeTextElement("description",sensor.sensorDescription);
         xmlWriter.writeTextElement("ip",sensor.sensorIp);
         xmlWriter.writeTextElement("latitude",QString::number(sensor.sensorLatitude,'g',8));
         xmlWriter.writeTextElement("longitude",QString::number(sensor.sensorLongitude,'g',8));
         xmlWriter.writeTextElement("category",QString::number(sensor.category));
-        xmlWriter.writeTextElement("system_area_code",QString::number(sic));
+        xmlWriter.writeTextElement("system_id_code",QString::number(sensor.systemIdCode));
+        xmlWriter.writeTextElement("system_area_code",QString::number(sensor.systemAreaCode));
         xmlWriter.writeEndElement();
     }
     xmlWriter.writeEndElement();
@@ -82,13 +122,12 @@ void AppConfig::LoadXMLFile(QString path) {
                         if (reader.name() == "Sensor") {
                             qDebug() << "Start of Sensor";
                             Sensor sensor = Sensor();
-                            short systemAreaCode = 0;
                             while (reader.readNextStartElement()) {
                                 if (reader.name() == "ip") {
                                     sensor.sensorIp = reader.readElementText();
                                 }
-                                else if (reader.name() == "id") {
-                                    sensor.sensorId = reader.readElementText();
+                                else if (reader.name() == "description") {
+                                    sensor.sensorDescription = reader.readElementText();
                                 }
                                 else if (reader.name() == "latitude") {
                                     sensor.sensorLatitude = reader.readElementText().toDouble();
@@ -100,11 +139,17 @@ void AppConfig::LoadXMLFile(QString path) {
                                     sensor.category = reader.readElementText().toInt();
                                 }
                                 else if (reader.name() == "system_area_code") {
-                                    systemAreaCode = (short) reader.readElementText().toInt();
+                                    sensor.systemAreaCode = reader.readElementText().toInt();
+                                }
+                                else if (reader.name() == "system_id_code") {
+                                    sensor.systemIdCode = reader.readElementText().toInt();
+                                }
+                                else if (reader.name() == "unique_id") {
+                                    sensor.uniqueId = reader.readElementText().toInt();
                                 }
                             }
-                            if (systemAreaCode != 0) {
-                                this->AddSensor(sensor,systemAreaCode);
+                            if (sensor.uniqueId != 0) {
+                                this->AddSensor(sensor);
                             }
                         }
                     }
@@ -115,9 +160,6 @@ void AppConfig::LoadXMLFile(QString path) {
 }
 
 void AppConfig::ClearSensors() {
-    this->dataList.clear();
+    this->sensorList_.clear();
 }
-
-
-
 AppConfig* AppConfig::appConfig_ = nullptr;;

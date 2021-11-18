@@ -18,13 +18,15 @@ public:
     AppConfig(AppConfig &other) = delete;
     void operator=(const AppConfig &) = delete;
 
-    void AddSensor(Sensor sensor, short systemAreaCode);
+    void AddSensor(Sensor sensor);
     QList<short> GetSystemAreaCodes();
+    QList<short> GetSystemIdCodes();
     void ClearSensors();
-    Sensor GetSensorInfo(short systemAreaCode);
+    Sensor GetSensorInfo(int uniqueId);
     void LoadXMLFile(QString path);
     void SaveXMLFile(QString path);
-    void DeleteSensor(short systemAreaCode);
+    void DeleteSensor(int uniqueId);
+    QList<int>GetUniqueIds();
 
 
 private:
@@ -32,9 +34,7 @@ private:
     AppConfig();
 
     static AppConfig* appConfig_;
-    int value;
-    QMap<short,Sensor> dataList;
-
+    QList<Sensor> sensorList_;
 
 };
 
