@@ -19,3 +19,10 @@ QTime OtherDataBlocks::GetTimeOfReception() {
 QString OtherDataBlocks::GetSACSIC() {
     return "N/A//N/A";
 }
+
+WGS84Coordinates OtherDataBlocks::GetPosition() {
+    return WGS84Coordinates(0,0,0);
+}
+QString OtherDataBlocks::GetIdentifier() {
+    return "N/A";
+}

@@ -17,6 +17,8 @@ public:
     QString GetTypeOfMessage();
     QTime GetTimeOfReception();
     QString GetSACSIC();
+    WGS84Coordinates GetPosition();
+    QString GetIdentifier();
 
 private:
 

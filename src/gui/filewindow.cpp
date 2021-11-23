@@ -39,12 +39,19 @@ void FileWindow::on_PacketLoaded() {
 
 void FileWindow::on_FinishLoading() {
 
-    ui->tableView->setModel(astFile_->table);
+    ui->tableView->setModel(astFile_->packetTable_);
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->loadedPackets->setText("Loaded " + QString::number(astFile_->numberOfPackets) + " packets");
+
+    ui->loadedFlights->setModel(astFile_->emitterTable_);
+    ui->loadedFlights->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->loadedFlights->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->loadedFlights->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->loadedFlights->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
     this->show();
     this->raise();
     loadingThread->quit();

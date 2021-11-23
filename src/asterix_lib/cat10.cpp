@@ -111,6 +111,13 @@ QString Cat10::GetSACSIC() {
     return QString::number(systemAreaCode) + "/" + QString::number(systemIdentificationCode);
 }
 
+WGS84Coordinates Cat10::GetPosition() {
+    return WGS84Coordinates(0,0,0);
+}
+QString Cat10::GetIdentifier() {
+    return "N/A";
+}
+
 void Cat10::FullDecode() {
 
     if (this->fspec.length() > 0) {

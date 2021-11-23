@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    emitter.cpp \
     src/appconfig.cpp \
     src/asterix_lib/otherdatablocks.cpp \
     src/gui/filewindow.cpp \
@@ -23,9 +24,11 @@ SOURCES += \
     src/asterix_lib/datablock.cpp \
     src/asterix_lib/utilities.cpp \
     src/asterix_lib/cat10.cpp \
-    src/testwindow.cpp
+    src/testwindow.cpp \
+    wgs84coordinates.cpp
 
 HEADERS += \
+    emitter.h \
     hdr/appconfig.h \
     hdr/gui/filewindow.h \
     hdr/asterix_lib/cat19.h \
@@ -39,7 +42,8 @@ HEADERS += \
     hdr/gui/preferenceswindow.h \
     hdr/asterix_lib/otherdatablocks.h \
     hdr/ensor.h \
-    hdr/testwindow.h
+    hdr/testwindow.h \
+    wgs84coordinates.h
 
 FORMS += \
     ui/widgets/testwindow.ui \

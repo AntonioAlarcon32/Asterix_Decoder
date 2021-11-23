@@ -122,6 +122,13 @@ QString Cat20::GetSACSIC() {
     return QString::number(systemAreaCode) + "/" + QString::number(systemIdentificationCode);
 }
 
+WGS84Coordinates Cat20::GetPosition() {
+    return WGS84Coordinates(0,0,0);
+}
+QString Cat20::GetIdentifier() {
+    return "N/A";
+}
+
 
 
 void Cat20::FullDecode() {

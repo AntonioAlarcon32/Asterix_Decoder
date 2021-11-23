@@ -7,18 +7,20 @@
 AsterixFile::AsterixFile()
 {
     dataBlocks = new QVector<DataBlock*>();
-    table = new QStandardItemModel;
+    packetTable_ = new QStandardItemModel;
+    emitterTable_ = new QStandardItemModel;
+    emitters_ = QList<Emitter>();
 }
 
 AsterixFile::~AsterixFile() {
     delete dataBlocks;
-    delete table;
+    delete packetTable_;
 }
 
 void AsterixFile::readFile(QString path) {
 
     dataBlocks->clear();
-    table->clear();
+    packetTable_->clear();
 
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly))
@@ -122,14 +124,16 @@ void AsterixFile::readFile(QString path) {
         if ((numOfPackets % 1000) == 0) {
             emit packetLoaded();
         }
-        table->appendRow({new QStandardItem(QString::number(category)),new QStandardItem(QString::number(length)),new QStandardItem(sicsac),
+        packetTable_->appendRow({new QStandardItem(QString::number(category)),new QStandardItem(QString::number(length)),new QStandardItem(sicsac),
                           new QStandardItem(timeToShow),new QStandardItem(typeOfMessage)});
         offset += length;
         if (fileInfo.completeSuffix() == "gps") {
             offset += 10;
         }
     }
-    table->setHorizontalHeaderLabels({"Category", "Length", "SAC/SIC", "Time of Transmission", "Type of Message"});
+    packetTable_->setHorizontalHeaderLabels({"Category", "Length", "SAC/SIC", "Time of Transmission", "Type of Message"});
+
+    this->ProcessEmitters();
 
     emit finishLoading();
      qDebug() << "Loading took" << testTime->elapsed() << "milliseconds";
@@ -167,6 +171,41 @@ int AsterixFile::GetTotalPackets(QString path) {
         }
     }
     return numOfPackets;
+}
+
+void AsterixFile::ProcessEmitters() {
+
+    QList<QString> identifiers = QList<QString>();
+    int i = 0;
+
+    for (DataBlock *dataBlock : *dataBlocks) {
+
+        if (dataBlock->GetIdentifier() != "N/A") {
+            int index = identifiers.indexOf(dataBlock->GetIdentifier());
+            i++;
+            if (i == 42)
+                int c = 1;
+
+            if (index == -1) {
+                Emitter newEmitter = Emitter(dataBlock->GetIdentifier());
+                newEmitter.AddPoint(dataBlock->GetPosition(), dataBlock->GetTimeOfReception());
+                identifiers.append(dataBlock->GetIdentifier());
+                emitters_.append(newEmitter);
+            }
+
+                else {
+                emitters_[index].AddPoint(dataBlock->GetPosition(), dataBlock->GetTimeOfReception());
+            }
+
+        }
+    }
+    for (Emitter emitter: emitters_) {
+        emitterTable_->appendRow({new QStandardItem(emitter.GetIdentifier()),
+                                  new QStandardItem(emitter.GetFirstReport().toString("hh:mm:ss:zzz")),
+                                  new QStandardItem(emitter.GetLastReport().toString("hh:mm:ss:zzz"))});
+
+    }
+    emitterTable_->setHorizontalHeaderLabels({"CallSign", "First Report at", "Last Report At"});
 }
 
 

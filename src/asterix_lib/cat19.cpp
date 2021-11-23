@@ -48,6 +48,15 @@ QString Cat19::GetSACSIC() {
 }
 
 
+WGS84Coordinates Cat19::GetPosition() {
+    return WGS84Coordinates(0,0,0);
+}
+QString Cat19::GetIdentifier() {
+    return "N/A";
+}
+
+
+
 void Cat19::FullDecode() {
     if (this->fspec.length() > 0) {
 

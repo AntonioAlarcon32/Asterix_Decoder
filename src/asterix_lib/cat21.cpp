@@ -203,6 +203,13 @@ QString Cat21::GetSACSIC() {
     return QString::number(systemAreaCode) + "/" + QString::number(systemIdentificationCode);
 }
 
+WGS84Coordinates Cat21::GetPosition() {
+    return WGS84Coordinates(wgs84latitude,wgs84longitude, geometricHeight*0.3048);
+}
+QString Cat21::GetIdentifier() {
+    return targetIdentification;
+}
+
 void Cat21::FullDecode() {
 
     if (this->fspec.length() > 0) {

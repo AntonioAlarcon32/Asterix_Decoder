@@ -4,6 +4,7 @@
 #include "QString"
 #include "QVector"
 #include "QTime"
+#include "wgs84coordinates.h"
 
 
 class DataBlock
@@ -30,8 +31,8 @@ public:
     virtual QString GetTypeOfMessage() = 0;
     virtual QTime GetTimeOfReception() = 0;
     virtual QString GetSACSIC() = 0;
-
-
+    virtual WGS84Coordinates GetPosition() = 0;
+    virtual QString GetIdentifier() = 0;
 };
 
 #endif // DATABLOCK_H

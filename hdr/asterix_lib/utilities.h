@@ -18,4 +18,6 @@ namespace Utilities
     };
 };
 
+
+
 #endif // UTILITIES_H

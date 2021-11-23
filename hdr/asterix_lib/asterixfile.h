@@ -12,6 +12,7 @@
 #include "cat20.h"
 #include "cat21.h"
 #include "otherdatablocks.h"
+#include "emitter.h"
 
 #include "hdr/appconfig.h"
 
@@ -25,16 +26,19 @@ public:
     ~AsterixFile();
 
     QVector<DataBlock *> *dataBlocks;
+    QList<Emitter> emitters_;
     int numberOfPackets;
     void decodeFlights();
 
     int GetTotalPackets(QString path);
 
-    QStandardItemModel* table;
+    QStandardItemModel* packetTable_;
+    QStandardItemModel* emitterTable_;
 
 public slots:
 
     void readFile(QString path);
+    void ProcessEmitters();
 
 signals:
 
