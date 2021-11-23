@@ -199,6 +199,10 @@ QTime Cat21::GetTimeOfReception() {
     return this->timeOfReportTransmission;
 }
 
+QString Cat21::GetSACSIC() {
+    return QString::number(systemAreaCode) + "/" + QString::number(systemIdentificationCode);
+}
+
 void Cat21::FullDecode() {
 
     if (this->fspec.length() > 0) {

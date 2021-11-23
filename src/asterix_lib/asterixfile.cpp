@@ -112,6 +112,7 @@ void AsterixFile::readFile(QString path) {
 
         QString typeOfMessage = dataBlocks->last()->GetTypeOfMessage();
         QTime timeOfReception = dataBlocks->last()->GetTimeOfReception();
+        QString sicsac = dataBlocks->last()->GetSACSIC();
         QString timeToShow = "N/A";
 
         if (!timeOfReception.isNull()) {
@@ -121,14 +122,14 @@ void AsterixFile::readFile(QString path) {
         if ((numOfPackets % 1000) == 0) {
             emit packetLoaded();
         }
-        table->appendRow({new QStandardItem(QString::number(category)),new QStandardItem(QString::number(length)),
+        table->appendRow({new QStandardItem(QString::number(category)),new QStandardItem(QString::number(length)),new QStandardItem(sicsac),
                           new QStandardItem(timeToShow),new QStandardItem(typeOfMessage)});
         offset += length;
         if (fileInfo.completeSuffix() == "gps") {
             offset += 10;
         }
     }
-    table->setHorizontalHeaderLabels({"Category","" "Length", "Time of Transmission", "Type of Message"});
+    table->setHorizontalHeaderLabels({"Category", "Length", "SAC/SIC", "Time of Transmission", "Type of Message"});
 
     emit finishLoading();
      qDebug() << "Loading took" << testTime->elapsed() << "milliseconds";

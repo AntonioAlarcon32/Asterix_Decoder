@@ -118,6 +118,10 @@ QTime Cat20::GetTimeOfReception() {
     return this->timeOfDay;
 }
 
+QString Cat20::GetSACSIC() {
+    return QString::number(systemAreaCode) + "/" + QString::number(systemIdentificationCode);
+}
+
 
 
 void Cat20::FullDecode() {

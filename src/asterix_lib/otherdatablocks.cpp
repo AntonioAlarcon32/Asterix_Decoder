@@ -15,3 +15,7 @@ QString OtherDataBlocks::GetTypeOfMessage() {
 QTime OtherDataBlocks::GetTimeOfReception() {
   return QTime();
 }
+
+QString OtherDataBlocks::GetSACSIC() {
+    return "N/A//N/A";
+}

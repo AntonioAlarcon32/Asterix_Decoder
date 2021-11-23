@@ -107,6 +107,10 @@ QTime Cat10::GetTimeOfReception() {
     return this->timeOfDay;
 }
 
+QString Cat10::GetSACSIC() {
+    return QString::number(systemAreaCode) + "/" + QString::number(systemIdentificationCode);
+}
+
 void Cat10::FullDecode() {
 
     if (this->fspec.length() > 0) {

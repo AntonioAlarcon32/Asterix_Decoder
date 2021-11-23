@@ -16,6 +16,7 @@ public:
     void FullDecode();
     QString GetTypeOfMessage();
     QTime GetTimeOfReception();
+    QString GetSACSIC();
 
 private:
 

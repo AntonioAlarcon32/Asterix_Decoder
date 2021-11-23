@@ -43,6 +43,10 @@ QTime Cat19::GetTimeOfReception() {
     return this->timeOfDay;
 }
 
+QString Cat19::GetSACSIC() {
+    return QString::number(systemAreaCode) + "/" + QString::number(systemIdentificationCode);
+}
+
 
 void Cat19::FullDecode() {
     if (this->fspec.length() > 0) {

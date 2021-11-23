@@ -29,6 +29,7 @@ public:
 
     virtual QString GetTypeOfMessage() = 0;
     virtual QTime GetTimeOfReception() = 0;
+    virtual QString GetSACSIC() = 0;
 
 
 };
