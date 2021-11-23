@@ -1,7 +1,9 @@
 #ifndef DATABLOCK_H
 #define DATABLOCK_H
+
 #include "QString"
 #include "QVector"
+#include "QTime"
 
 
 class DataBlock
@@ -14,13 +16,20 @@ public:
     QVector<unsigned char> fspec;
 
     void SetLength(int len);
-    int GetLength();
-    int GetCategory();
+
     void SetData(QByteArray data);
     void DecodeFSPEC();
-    QByteArray GetData();
-    //virtual QString GetTypeOfMessage() = 0;
     virtual void FullDecode() = 0;
+
+    //Get Methods
+
+    int GetLength();
+    int GetCategory();
+    QByteArray GetData();
+
+    virtual QString GetTypeOfMessage() = 0;
+    virtual QTime GetTimeOfReception() = 0;
+
 
 };
 

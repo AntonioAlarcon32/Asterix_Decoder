@@ -191,6 +191,14 @@ Cat21::Cat21()
     this->daSCC = nanf("");
 }
 
+QString Cat21::GetTypeOfMessage() {
+    return "N/A";
+}
+
+QTime Cat21::GetTimeOfReception() {
+    return this->timeOfReportTransmission;
+}
+
 void Cat21::FullDecode() {
 
     if (this->fspec.length() > 0) {

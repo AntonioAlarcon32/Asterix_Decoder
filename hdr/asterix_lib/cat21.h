@@ -13,6 +13,8 @@ public:
 
     Cat21();
     void FullDecode();
+    QString GetTypeOfMessage();
+    QTime GetTimeOfReception();
 
 private:
 

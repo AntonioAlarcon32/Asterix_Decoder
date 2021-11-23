@@ -12,6 +12,8 @@ public:
 
     Cat20();
     void FullDecode();
+    QString GetTypeOfMessage();
+    QTime GetTimeOfReception();
 
 private:
 

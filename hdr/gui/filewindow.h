@@ -10,8 +10,8 @@
 #include "QThread"
 
 #include <../AsterixDecoder/hdr/asterix_lib/asterixfile.h>
-#include <appconfig.h>
-#include <sensor.h>
+#include <hdr/appconfig.h>
+#include <hdr/sensor.h>
 
 #include <hdr/gui/preferenceswindow.h>
 
@@ -39,10 +39,12 @@ private:
 signals:
     void startLoading(QString path);
     void packetLoaded();
+    void finishedLoading();
 
 private slots:
     void on_PacketLoaded();
     void on_FinishLoading();
+
 };
 
 

@@ -1,4 +1,4 @@
-#include "sensor.h"
+#include "hdr/sensor.h"
 
 
 Sensor::Sensor() {

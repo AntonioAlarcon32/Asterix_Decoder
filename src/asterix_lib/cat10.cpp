@@ -98,6 +98,15 @@ Cat10::Cat10()
     this->presenceDTheta = QVector<unsigned char>();
 }
 
+
+QString Cat10::GetTypeOfMessage() {
+    return this->typeOfMessage;
+}
+
+QTime Cat10::GetTimeOfReception() {
+    return this->timeOfDay;
+}
+
 void Cat10::FullDecode() {
 
     if (this->fspec.length() > 0) {

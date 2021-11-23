@@ -1,4 +1,4 @@
-#include "appconfig.h"
+#include "hdr/appconfig.h"
 
 
 AppConfig::AppConfig()

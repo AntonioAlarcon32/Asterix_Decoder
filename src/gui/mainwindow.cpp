@@ -2,14 +2,18 @@
 #include "ui_mainwindow.h"
 
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
       prefWindow_(nullptr)
+
 {
     ui->setupUi(this);
     appConfig_ = nullptr;
     this->InitialConfig();
+    loadingDialog_ = new QProgressDialog("Decoding Asterix File...", nullptr, 0,0);
+    loadingDialog_->reset();
     numberOfPackets_ = 0;
 }
 
@@ -17,6 +21,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete prefWindow_;
+    delete loadingDialog_;
 }
 
 void MainWindow::InitialConfig() {
@@ -59,19 +64,24 @@ void MainWindow::on_openFileButton_clicked()
     if (dialog.exec())
         fileNames = dialog.selectedFiles();
 
+
     if (fileNames.length() == 1) {
         QString filePath = fileNames.at(0);
         FileWindow *fileWindow = new FileWindow(this);
 
         int packets = fileWindow->GetFileLength(filePath);
 
-        this->ui->progressBar->setMinimum(0);
-        this->ui->progressBar->setMaximum(packets);
+        loadingDialog_->setMinimum(0);
+        loadingDialog_->setMaximum(packets);
 
         connect(fileWindow, &FileWindow::packetLoaded, this, &MainWindow::on_PacketLoaded);
+        connect(fileWindow, &FileWindow::finishedLoading, this, &MainWindow::on_FinishedLoading);
         fileWindow->DecodeFile(filePath);
     }
 
+    else {
+        loadingDialog_->reset();
+    }
 }
 
 void MainWindow::on_preferencesButton_clicked()
@@ -96,5 +106,18 @@ void MainWindow::on_exitButton_clicked()
 void MainWindow::on_PacketLoaded() {
 
     numberOfPackets_+= 1000;
-    this->ui->progressBar->setValue(numberOfPackets_);
+    loadingDialog_->setValue(numberOfPackets_);
 }
+
+void MainWindow::on_pushButton_clicked()
+{
+    TestWindow *testWindow = new TestWindow(this);
+    testWindow->show();
+    testWindow->raise();
+}
+
+void MainWindow::on_FinishedLoading() {
+    loadingDialog_->setMinimum(0);
+    loadingDialog_->reset();
+}
+

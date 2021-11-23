@@ -22,7 +22,6 @@ FileWindow::~FileWindow()
     delete astFile_;
     delete ui;
     delete loadingThread;
-
 }
 
 void FileWindow::DecodeFile(QString filePath) {
@@ -49,7 +48,9 @@ void FileWindow::on_FinishLoading() {
     this->show();
     this->raise();
     loadingThread->quit();
+    emit finishedLoading();
 }
+
 
 int FileWindow::GetFileLength(QString filePath) {
     return this->astFile_->GetTotalPackets(filePath);

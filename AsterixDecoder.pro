@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui quickwidgets positioning
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -9,10 +9,11 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    appconfig.cpp \
+    src/appconfig.cpp \
+    src/asterix_lib/otherdatablocks.cpp \
     src/gui/filewindow.cpp \
     src/gui/preferenceswindow.cpp \
-    sensor.cpp \
+    src/sensor.cpp \
     src/asterix_lib/cat19.cpp \
     src/asterix_lib/cat20.cpp \
     src/asterix_lib/cat21.cpp \
@@ -21,10 +22,11 @@ SOURCES += \
     src/asterix_lib/asterixfile.cpp \
     src/asterix_lib/datablock.cpp \
     src/asterix_lib/utilities.cpp \
-    src/asterix_lib/cat10.cpp
+    src/asterix_lib/cat10.cpp \
+    src/testwindow.cpp
 
 HEADERS += \
-    appconfig.h \
+    hdr/appconfig.h \
     hdr/gui/filewindow.h \
     hdr/asterix_lib/cat19.h \
     hdr/asterix_lib/cat20.h \
@@ -35,14 +37,23 @@ HEADERS += \
     hdr/asterix_lib/datablock.h \
     hdr/asterix_lib/cat10.h \
     hdr/gui/preferenceswindow.h \
-    sensor.h
+    hdr/asterix_lib/otherdatablocks.h \
+    hdr/ensor.h \
+    hdr/testwindow.h
 
 FORMS += \
-    ui/filewindow.ui \
-    ui/preferenceswindow.ui \
-    ui/mainwindow.ui
+    ui/widgets/testwindow.ui \
+    ui/widgets/filewindow.ui \
+    ui/widgets/preferenceswindow.ui \
+    ui/widgets/mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    testQml.qml
+
+RESOURCES += \
+    Resources.qrc

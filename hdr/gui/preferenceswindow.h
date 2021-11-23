@@ -8,8 +8,8 @@
 #include "QMessageBox"
 #include "QStandardItemModel"
 
-#include <appconfig.h>
-#include <sensor.h>
+#include <hdr/appconfig.h>
+#include <hdr/sensor.h>
 
 
 namespace Ui {

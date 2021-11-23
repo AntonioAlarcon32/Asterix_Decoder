@@ -110,6 +110,16 @@ Cat20::Cat20()
 }
 
 
+QString Cat20::GetTypeOfMessage() {
+    return "N/A";
+}
+
+QTime Cat20::GetTimeOfReception() {
+    return this->timeOfDay;
+}
+
+
+
 void Cat20::FullDecode() {
     if (this->fspec.length() > 0) {
 

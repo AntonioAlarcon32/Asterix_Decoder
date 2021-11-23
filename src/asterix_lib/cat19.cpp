@@ -34,6 +34,16 @@ Cat19::Cat19()
     this->wgs84undulation = 0;
 }
 
+
+QString Cat19::GetTypeOfMessage() {
+    return this->typeOfMessage;
+}
+
+QTime Cat19::GetTimeOfReception() {
+    return this->timeOfDay;
+}
+
+
 void Cat19::FullDecode() {
     if (this->fspec.length() > 0) {
 

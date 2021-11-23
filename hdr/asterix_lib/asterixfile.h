@@ -11,8 +11,9 @@
 #include "cat19.h"
 #include "cat20.h"
 #include "cat21.h"
+#include "otherdatablocks.h"
 
-#include "appconfig.h"
+#include "hdr/appconfig.h"
 
 class AsterixFile: public QObject
 {

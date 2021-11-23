@@ -7,13 +7,15 @@
 #include "QDebug"
 #include "QDir"
 #include "QMessageBox"
+#include "QProgressDialog"
 
-#include <../AsterixDecoder/hdr/asterix_lib/asterixfile.h>
-#include <appconfig.h>
-#include <sensor.h>
+#include <hdr/asterix_lib/asterixfile.h>
+#include <hdr/appconfig.h>
+#include <hdr/sensor.h>
 
 #include <hdr/gui/preferenceswindow.h>
 #include <hdr/gui/filewindow.h>
+#include <hdr/testwindow.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -37,11 +39,15 @@ private slots:
 
     void on_PacketLoaded();
 
+    void on_pushButton_clicked();
+
+    void on_FinishedLoading();
+
 private:
     Ui::MainWindow *ui;
     AppConfig *appConfig_;
     int numberOfPackets_;
-
+    QProgressDialog *loadingDialog_;
     PreferencesWindow *prefWindow_;
 
     void InitialConfig();
