@@ -633,7 +633,7 @@ void Cat21::DecodeServiceIdentification(QVector<unsigned char> &dataItem) {
 void Cat21::DecodeTimeOfApplicabilityForPosition(QVector<unsigned char> &dataItem) {
     double timeResolution = pow(2,-7);
     double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
-    int mseconds = (int) seconds * 1000;
+    int mseconds = seconds * 1000;
     this->timeOfApplicabilityForPosition = QTime::fromMSecsSinceStartOfDay(mseconds);
 }
 void Cat21::DecodePositionInWGS84Coordinates(QVector<unsigned char> &dataItem) {
@@ -658,7 +658,7 @@ void Cat21::DecodePositionInWGS84CoordinatesHighRes(QVector<unsigned char> &data
 void Cat21::DecodeTimeOfApplicabilityForVelocity(QVector<unsigned char> &dataItem) {
     double timeResolution = pow(2,-7);
     double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
-    int mseconds = (int) seconds * 1000;
+    int mseconds = seconds * 1000;
     this->timeOfApplicabilityForVelocity = QTime::fromMSecsSinceStartOfDay(mseconds);
 }
 
@@ -717,7 +717,7 @@ void Cat21::DecodeTargetAddress(QVector<unsigned char> &dataItem){
 void Cat21::DecodeTimeOfMessageReceptionOfPosition(QVector<unsigned char> &dataItem) {
     double timeResolution = pow(2,-7);
     double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
-    int mseconds = (int) seconds * 1000;
+    int mseconds = seconds * 1000;
     this->timeOfMessageReceptionOfPosition = QTime::fromMSecsSinceStartOfDay(mseconds);
 }
 void Cat21::DecodeTimeOfMessageReceptionOfPositionHighPrecision(QVector<unsigned char> &dataItem){
@@ -732,7 +732,7 @@ void Cat21::DecodeTimeOfMessageReceptionOfPositionHighPrecision(QVector<unsigned
 void Cat21::DecodeTimeOfMessageReceptionOfVelocity(QVector<unsigned char> &dataItem){
     double timeResolution = pow(2,-7);
     double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
-    int mseconds = (int) seconds * 1000;
+    int mseconds = seconds * 1000;
     this->timeOfMessageReceptionOfVelocity = QTime::fromMSecsSinceStartOfDay(mseconds);
 }
 void Cat21::DecodeTimeOfMessageReceptionOfVelocityHighPrecision(QVector<unsigned char> &dataItem){
@@ -996,7 +996,7 @@ void Cat21::DecodeTimeOfReportTransmission(QVector<unsigned char> &dataItem) {
 
     double timeResolution = pow(2,-7);
     double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
-    int mseconds = (int) seconds * 1000;
+    int mseconds = seconds * 1000;
     this->timeOfReportTransmission = QTime::fromMSecsSinceStartOfDay(mseconds);
 }
 

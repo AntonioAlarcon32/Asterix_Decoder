@@ -438,7 +438,7 @@ void Cat20::DecodeTargetReportDescriptor(QVector<unsigned char> &dataItem) {
 void Cat20::DecodeTimeOfDay(QVector<unsigned char> &dataItem) {
     double timeResolution = pow(2,-7);
     double seconds = Utilities::DataTools::DecodeUnsignedBytesToDouble(dataItem,timeResolution);
-    int mseconds = (int) seconds * 1000;
+    int mseconds = seconds * 1000;
     this->timeOfDay = QTime::fromMSecsSinceStartOfDay(mseconds);
 }
 
