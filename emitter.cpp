@@ -24,3 +24,11 @@ QTime Emitter::GetLastReport() {
     return timeStamps.last();
 }
 
+QList<WGS84Coordinates> Emitter::GetCoordinates() {
+    return this->points;
+}
+
+QList<QTime> Emitter::GetTimeStamps() {
+    return this->timeStamps;
+}
+

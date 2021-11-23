@@ -9,9 +9,10 @@ TestWindow::TestWindow(QWidget *parent) :
     ui->setupUi(this);
     QQuickWidget *view = ui->quickWidget;
     QQmlContext *context = view->rootContext();
+    context->setContextProperty("testWindow", this);
     view->show();
     map_ = view->rootObject();
-    context->setContextProperty("testWindow", this);
+
 
     //connect(this, SIGNAL(changePosition(QGeoCoordinate)), map_, SLOT(changePos(QGeoCoordinate)));
 }
