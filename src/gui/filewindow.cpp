@@ -13,11 +13,6 @@ FileWindow::FileWindow(QWidget *parent) :
     loadingThread = new QThread();
     astFile_->moveToThread(loadingThread);
     ConnectSignalsSlots();
-
-    QQuickWidget *view = ui->quickWidget;
-    QQmlContext *context = view->rootContext();
-    view->show();
-    context->setContextProperty("testWindow", this);
 }
 
 FileWindow::~FileWindow()

@@ -188,13 +188,12 @@ void AsterixFile::ProcessEmitters() {
 
             if (index == -1) {
                 Emitter newEmitter = Emitter(dataBlock->GetIdentifier());
-                newEmitter.AddPoint(dataBlock->GetPosition(), dataBlock->GetTimeOfReception());
+                newEmitter.AddPoint(dataBlock->GetPosition(), dataBlock->GetTimeOfReception(), dataBlock->category);
                 identifiers.append(dataBlock->GetIdentifier());
                 emitters_.append(newEmitter);
             }
-
                 else {
-                emitters_[index].AddPoint(dataBlock->GetPosition(), dataBlock->GetTimeOfReception());
+                emitters_[index].AddPoint(dataBlock->GetPosition(), dataBlock->GetTimeOfReception(), dataBlock->category);
             }
 
         }

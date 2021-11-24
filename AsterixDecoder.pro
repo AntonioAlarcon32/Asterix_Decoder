@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    custommap.cpp \
     emitter.cpp \
     src/appconfig.cpp \
     src/asterix_lib/otherdatablocks.cpp \
@@ -28,6 +29,7 @@ SOURCES += \
     wgs84coordinates.cpp
 
 HEADERS += \
+    custommap.h \
     emitter.h \
     hdr/appconfig.h \
     hdr/gui/filewindow.h \
@@ -46,6 +48,7 @@ HEADERS += \
     wgs84coordinates.h
 
 FORMS += \
+    custommap.ui \
     ui/widgets/testwindow.ui \
     ui/widgets/filewindow.ui \
     ui/widgets/preferenceswindow.ui \

@@ -215,8 +215,24 @@ QString Cat21::GetSACSIC() {
 WGS84Coordinates Cat21::GetPosition() {
     return WGS84Coordinates(wgs84latitude,wgs84longitude, geometricHeight*0.3048);
 }
+
 QString Cat21::GetIdentifier() {
-    return targetIdentification;
+
+    if (targetIdentification != "N/A") {
+            return targetIdentification;
+    }
+
+    else if (targetAddress != "N/A") {
+        return targetAddress;
+    }
+
+    else if (trackNumber != -1) {
+        return QString::number(trackNumber);
+    }
+
+    else {
+        return "N/A";
+    }
 }
 
 void Cat21::FullDecode() {

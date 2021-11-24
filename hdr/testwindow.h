@@ -6,6 +6,7 @@
 #include "QQuickItem"
 #include "QGeoCoordinate"
 #include "QQmlContext"
+#include "custommap.h"
 
 namespace Ui {
 class TestWindow;
@@ -19,16 +20,9 @@ public:
     explicit TestWindow(QWidget *parent = nullptr);
     ~TestWindow();
 
-private slots:
-    void on_pushButton_clicked();
-
-    void on_pushButton_2_clicked();
-
-    void on_pushButton_3_clicked();
-
 private:
     Ui::TestWindow *ui;
-    QQuickItem *map_;
+    CustomMap *map_;
 
 signals:
     void changePosition(double lat, double lon);

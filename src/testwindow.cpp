@@ -7,13 +7,9 @@ TestWindow::TestWindow(QWidget *parent) :
     ui(new Ui::TestWindow)
 {
     ui->setupUi(this);
-    QQuickWidget *view = ui->quickWidget;
-    QQmlContext *context = view->rootContext();
-    view->show();
-    map_ = view->rootObject();
-    context->setContextProperty("testWindow", this);
-
-    //connect(this, SIGNAL(changePosition(QGeoCoordinate)), map_, SLOT(changePos(QGeoCoordinate)));
+    map_ = ui->testMap;
+    map_->SetZoom(13);
+    map_->SetPosition(WGS84Coordinates(41.280100977219696, 1.9766510362841287,0));
 }
 
 TestWindow::~TestWindow()
@@ -21,20 +17,4 @@ TestWindow::~TestWindow()
     delete ui;
 }
 
-void TestWindow::on_pushButton_clicked()
-{
-    emit changePosition(41.301104043406234, 2.070916979442824);
-}
-
-
-void TestWindow::on_pushButton_2_clicked()
-{
-    emit addMarker(41.301104043406234, 2.070916979442824);
-}
-
-
-void TestWindow::on_pushButton_3_clicked()
-{
-    emit clearMap();
-}
 

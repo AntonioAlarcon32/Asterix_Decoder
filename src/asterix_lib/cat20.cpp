@@ -134,11 +134,25 @@ QString Cat20::GetSACSIC() {
 WGS84Coordinates Cat20::GetPosition() {
     return WGS84Coordinates(0,0,0);
 }
+
 QString Cat20::GetIdentifier() {
-    return "N/A";
+
+    if (targetIdentification != "N/A") {
+            return targetIdentification;
+    }
+
+    else if (targetAddress != "N/A") {
+        return targetAddress;
+    }
+
+    else if (trackNumber != -1) {
+        return QString::number(trackNumber);
+    }
+
+    else {
+        return "N/A";
+    }
 }
-
-
 
 void Cat20::FullDecode() {
     if (this->fspec.length() > 0) {
