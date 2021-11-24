@@ -19,9 +19,6 @@ public:
     QTime GetFirstReport();
     QTime GetLastReport();
 
-    QList<WGS84Coordinates> GetCoordinates();
-    QList<QTime> GetTimeStamps();
-
 private:
     QString identifier;
     QList<WGS84Coordinates> points;

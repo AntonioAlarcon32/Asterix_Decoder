@@ -2,7 +2,4 @@
     <qresource prefix="/qml">
         <file>ui/qml/testQml.qml</file>
     </qresource>
-    <qresource prefix="/images">
-        <file>redMarker.png</file>
-    </qresource>
 </RCC>
