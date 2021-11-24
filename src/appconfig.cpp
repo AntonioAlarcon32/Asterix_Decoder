@@ -59,6 +59,18 @@ void AppConfig::DeleteSensor(int uniqueId) {
     }
 }
 
+Sensor AppConfig::GetSensorFromSACSIC(short sac, short sic) {
+
+    int i = 0;
+    while (i < this->sensorList_.length()) {
+        if (sensorList_.at(i).systemAreaCode == sac && sensorList_.at(i).systemIdCode == sic) {
+            return sensorList_.at(i);
+        }
+        i++;
+    }
+    return Sensor();
+}
+
 Sensor AppConfig::GetSensorInfo(int uniqueId) {
     int i = 0;
     while (i < this->sensorList_.length()) {

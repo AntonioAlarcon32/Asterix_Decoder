@@ -119,7 +119,16 @@ QTime Cat20::GetTimeOfReception() {
 }
 
 QString Cat20::GetSACSIC() {
-    return QString::number(systemAreaCode) + "/" + QString::number(systemIdentificationCode);
+
+    AppConfig *conf = AppConfig::GetInstance();
+    Sensor sensor = conf->GetSensorFromSACSIC(systemAreaCode,systemIdentificationCode);
+    if (sensor.systemAreaCode == systemAreaCode && sensor.systemIdCode == systemIdentificationCode) {
+        return sensor.sensorDescription;
+    }
+    else {
+        return QString::number(systemAreaCode) + "/" + QString::number(systemIdentificationCode);
+    }
+
 }
 
 WGS84Coordinates Cat20::GetPosition() {
