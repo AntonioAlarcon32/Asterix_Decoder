@@ -9,12 +9,15 @@ FileWindow::FileWindow(QWidget *parent) :
     ui->setupUi(this);
     astFile_ = new AsterixFile();
     appConfig_ = AppConfig::GetInstance();
+    playTimer_ = new QTimer();
     loadingThread = new QThread();
     astFile_->moveToThread(loadingThread);
+    ConnectSignalsSlots();
 
-    connect(this, &FileWindow::startLoading, astFile_, &AsterixFile::readFile);
-    connect(astFile_, &AsterixFile::packetLoaded, this, &FileWindow::on_PacketLoaded);
-    connect(astFile_, &AsterixFile::finishLoading, this, &FileWindow::on_FinishLoading);
+    QQuickWidget *view = ui->quickWidget;
+    QQmlContext *context = view->rootContext();
+    view->show();
+    context->setContextProperty("testWindow", this);
 }
 
 FileWindow::~FileWindow()
@@ -52,13 +55,40 @@ void FileWindow::on_FinishLoading() {
     ui->loadedFlights->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->loadedFlights->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
+    currentTime_ = astFile_->dataBlocks->first()->GetTimeOfReception();
+    this->ui->timerLabel->setText(currentTime_.toString("hh:mm:ss"));
     this->show();
     this->raise();
     loadingThread->quit();
     emit finishedLoading();
 }
 
-
 int FileWindow::GetFileLength(QString filePath) {
     return this->astFile_->GetTotalPackets(filePath);
 }
+
+
+void FileWindow::on_playButton_clicked()
+{
+    playTimer_->start(1000);
+}
+
+void FileWindow::on_stopButton_clicked()
+{
+    playTimer_->stop();
+}
+
+void FileWindow::ConnectSignalsSlots() {
+    connect(this, &FileWindow::startLoading, astFile_, &AsterixFile::readFile);
+    connect(astFile_, &AsterixFile::packetLoaded, this, &FileWindow::on_PacketLoaded);
+    connect(astFile_, &AsterixFile::finishLoading, this, &FileWindow::on_FinishLoading);
+    connect(this->ui->playButton, &QAbstractButton::clicked, this, &FileWindow::on_playButton_clicked);
+    connect(this->ui->stopButton, &QAbstractButton::clicked, this, &FileWindow::on_stopButton_clicked);
+    connect(playTimer_, &QTimer::timeout, this, &FileWindow::on_TimerTick);
+}
+
+void FileWindow::on_TimerTick() {
+    currentTime_ = currentTime_.addSecs(1);
+    this->ui->timerLabel->setText(currentTime_.toString("hh:mm:ss"));
+}
+

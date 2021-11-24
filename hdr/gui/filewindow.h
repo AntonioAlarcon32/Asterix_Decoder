@@ -8,6 +8,8 @@
 #include "QDir"
 #include "QMessageBox"
 #include "QThread"
+#include "QTimer"
+#include "QQmlContext"
 
 #include <../AsterixDecoder/hdr/asterix_lib/asterixfile.h>
 #include <hdr/appconfig.h>
@@ -34,7 +36,10 @@ private:
     AsterixFile *astFile_;
     AppConfig *appConfig_;
     QThread *loadingThread;
+    QTimer *playTimer_;
+    QTime currentTime_;
     void closeEvent(QCloseEvent *event);
+    void ConnectSignalsSlots();
 
 signals:
     void startLoading(QString path);
@@ -44,7 +49,9 @@ signals:
 private slots:
     void on_PacketLoaded();
     void on_FinishLoading();
-
+    void on_stopButton_clicked();
+    void on_playButton_clicked();
+    void on_TimerTick();
 };
 
 
