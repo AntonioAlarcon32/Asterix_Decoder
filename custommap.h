@@ -21,6 +21,7 @@ public:
 
     void SetPosition(WGS84Coordinates coordinates);
     void SetZoom(int level);
+    void AddItem(WGS84Coordinates coordinates);
 
 private:
     Ui::CustomMap *ui;

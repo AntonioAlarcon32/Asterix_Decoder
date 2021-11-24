@@ -24,18 +24,20 @@ CustomMap::~CustomMap()
 void CustomMap::SetPosition(WGS84Coordinates coordinates) {
     QVariant lat = coordinates.latitude;
     QVariant lon = coordinates.longitude;
-    QVariant returnedValue;
     QMetaObject::invokeMethod(map_, "changeCenterPos",
-            Q_RETURN_ARG(QVariant, returnedValue),
             Q_ARG(QVariant, lat),Q_ARG(QVariant, lon));
 }
 
 void CustomMap::SetZoom(int level) {
     QVariant value = level;
-    QVariant returnedValue;
     QMetaObject::invokeMethod(map_, "setZoom",
-            Q_RETURN_ARG(QVariant, returnedValue),
             Q_ARG(QVariant, value));
+}
+
+void CustomMap::AddItem(WGS84Coordinates coordinates) {
+    QVariant lat = coordinates.latitude;
+    QVariant lon = coordinates.longitude;
+    QMetaObject::invokeMethod(map_, "addItemToMap", Q_ARG(QVariant, lat),Q_ARG(QVariant, lon));
 }
 
 

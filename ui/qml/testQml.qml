@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQml 2.0
 import QtQuick.Window 2.12
 import QtQuick.Controls 2.0
-import QtLocation 5.6
+import QtLocation 5.12
 import QtPositioning 5.6
 
 Rectangle {
@@ -28,17 +28,19 @@ Rectangle {
         function setZoom(level) {
             testMap.zoomLevel = level
         }
+
+        function addItemToMap(lat, lon) {
+            var component = Qt.createComponent("PolygonGroup.qml");
+            var item = component.createObject(testMap);
+            item.position = QtPositioning.coordinate(lat, lon);
+            testMap.addMapItemGroup(item);
+        }
     }
 
     Plugin {
             id: mapPlugin
             name: "osm" // "mapboxgl", "esri", ...
-            // specify plugin parameters if necessary
-            // PluginParameter {
-            //     name:
-            //     value:
-            // }
-        }
+    }
 }
 
 
