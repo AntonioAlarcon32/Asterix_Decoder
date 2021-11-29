@@ -36,6 +36,8 @@ private:
     Ui::FileWindow *ui;
     AsterixFile *astFile_;
     int packetCounter_;
+    QList<QString> alreadyAdded_;
+    int secsValue_;
     AppConfig *appConfig_;
     QThread *loadingThread;
     QTimer *playTimer_;

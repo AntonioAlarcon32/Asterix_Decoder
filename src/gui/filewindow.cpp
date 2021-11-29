@@ -12,8 +12,12 @@ FileWindow::FileWindow(QWidget *parent) :
     playTimer_ = new QTimer();
     loadingThread = new QThread();
     packetCounter_ = 0;
+    alreadyAdded_ = QList<QString>();
+    secsValue_ = 0;
     astFile_->moveToThread(loadingThread);
     ConnectSignalsSlots();
+    ui->widget->SetPosition(WGS84Coordinates(41.29742220817759, 2.083346335275707,0));
+    ui->widget->SetZoom(10);
 }
 
 FileWindow::~FileWindow()
@@ -52,7 +56,11 @@ void FileWindow::on_FinishLoading() {
     ui->loadedFlights->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->loadedFlights->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    currentTime_ = astFile_->dataBlocks->first()->GetTimeOfReception();
+    int hour = astFile_->dataBlocks->first()->GetTimeOfReception().hour();
+    int min = astFile_->dataBlocks->first()->GetTimeOfReception().minute();
+    int sec = astFile_->dataBlocks->first()->GetTimeOfReception().second();
+
+    currentTime_ = QTime(hour,min,sec,0);
     this->ui->timerLabel->setText(currentTime_.toString("hh:mm:ss"));
     this->show();
     this->raise();
@@ -67,7 +75,7 @@ int FileWindow::GetFileLength(QString filePath) {
 
 void FileWindow::on_playButton_clicked()
 {
-    playTimer_->start(1000);
+    playTimer_->start(500);
 }
 
 void FileWindow::on_stopButton_clicked()
@@ -86,21 +94,41 @@ void FileWindow::ConnectSignalsSlots() {
 }
 
 void FileWindow::on_TimerTick() {
-    currentTime_ = currentTime_.addSecs(1);
     this->ui->timerLabel->setText(currentTime_.toString("hh:mm:ss"));
-    this->ui->widget->Clear();
+
+
+    if (secsValue_ != 1000) {
+        secsValue_ += 500;
+    }
+
+    else {
+        this->ui->widget->Clear();
+        secsValue_ = 0;
+        alreadyAdded_.clear();
+    }
 
     while (packetCounter_ < astFile_->dataBlocks->length()) {
-        int timeDiff = currentTime_.secsTo(astFile_->dataBlocks->at(packetCounter_)->GetTimeOfReception());
-        if (timeDiff >= -1 && timeDiff <= 1) {
-            DataBlock* dataBlock = astFile_->dataBlocks->at(packetCounter_);
-            this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10, "red");
-            packetCounter_++;
+        int timeDiff = currentTime_.msecsTo(astFile_->dataBlocks->at(packetCounter_)->GetTimeOfReception());
+        QString ident = astFile_->dataBlocks->at(packetCounter_)->GetIdentifier();
+
+        if (timeDiff >= 0 && timeDiff <= 500) {
+            if (alreadyAdded_.indexOf(ident) == -1) {
+                DataBlock* dataBlock = astFile_->dataBlocks->at(packetCounter_);
+                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10, "red");
+                packetCounter_++;
+                alreadyAdded_.append(ident);
+            }
+            else if (alreadyAdded_.indexOf(ident) != -1) {
+                //DELETE OLD MARKER ADD NEW MARKER
+                packetCounter_++;
+            }
         }
+
         else {
             break;
         }
     }
+    currentTime_ = currentTime_.addMSecs(500);
 }
 
 
