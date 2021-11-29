@@ -29,6 +29,7 @@ public:
     QList<Emitter> emitters_;
     int numberOfPackets;
     void decodeFlights();
+    void FilterByCallSign(QString callSign);
 
     int GetTotalPackets(QString path);
 

@@ -15,6 +15,9 @@ public:
     QString GetSACSIC();
     WGS84Coordinates GetPosition();
     QString GetIdentifier();
+    QString GetCallSign();
+    QString GetAddress();
+    QString GetTrackNumber();
 };
 
 #endif // OTHERDATABLOCKS_H

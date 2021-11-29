@@ -11,8 +11,9 @@
 #include "QTimer"
 #include "QQmlContext"
 
-#include <../AsterixDecoder/hdr/asterix_lib/asterixfile.h>
+#include <hdr/asterix_lib/asterixfile.h>
 #include <hdr/appconfig.h>
+#include <filtersdialog.h>
 #include <hdr/sensor.h>
 
 #include <hdr/gui/preferenceswindow.h>
@@ -34,6 +35,7 @@ public:
 private:
     Ui::FileWindow *ui;
     AsterixFile *astFile_;
+    int packetCounter_;
     AppConfig *appConfig_;
     QThread *loadingThread;
     QTimer *playTimer_;
@@ -52,6 +54,7 @@ private slots:
     void on_stopButton_clicked();
     void on_playButton_clicked();
     void on_TimerTick();
+    void on_filtersButton_clicked();
 };
 
 

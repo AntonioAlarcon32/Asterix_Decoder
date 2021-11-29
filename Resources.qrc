@@ -3,4 +3,5 @@
         <file>ui/qml/testQml.qml</file>
         <file>ui/qml/PolygonGroup.qml</file>
     </qresource>
+    <qresource prefix="/images"/>
 </RCC>

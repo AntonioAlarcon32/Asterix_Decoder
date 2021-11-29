@@ -22,17 +22,19 @@ Rectangle {
         }
 
         function clearMap() {
-            testMap.clearMapItems()
+            testMap.clearMapItems();
         }
 
         function setZoom(level) {
             testMap.zoomLevel = level
         }
 
-        function addItemToMap(lat, lon) {
+        function addItemToMap(lat, lon, radius, color) {
             var component = Qt.createComponent("PolygonGroup.qml");
             var item = component.createObject(testMap);
             item.position = QtPositioning.coordinate(lat, lon);
+            item.radius = radius;
+            item.color = color;
             testMap.addMapItemGroup(item);
         }
     }

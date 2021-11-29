@@ -235,6 +235,17 @@ QString Cat21::GetIdentifier() {
     }
 }
 
+QString Cat21::GetCallSign() {
+    return targetIdentification;
+}
+QString Cat21::GetAddress() {
+    return targetAddress;
+}
+QString Cat21::GetTrackNumber() {
+    return QString::number(trackNumber);
+}
+
+
 void Cat21::FullDecode() {
 
     if (this->fspec.length() > 0) {

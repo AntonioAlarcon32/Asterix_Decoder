@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     custommap.cpp \
     emitter.cpp \
+    filtersdialog.cpp \
     src/appconfig.cpp \
     src/asterix_lib/otherdatablocks.cpp \
     src/gui/filewindow.cpp \
@@ -31,6 +32,7 @@ SOURCES += \
 HEADERS += \
     custommap.h \
     emitter.h \
+    filtersdialog.h \
     hdr/appconfig.h \
     hdr/gui/filewindow.h \
     hdr/asterix_lib/cat19.h \
@@ -49,6 +51,7 @@ HEADERS += \
 
 FORMS += \
     custommap.ui \
+    filtersdialog.ui \
     ui/widgets/testwindow.ui \
     ui/widgets/filewindow.ui \
     ui/widgets/preferenceswindow.ui \

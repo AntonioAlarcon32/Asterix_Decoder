@@ -154,6 +154,19 @@ QString Cat20::GetIdentifier() {
     }
 }
 
+
+QString Cat20::GetCallSign() {
+    return targetIdentification;
+}
+QString Cat20::GetAddress() {
+    return targetAddress;
+}
+QString Cat20::GetTrackNumber() {
+    return QString::number(trackNumber);
+}
+
+
+
 void Cat20::FullDecode() {
     if (this->fspec.length() > 0) {
 

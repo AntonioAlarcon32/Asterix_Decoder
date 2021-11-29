@@ -26,3 +26,14 @@ WGS84Coordinates OtherDataBlocks::GetPosition() {
 QString OtherDataBlocks::GetIdentifier() {
     return "N/A";
 }
+
+QString OtherDataBlocks::GetCallSign() {
+    return "N/A";
+}
+QString OtherDataBlocks::GetAddress() {
+    return "N/A";
+}
+QString OtherDataBlocks::GetTrackNumber() {
+    return "N/A";
+}
+

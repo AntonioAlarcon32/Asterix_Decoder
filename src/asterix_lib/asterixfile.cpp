@@ -111,6 +111,7 @@ void AsterixFile::readFile(QString path) {
         //Cat10 *inten2 = dynamic_cast<Cat10*>(dataBlocks->at(0));
 
         numOfPackets++;
+        dataBlocks->at(numOfPackets-1)->SetNumOfPacket(numOfPackets);
 
         QString typeOfMessage = dataBlocks->last()->GetTypeOfMessage();
         QTime timeOfReception = dataBlocks->last()->GetTimeOfReception();
@@ -124,14 +125,14 @@ void AsterixFile::readFile(QString path) {
         if ((numOfPackets % 1000) == 0) {
             emit packetLoaded();
         }
-        packetTable_->appendRow({new QStandardItem(QString::number(category)),new QStandardItem(QString::number(length)),new QStandardItem(sicsac),
+        packetTable_->appendRow({new QStandardItem(QString::number(numOfPackets)),new QStandardItem(QString::number(category)),new QStandardItem(QString::number(length)),new QStandardItem(sicsac),
                           new QStandardItem(timeToShow),new QStandardItem(typeOfMessage)});
         offset += length;
         if (fileInfo.completeSuffix() == "gps") {
             offset += 10;
         }
     }
-    packetTable_->setHorizontalHeaderLabels({"Category", "Length", "SAC/SIC", "Time of Transmission", "Type of Message"});
+    packetTable_->setHorizontalHeaderLabels({"Packet","Category", "Length", "SAC/SIC", "Time of Transmission", "Type of Message"});
 
     this->ProcessEmitters();
 
@@ -205,6 +206,35 @@ void AsterixFile::ProcessEmitters() {
 
     }
     emitterTable_->setHorizontalHeaderLabels({"CallSign", "First Report at", "Last Report At"});
+}
+
+void AsterixFile::FilterByCallSign(QString callSign) {
+
+    packetTable_->clear();
+
+    for (DataBlock *dataBlock : *dataBlocks) {
+
+        if (callSign == dataBlock->GetCallSign().replace(" ","")) {
+
+            QString typeOfMessage = dataBlock->GetTypeOfMessage();
+            QTime timeOfReception = dataBlock->GetTimeOfReception();
+            QString sicsac = dataBlock->GetSACSIC();
+            QString timeToShow = "N/A";
+            int category = dataBlock->GetCategory();
+            int packetNumber = dataBlock->GetNumOfPacket();
+            int length = dataBlock->GetLength();
+
+            if (!timeOfReception.isNull()) {
+                timeToShow = timeOfReception.toString("hh:mm:ss:zzz");
+            }
+
+            packetTable_->appendRow({new QStandardItem(QString::number(packetNumber)),new QStandardItem(QString::number(category)),new QStandardItem(QString::number(length)),new QStandardItem(sicsac),
+                                     new QStandardItem(timeToShow),new QStandardItem(typeOfMessage)});
+        }
+    }
+
+    packetTable_->setHorizontalHeaderLabels({"Packet","Category", "Length", "SAC/SIC", "Time of Transmission", "Type of Message"});
+
 }
 
 

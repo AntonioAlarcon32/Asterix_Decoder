@@ -13,10 +13,13 @@ public:
 
     int category;
     int length;
+    int numOfPacket;
     QByteArray data;
     QVector<unsigned char> fspec;
 
     void SetLength(int len);
+    void SetNumOfPacket(int len);
+    int GetNumOfPacket();
 
     void SetData(QByteArray data);
     void DecodeFSPEC();
@@ -33,6 +36,10 @@ public:
     virtual QString GetSACSIC() = 0;
     virtual WGS84Coordinates GetPosition() = 0;
     virtual QString GetIdentifier() = 0;
+
+    virtual QString GetCallSign() = 0;
+    virtual QString GetAddress() = 0;
+    virtual QString GetTrackNumber() = 0;
 };
 
 #endif // DATABLOCK_H

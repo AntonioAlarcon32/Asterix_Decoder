@@ -9,6 +9,14 @@ int DataBlock::GetLength() {
     return this->length;
 };
 
+void DataBlock::SetNumOfPacket(int number) {
+    this->numOfPacket = number;
+};
+
+int DataBlock::GetNumOfPacket() {
+    return this->numOfPacket;
+};
+
 void DataBlock::SetLength(int len) {
     this->length = len;
 };

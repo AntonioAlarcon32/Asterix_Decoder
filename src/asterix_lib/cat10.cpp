@@ -142,6 +142,16 @@ QString Cat10::GetIdentifier() {
     }
 }
 
+QString Cat10::GetCallSign() {
+    return targetIdentification;
+}
+QString Cat10::GetAddress() {
+    return targetAddress;
+}
+QString Cat10::GetTrackNumber() {
+    return QString::number(trackNumber);
+}
+
 void Cat10::FullDecode() {
 
     if (this->fspec.length() > 0) {

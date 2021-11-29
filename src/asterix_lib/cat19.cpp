@@ -59,9 +59,21 @@ QString Cat19::GetSACSIC() {
 WGS84Coordinates Cat19::GetPosition() {
     return WGS84Coordinates(0,0,0);
 }
+
 QString Cat19::GetIdentifier() {
     return "N/A";
 }
+
+QString Cat19::GetCallSign() {
+    return "N/A";
+}
+QString Cat19::GetAddress() {
+    return "N/A";
+}
+QString Cat19::GetTrackNumber() {
+    return "N/A";
+}
+
 
 
 

@@ -34,10 +34,14 @@ void CustomMap::SetZoom(int level) {
             Q_ARG(QVariant, value));
 }
 
-void CustomMap::AddItem(WGS84Coordinates coordinates) {
+void CustomMap::AddCircleMarker(WGS84Coordinates coordinates, int radius, QString color) {
     QVariant lat = coordinates.latitude;
     QVariant lon = coordinates.longitude;
-    QMetaObject::invokeMethod(map_, "addItemToMap", Q_ARG(QVariant, lat),Q_ARG(QVariant, lon));
+    QMetaObject::invokeMethod(map_, "addItemToMap", Q_ARG(QVariant, lat),Q_ARG(QVariant, lon),Q_ARG(QVariant, radius),Q_ARG(QVariant, color));
+}
+
+void CustomMap::Clear() {
+    QMetaObject::invokeMethod(map_, "clearMap");
 }
 
 
