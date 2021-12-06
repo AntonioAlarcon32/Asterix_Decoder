@@ -31,7 +31,7 @@ Cat19::Cat19()
     this->wgs84longitude = nan("");
 
     this->wgs84height = nan("");
-    this->wgs84undulation = 0;
+    this->wgs84undulation = -128;
 }
 
 
@@ -88,19 +88,163 @@ QTreeWidgetItem* Cat19::GetPacketInfo() {
     len->setText(1,QString::number(this->length));
     root->addChild(len);
 
-    QTreeWidgetItem *sicsac = new QTreeWidgetItem();
-    sicsac->setText(0, "SIC/SAC");
-    root->addChild(sicsac);
+    QTreeWidgetItem *dataItems = new QTreeWidgetItem();
+    dataItems->setText(0, "Data Items");
+    root->addChild(dataItems);
 
-    QTreeWidgetItem *sac = new QTreeWidgetItem();
-    sac->setText(0, "SAC");
-    sac->setText(1,QString::number(this->systemAreaCode));
-    sicsac->addChild(sac);
+    QTreeWidgetItem *messageType = new QTreeWidgetItem();
+    messageType->setText(0,"I019/000, Message Type");
+    dataItems->addChild(messageType);
+    QTreeWidgetItem *mt = new QTreeWidgetItem();
+    mt->setText(0,"Message Type");
+    mt->setText(1,this->typeOfMessage);
+    messageType->addChild(mt);
 
-    QTreeWidgetItem *sic = new QTreeWidgetItem();
-    sac->setText(0, "SIC");
-    sac->setText(1,QString::number(this->systemIdentificationCode));
-    sicsac->addChild(sic);
+
+    QTreeWidgetItem *dataSourceId = new QTreeWidgetItem();
+    dataSourceId->setText(0, "I019/010, Data Source Identifier");
+    dataItems->addChild(dataSourceId);
+    QTreeWidgetItem *systemAreaCode = new QTreeWidgetItem();
+    systemAreaCode->setText(0,"System Area Code");
+    systemAreaCode->setText(1,QString::number(this->systemAreaCode));
+    dataSourceId->addChild(systemAreaCode);
+    QTreeWidgetItem *systemIdCode = new QTreeWidgetItem();
+    systemIdCode->setText(0,"System Identification Code");
+    systemIdCode->setText(1,QString::number(this->systemIdentificationCode));
+    dataSourceId->addChild(systemIdCode);
+
+    if (this->timeOfDay != QTime()) {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I019/140, Time of Day");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"Time Of Day");
+        v->setText(1,this->timeOfDay.toString("hh:mm:ss:zzz"));
+        child->addChild(v);
+    }
+
+    if (this->ssNogo != "N/A") {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I019/550, System Status");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"NOGO");
+        v->setText(1,this->ssNogo);
+        child->addChild(v);
+        QTreeWidgetItem *v2 = new QTreeWidgetItem();
+        v2->setText(0,"OVL");
+        v2->setText(1,this->ssOvl);
+        child->addChild(v2);
+        QTreeWidgetItem *v3 = new QTreeWidgetItem();
+        v3->setText(0,"TSV");
+        v3->setText(1,this->ssTsv);
+        child->addChild(v3);
+        QTreeWidgetItem *v5 = new QTreeWidgetItem();
+        v5->setText(0,"TTF");
+        v5->setText(1,this->ssTtf);
+        child->addChild(v5);
+    }
+
+    if (this->tp1Status != "N/A") {
+
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I019/551, Tracking Processor Detailed Status");
+        dataItems->addChild(child);
+        if (this->tp1Status != "N/A") {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0,"Tracking Processor 1 Status");
+            v->setText(1,this->tp1Status);
+            child->addChild(v);
+        }
+
+        if (this->tp2Status != "N/A") {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0,"Tracking Processor 2 Status");
+            v->setText(1,this->tp2Status);
+            child->addChild(v);
+        }
+
+        if (this->tp3Status != "N/A") {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0,"Tracking Processor 3 Status");
+            v->setText(1,this->tp3Status);
+            child->addChild(v);
+        }
+
+        if (this->tp4Status != "N/A") {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0,"Tracking Processor 4 Status");
+            v->setText(1,this->tp4Status);
+            child->addChild(v);
+        }
+    }
+
+    if (this->rt1Status != "N/A") {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I019/553, Reference Transponder Detailed Status");
+        dataItems->addChild(child);
+        if (this->rt1Status != "N/A") {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0,"Reference Transponder 1 Status");
+            v->setText(1,this->rt1Status);
+            child->addChild(v);
+        }
+
+        if (this->rt1Status != "N/A") {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0,"Reference Transponder 2 Status");
+            v->setText(1,this->rt2Status);
+            child->addChild(v);
+        }
+
+        if (this->rt1Status != "N/A") {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0,"Reference Transponder 3 Status");
+            v->setText(1,this->rt3Status);
+            child->addChild(v);
+        }
+
+        if (this->rt1Status != "N/A") {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0,"Reference Transponder 4 Status");
+            v->setText(1,this->rt4Status);
+            child->addChild(v);
+        }
+    }
+
+    if (!isnan(this->wgs84latitude)) {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I019/600, Position of the MLT System Reference Point");
+        dataItems->addChild(child);
+        QTreeWidgetItem *lat = new QTreeWidgetItem();
+        QTreeWidgetItem *lon = new QTreeWidgetItem();
+        lat->setText(0,"Latitude [º]");
+        lat->setText(1,QString::number(this->wgs84latitude));
+        child->addChild(lat);
+        lon->setText(0,"Longitude [º]");
+        lon->setText(1,QString::number(this->wgs84longitude));
+        child->addChild(lon);
+    }
+
+    if (!isnan(this->wgs84height)) {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I019/610, Height of the MLT System Reference Point");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"Height of the MLT Reference Point [m]");
+        v->setText(1,QString::number(this->wgs84height));
+        child->addChild(v);
+    }
+
+    if (this->wgs84undulation != -128) {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I019/620, WGS-84 Undulation");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"WGS84 undulation [m]");
+        v->setText(1,QString::number(this->wgs84undulation));
+        child->addChild(v);
+    }
 
     return root;
 
