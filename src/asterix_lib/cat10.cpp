@@ -171,6 +171,15 @@ QTreeWidgetItem* Cat10::GetPacketInfo() {
     dataItems->setText(0, "Data Items");
     root->addChild(dataItems);
 
+    QTreeWidgetItem *messageType = new QTreeWidgetItem();
+    messageType->setText(0,"I010/000, Message Type");
+    dataItems->addChild(messageType);
+    QTreeWidgetItem *mt = new QTreeWidgetItem();
+    mt->setText(0,"Message Type");
+    mt->setText(1,this->typeOfMessage);
+    messageType->addChild(mt);
+
+
     QTreeWidgetItem *dataSourceId = new QTreeWidgetItem();
     dataSourceId->setText(0, "I010/010, Data Source Identifier");
     dataItems->addChild(dataSourceId);
