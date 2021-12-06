@@ -7,10 +7,12 @@ TestWindow::TestWindow(QWidget *parent) :
     ui(new Ui::TestWindow)
 {
     ui->setupUi(this);
-    map_ = ui->testMap;
-    map_->SetZoom(13);
-    map_->SetPosition(WGS84Coordinates(41.280100977219696, 1.9766510362841287,0));
-    map_->AddCircleMarker(WGS84Coordinates(41.280100977219696, 1.9766510362841287,0),10,"green");
+    QTreeWidgetItem *root = new QTreeWidgetItem();
+    root->setText(0, "Packet");
+    QTreeWidgetItem *child = new QTreeWidgetItem();
+    child->setText(0,"child");
+    root->addChild(child);
+    ui->treeWidget->addTopLevelItem(root);
 }
 
 TestWindow::~TestWindow()
@@ -18,4 +20,6 @@ TestWindow::~TestWindow()
     delete ui;
 }
 
-
+void TestWindow::on_toolButton_clicked()
+{
+}

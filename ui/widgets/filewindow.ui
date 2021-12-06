@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="packetTab">
        <attribute name="title">
@@ -40,6 +40,26 @@
           <property name="text">
            <string>Apply Filters</string>
           </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QTreeWidget" name="packetTreeWidget">
+          <property name="headerHidden">
+           <bool>true</bool>
+          </property>
+          <property name="columnCount">
+           <number>2</number>
+          </property>
+          <column>
+           <property name="text">
+            <string notr="true">1</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string notr="true">2</string>
+           </property>
+          </column>
          </widget>
         </item>
        </layout>

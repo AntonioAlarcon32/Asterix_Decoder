@@ -37,3 +37,22 @@ QString OtherDataBlocks::GetTrackNumber() {
     return "N/A";
 }
 
+QTreeWidgetItem* OtherDataBlocks::GetPacketInfo() {
+    QTreeWidgetItem *root = new QTreeWidgetItem();
+    root->setText(0, "Packet " + QString::number(this->numOfPacket));
+
+    QTreeWidgetItem *cat = new QTreeWidgetItem();
+    cat->setText(0, "Category");
+    cat->setText(1,QString::number(this->category));
+    root->addChild(cat);
+
+    QTreeWidgetItem *len = new QTreeWidgetItem();
+    len->setText(0, "Length");
+    len->setText(1,QString::number(this->length));
+    root->addChild(len);
+
+    return root;
+
+}
+
+

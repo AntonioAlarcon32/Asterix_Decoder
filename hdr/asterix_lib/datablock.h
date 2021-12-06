@@ -5,6 +5,7 @@
 #include "QVector"
 #include "QTime"
 #include "wgs84coordinates.h"
+#include "QTreeWidgetItem"
 
 
 class DataBlock
@@ -40,6 +41,8 @@ public:
     virtual QString GetCallSign() = 0;
     virtual QString GetAddress() = 0;
     virtual QString GetTrackNumber() = 0;
+
+    virtual QTreeWidgetItem* GetPacketInfo() = 0;
 };
 
 #endif // DATABLOCK_H

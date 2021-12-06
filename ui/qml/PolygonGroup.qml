@@ -10,12 +10,13 @@ MapItemGroup {
     property alias position: marker.coordinate
     property alias radius: markerDraw.radius
     property alias color: markerDraw.color
+    property string callSign: ""
 
     MapQuickItem {
-            id: marker
-            property int radius: 1
-            sourceItem: Rectangle { id: markerDraw; width: radius; height: radius; color: "red"; smooth: true; radius: radius }
-            anchorPoint: Qt.point(sourceItem.width/2, sourceItem.height/2)
-        }
+        id: marker
+        property int radius: 1
+        sourceItem: Rectangle { id: markerDraw; width: radius; height: radius; color: "red"; smooth: true; radius: radius }
+        anchorPoint: Qt.point(sourceItem.width/2, sourceItem.height/2)
+    }
 }
 

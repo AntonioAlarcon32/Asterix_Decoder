@@ -22,12 +22,13 @@ public:
 
 private:
     Ui::TestWindow *ui;
-    CustomMap *map_;
 
 signals:
     void changePosition(double lat, double lon);
     void addMarker(double lat, double lon);
     void clearMap();
+private slots:
+    void on_toolButton_clicked();
 };
 
 #endif // TESTWINDOW_H

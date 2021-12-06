@@ -18,6 +18,7 @@ public:
     QString GetCallSign();
     QString GetAddress();
     QString GetTrackNumber();
+    QTreeWidgetItem* GetPacketInfo();
 };
 
 #endif // OTHERDATABLOCKS_H

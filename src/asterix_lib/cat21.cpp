@@ -245,6 +245,38 @@ QString Cat21::GetTrackNumber() {
     return QString::number(trackNumber);
 }
 
+QTreeWidgetItem* Cat21::GetPacketInfo() {
+    QTreeWidgetItem *root = new QTreeWidgetItem();
+    root->setText(0, "Packet " + QString::number(this->numOfPacket));
+
+    QTreeWidgetItem *cat = new QTreeWidgetItem();
+    cat->setText(0, "Category");
+    cat->setText(1,QString::number(this->category));
+    root->addChild(cat);
+
+    QTreeWidgetItem *len = new QTreeWidgetItem();
+    len->setText(0, "Length");
+    len->setText(1,QString::number(this->length));
+    root->addChild(len);
+
+    QTreeWidgetItem *sicsac = new QTreeWidgetItem();
+    sicsac->setText(0, "SIC/SAC");
+    root->addChild(sicsac);
+
+    QTreeWidgetItem *sac = new QTreeWidgetItem();
+    sac->setText(0, "SAC");
+    sac->setText(1,QString::number(this->systemAreaCode));
+    sicsac->addChild(sac);
+
+    QTreeWidgetItem *sic = new QTreeWidgetItem();
+    sac->setText(0, "SIC");
+    sac->setText(1,QString::number(this->systemIdentificationCode));
+    sicsac->addChild(sic);
+
+    return root;
+
+}
+
 
 void Cat21::FullDecode() {
 

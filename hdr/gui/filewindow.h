@@ -57,6 +57,7 @@ private slots:
     void on_playButton_clicked();
     void on_TimerTick();
     void on_filtersButton_clicked();
+    void on_PacketRowClicked();
 };
 
 

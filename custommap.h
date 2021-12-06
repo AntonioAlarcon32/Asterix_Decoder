@@ -21,8 +21,9 @@ public:
 
     void SetPosition(WGS84Coordinates coordinates);
     void SetZoom(int level);
-    void AddCircleMarker(WGS84Coordinates coordinates, int radius, QString color);
+    void AddCircleMarker(WGS84Coordinates coordinates, int radius, QString color, QString id);
     void Clear();
+    void DeleteMarker(QString id);
 
 private:
     Ui::CustomMap *ui;

@@ -15,9 +15,9 @@ FileWindow::FileWindow(QWidget *parent) :
     alreadyAdded_ = QList<QString>();
     secsValue_ = 0;
     astFile_->moveToThread(loadingThread);
-    ConnectSignalsSlots();
     ui->widget->SetPosition(WGS84Coordinates(41.29742220817759, 2.083346335275707,0));
     ui->widget->SetZoom(10);
+    ConnectSignalsSlots();
 }
 
 FileWindow::~FileWindow()
@@ -56,6 +56,8 @@ void FileWindow::on_FinishLoading() {
     ui->loadedFlights->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->loadedFlights->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
+    ui->packetTreeWidget->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
     int hour = astFile_->dataBlocks->first()->GetTimeOfReception().hour();
     int min = astFile_->dataBlocks->first()->GetTimeOfReception().minute();
     int sec = astFile_->dataBlocks->first()->GetTimeOfReception().second();
@@ -91,44 +93,13 @@ void FileWindow::ConnectSignalsSlots() {
     connect(this->ui->stopButton, &QAbstractButton::clicked, this, &FileWindow::on_stopButton_clicked);
     connect(playTimer_, &QTimer::timeout, this, &FileWindow::on_TimerTick);
     connect(this->ui->filtersButton, &QAbstractButton::clicked, this, &FileWindow::on_filtersButton_clicked);
+    connect(this->ui->tableView, &QAbstractItemView::clicked, this, &FileWindow::on_PacketRowClicked);
+
 }
 
 void FileWindow::on_TimerTick() {
+
     this->ui->timerLabel->setText(currentTime_.toString("hh:mm:ss"));
-
-
-    if (secsValue_ != 1000) {
-        secsValue_ += 500;
-    }
-
-    else {
-        this->ui->widget->Clear();
-        secsValue_ = 0;
-        alreadyAdded_.clear();
-    }
-
-    while (packetCounter_ < astFile_->dataBlocks->length()) {
-        int timeDiff = currentTime_.msecsTo(astFile_->dataBlocks->at(packetCounter_)->GetTimeOfReception());
-        QString ident = astFile_->dataBlocks->at(packetCounter_)->GetIdentifier();
-
-        if (timeDiff >= 0 && timeDiff <= 500) {
-            if (alreadyAdded_.indexOf(ident) == -1) {
-                DataBlock* dataBlock = astFile_->dataBlocks->at(packetCounter_);
-                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10, "red");
-                packetCounter_++;
-                alreadyAdded_.append(ident);
-            }
-            else if (alreadyAdded_.indexOf(ident) != -1) {
-                //DELETE OLD MARKER ADD NEW MARKER
-                packetCounter_++;
-            }
-        }
-
-        else {
-            break;
-        }
-    }
-    currentTime_ = currentTime_.addMSecs(500);
 }
 
 
@@ -144,5 +115,15 @@ void FileWindow::on_filtersButton_clicked()
     if (callSign != "") {
         astFile_->FilterByCallSign(callSign);
     }
+}
+
+void FileWindow::on_PacketRowClicked() {
+
+    ui->packetTreeWidget->clear();
+    QModelIndexList indexes = ui->tableView->selectionModel()->selection().indexes();
+    QModelIndex index = indexes.at(0);
+    int packet = index.data().toInt();
+    ui->packetTreeWidget->addTopLevelItem(astFile_->dataBlocks->at(packet-1)->GetPacketInfo());
+    //ui->packetTreeWidget->addTopLevelItem(this->astFile_->dataBlocks->at(number)->GetPacketInfo());
 }
 

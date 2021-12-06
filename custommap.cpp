@@ -9,10 +9,11 @@ CustomMap::CustomMap(QWidget *parent) :
     QQuickWidget *view = ui->quickWidget;
     QQmlContext *context = view->rootContext();
     view->show();
-    context->setContextProperty("customMap", this);
+    context->setContextProperty("CustomMap", this);
     screen_ = qobject_cast<QQuickItem*>(view->rootObject());
     QQuickItem *map = view->rootObject()->childItems().at(0);
     map_ = qobject_cast<QQuickItem*>(map);
+
 }
 
 CustomMap::~CustomMap()
@@ -34,14 +35,18 @@ void CustomMap::SetZoom(int level) {
             Q_ARG(QVariant, value));
 }
 
-void CustomMap::AddCircleMarker(WGS84Coordinates coordinates, int radius, QString color) {
+void CustomMap::AddCircleMarker(WGS84Coordinates coordinates, int radius, QString color, QString id) {
     QVariant lat = coordinates.latitude;
     QVariant lon = coordinates.longitude;
-    QMetaObject::invokeMethod(map_, "addItemToMap", Q_ARG(QVariant, lat),Q_ARG(QVariant, lon),Q_ARG(QVariant, radius),Q_ARG(QVariant, color));
+    QMetaObject::invokeMethod(map_, "addItemToMap", Q_ARG(QVariant, lat),Q_ARG(QVariant, lon),Q_ARG(QVariant, radius),Q_ARG(QVariant, color),Q_ARG(QVariant, id));
 }
 
 void CustomMap::Clear() {
     QMetaObject::invokeMethod(map_, "clearMap");
+}
+
+void CustomMap::DeleteMarker(QString id) {
+    QMetaObject::invokeMethod(map_, "removeItem",Q_ARG(QVariant, id));
 }
 
 
