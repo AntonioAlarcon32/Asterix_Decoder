@@ -2,6 +2,9 @@
 #define ASTERIXFILE_H
 
 #include "QString"
+#include "QElapsedTimer"
+#include "QFileInfo"
+#include "QDebug"
 #include "datablock.h"
 #include "QVector"
 #include "QFile"
@@ -35,6 +38,8 @@ public:
 
     QStandardItemModel* packetTable_;
     QStandardItemModel* emitterTable_;
+    QFileInfo fileInfo_;
+    QMap<int,int> categoryStats_;
 
 public slots:
 

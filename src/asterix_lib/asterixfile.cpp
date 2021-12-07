@@ -1,7 +1,5 @@
 #include <hdr/asterix_lib/asterixfile.h>
-#include "QElapsedTimer"
-#include "QFileInfo"
-#include "QDebug"
+
 
 
 AsterixFile::AsterixFile()
@@ -10,6 +8,10 @@ AsterixFile::AsterixFile()
     packetTable_ = new QStandardItemModel;
     emitterTable_ = new QStandardItemModel;
     emitters_ = QList<Emitter>();
+    fileInfo_ = QFileInfo();
+    categoryStats_ = QMap<int,int>();
+
+
 }
 
 AsterixFile::~AsterixFile() {
@@ -25,16 +27,16 @@ void AsterixFile::readFile(QString path) {
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly))
         return;
-    QFileInfo fileInfo = QFileInfo(file);
+    fileInfo_ = QFileInfo(file);
     QByteArray fileBinary = file.readAll();
     int numOfPackets = 0;
     QElapsedTimer* testTime = new QElapsedTimer();
     testTime->start();
     int offset;
-    if (fileInfo.completeSuffix() == "ast") {
+    if (fileInfo_.completeSuffix() == "ast") {
         offset = 0;
     }
-    else if (fileInfo.completeSuffix() == "gps") {
+    else if (fileInfo_.completeSuffix() == "gps") {
         offset = 2200;
     }
     else {
@@ -110,6 +112,13 @@ void AsterixFile::readFile(QString path) {
         //Cat10 *inten = static_cast<Cat10*>(dataBlocks->at(0));
         //Cat10 *inten2 = dynamic_cast<Cat10*>(dataBlocks->at(0));
 
+        if (categoryStats_.value(category,0) == 0) {
+            categoryStats_.insert(category,1);
+        }
+        else {
+            categoryStats_[category]++;
+        }
+
         numOfPackets++;
         dataBlocks->at(numOfPackets-1)->SetNumOfPacket(numOfPackets);
 
@@ -128,7 +137,7 @@ void AsterixFile::readFile(QString path) {
         packetTable_->appendRow({new QStandardItem(QString::number(numOfPackets)),new QStandardItem(QString::number(category)),new QStandardItem(QString::number(length)),new QStandardItem(sicsac),
                           new QStandardItem(timeToShow),new QStandardItem(typeOfMessage)});
         offset += length;
-        if (fileInfo.completeSuffix() == "gps") {
+        if (fileInfo_.completeSuffix() == "gps") {
             offset += 10;
         }
     }

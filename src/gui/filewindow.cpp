@@ -56,11 +56,11 @@ void FileWindow::on_FinishLoading() {
     ui->loadedFlights->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->loadedFlights->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-
-
     int hour = astFile_->dataBlocks->first()->GetTimeOfReception().hour();
     int min = astFile_->dataBlocks->first()->GetTimeOfReception().minute();
     int sec = astFile_->dataBlocks->first()->GetTimeOfReception().second();
+
+    this->SetFileDetailsTab();
 
     currentTime_ = QTime(hour,min,sec,0);
     this->ui->timerLabel->setText(currentTime_.toString("hh:mm:ss"));
@@ -110,7 +110,6 @@ void FileWindow::on_filtersButton_clicked()
     QString callSign = filtersDialog->callSign_;
     QString address = filtersDialog->address_;
     QString trackNumber = filtersDialog->trackNumber_;
-    QList<DataBlock*> filteredDatablocks = QList<DataBlock*>();
 
     if (callSign != "") {
         astFile_->FilterByCallSign(callSign);
@@ -126,6 +125,41 @@ void FileWindow::on_PacketRowClicked() {
     PacketDetailDialog* details = new PacketDetailDialog(this,packetDetails);
     details->show();
     details->raise();
-    //ui->packetTreeWidget->addTopLevelItem(this->astFile_->dataBlocks->at(number)->GetPacketInfo());
 }
 
+void FileWindow::SetFileDetailsTab() {
+    QLocale locale = QLocale();
+
+    ui->fileLabel->setText("File Name: " + astFile_->fileInfo_.baseName() + "." + astFile_->fileInfo_.completeSuffix());
+    ui->directoryLabel->setText("Directory: " + astFile_->fileInfo_.absoluteDir().absolutePath());
+    ui->sizeLabel->setText("File Size: " + locale.formattedDataSize(astFile_->fileInfo_.size()));
+    ui->hourLabel->setText("Start Hour: " + astFile_->dataBlocks->at(0)->GetTimeOfReception().toString("hh:mm:ss:zzz") +
+                           " ;" + "Final Hour: " + astFile_->dataBlocks->last()->GetTimeOfReception().toString("hh:mm:ss:zzz"));
+    QList<int> categories = astFile_->categoryStats_.keys();
+    QList<int> values = astFile_->categoryStats_.values();
+    this->ui->statsTable->setRowCount(2);
+    this->ui->statsTable->setColumnCount(categories.count() + 2);
+    QTableWidgetItem *labelCat = new QTableWidgetItem("Category");
+    QTableWidgetItem *labelCount = new QTableWidgetItem("Number Of Packets");
+    this->ui->statsTable->setItem(0, 0, labelCat);
+    this->ui->statsTable->setItem(1, 0, labelCount);
+    int i;
+
+
+    for (i = 0; i < categories.count(); i++) {
+        QTableWidgetItem *category = new QTableWidgetItem(QString::number(categories.at(i)));
+        this->ui->statsTable->setItem(0, i+1, category);
+        QTableWidgetItem *count = new QTableWidgetItem(QString::number(values.at(i)));
+        this->ui->statsTable->setItem(1, i+1, count);
+    }
+    QTableWidgetItem *totalLabel = new QTableWidgetItem("Total");
+    QTableWidgetItem *totalCount = new QTableWidgetItem(QString::number(astFile_->numberOfPackets));
+    this->ui->statsTable->setItem(0,i+1, totalLabel);
+    this->ui->statsTable->setItem(1,i+1, totalCount);
+
+    ui->statsTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->statsTable->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->statsTable->setSelectionMode(QAbstractItemView::NoSelection);
+    ui->statsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->statsTable->verticalHeader()->setVisible(false);
+}

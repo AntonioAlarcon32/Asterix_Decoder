@@ -45,6 +45,7 @@ private:
     QTime currentTime_;
     void closeEvent(QCloseEvent *event);
     void ConnectSignalsSlots();
+    void SetFileDetailsTab();
 
 signals:
     void startLoading(QString path);
