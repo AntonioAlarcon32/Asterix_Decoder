@@ -56,7 +56,7 @@ void FileWindow::on_FinishLoading() {
     ui->loadedFlights->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->loadedFlights->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    ui->packetTreeWidget->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
 
     int hour = astFile_->dataBlocks->first()->GetTimeOfReception().hour();
     int min = astFile_->dataBlocks->first()->GetTimeOfReception().minute();
@@ -93,7 +93,7 @@ void FileWindow::ConnectSignalsSlots() {
     connect(this->ui->stopButton, &QAbstractButton::clicked, this, &FileWindow::on_stopButton_clicked);
     connect(playTimer_, &QTimer::timeout, this, &FileWindow::on_TimerTick);
     connect(this->ui->filtersButton, &QAbstractButton::clicked, this, &FileWindow::on_filtersButton_clicked);
-    connect(this->ui->tableView, &QAbstractItemView::clicked, this, &FileWindow::on_PacketRowClicked);
+    connect(this->ui->showPacketDetailsButton, &QAbstractButton::clicked, this, &FileWindow::on_PacketRowClicked);
 
 }
 
@@ -119,11 +119,13 @@ void FileWindow::on_filtersButton_clicked()
 
 void FileWindow::on_PacketRowClicked() {
 
-    ui->packetTreeWidget->clear();
     QModelIndexList indexes = ui->tableView->selectionModel()->selection().indexes();
     QModelIndex index = indexes.at(0);
     int packet = index.data().toInt();
-    ui->packetTreeWidget->addTopLevelItem(astFile_->dataBlocks->at(packet-1)->GetPacketInfo());
+    QTreeWidgetItem *packetDetails = astFile_->dataBlocks->at(packet-1)->GetPacketInfo();
+    PacketDetailDialog* details = new PacketDetailDialog(this,packetDetails);
+    details->show();
+    details->raise();
     //ui->packetTreeWidget->addTopLevelItem(this->astFile_->dataBlocks->at(number)->GetPacketInfo());
 }
 

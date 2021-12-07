@@ -12,6 +12,7 @@ SOURCES += \
     custommap.cpp \
     emitter.cpp \
     filtersdialog.cpp \
+    packetdetaildialog.cpp \
     src/appconfig.cpp \
     src/asterix_lib/otherdatablocks.cpp \
     src/gui/filewindow.cpp \
@@ -47,11 +48,13 @@ HEADERS += \
     hdr/asterix_lib/otherdatablocks.h \
     hdr/ensor.h \
     hdr/testwindow.h \
+    packetdetaildialog.h \
     wgs84coordinates.h
 
 FORMS += \
     custommap.ui \
     filtersdialog.ui \
+    packetdetaildialog.ui \
     ui/widgets/testwindow.ui \
     ui/widgets/filewindow.ui \
     ui/widgets/preferenceswindow.ui \

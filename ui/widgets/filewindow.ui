@@ -25,9 +25,6 @@
         <string>Packets</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <widget class="QTableView" name="tableView"/>
-        </item>
         <item row="1" column="0">
          <widget class="QLabel" name="loadedPackets">
           <property name="text">
@@ -35,32 +32,26 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QToolButton" name="filtersButton">
-          <property name="text">
-           <string>Apply Filters</string>
-          </property>
-         </widget>
+        <item row="0" column="0">
+         <widget class="QTableView" name="tableView"/>
         </item>
-        <item row="0" column="1">
-         <widget class="QTreeWidget" name="packetTreeWidget">
-          <property name="headerHidden">
-           <bool>true</bool>
-          </property>
-          <property name="columnCount">
-           <number>2</number>
-          </property>
-          <column>
-           <property name="text">
-            <string notr="true">1</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string notr="true">2</string>
-           </property>
-          </column>
-         </widget>
+        <item row="2" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QToolButton" name="filtersButton">
+            <property name="text">
+             <string>Apply Filters</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="showPacketDetailsButton">
+            <property name="text">
+             <string>Show Packet Details</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>

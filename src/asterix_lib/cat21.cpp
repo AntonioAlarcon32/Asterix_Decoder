@@ -736,30 +736,277 @@ QTreeWidgetItem* Cat21::GetPacketInfo() {
         QTreeWidgetItem *child = new QTreeWidgetItem();
         child->setText(0, "I021/210, MOPS Version");
         dataItems->addChild(child);
-
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"Version Not Supported");
+        v->setText(1,this->mvVns);
+        child->addChild(v);
+        QTreeWidgetItem *v2 = new QTreeWidgetItem();
+        v2->setText(0,"Version Number");
+        v2->setText(1,this->mvVn);
+        child->addChild(v2);
+        QTreeWidgetItem *v3 = new QTreeWidgetItem();
+        v3->setText(0,"Version Not Supported");
+        v3->setText(1,this->mvLtt);
+        child->addChild(v3);
     }
 
-    if (this->mvVns != "N/A") {
+    if (this->miTemperature != -32768 || this->miTurbulence != -32768 || this->miWindDirection != -32768 || this->miWindSpeed != -32768) {
         QTreeWidgetItem *child = new QTreeWidgetItem();
-        child->setText(0, "I021/210, MOPS Version");
+        child->setText(0, "I021/220, Met Information");
+        dataItems->addChild(child);
+        if (this->miWindSpeed != -32768) {
+            QTreeWidgetItem *v1 = new QTreeWidgetItem();
+            v1->setText(0,"Subfield #1: Wind Speed");
+            QTreeWidgetItem *v11 = new QTreeWidgetItem();
+            v11->setText(0,"Wind Speed [knot]");
+            v11->setText(1,QString::number(this->miWindSpeed));
+            v1->addChild(v11);
+            child->addChild(v1);
+        }
+
+        if (this->miWindDirection != -32768) {
+            QTreeWidgetItem *v1 = new QTreeWidgetItem();
+            v1->setText(0,"Subfield #2: Wind Direction");
+            QTreeWidgetItem *v11 = new QTreeWidgetItem();
+            v11->setText(0,"Wind Direction [º]");
+            v11->setText(1,QString::number(this->miWindDirection));
+            v1->addChild(v11);
+            child->addChild(v1);
+        }
+
+        if (this->miWindDirection != -32768) {
+            QTreeWidgetItem *v1 = new QTreeWidgetItem();
+            v1->setText(0,"Subfield #3: Temperature");
+            QTreeWidgetItem *v11 = new QTreeWidgetItem();
+            v11->setText(0,"Temperature [ºC]");
+            v11->setText(1,QString::number(this->miTemperature));
+            v1->addChild(v11);
+            child->addChild(v1);
+        }
+
+        if (this->miWindDirection != -32768) {
+            QTreeWidgetItem *v1 = new QTreeWidgetItem();
+            v1->setText(0,"Subfield #4: Turbulence");
+            QTreeWidgetItem *v11 = new QTreeWidgetItem();
+            v11->setText(0,"Turbulence []");
+            v11->setText(1,QString::number(this->miTurbulence));
+            v1->addChild(v11);
+            child->addChild(v1);
+        }
+    }
+
+    if (!isnan(this->rollAngle)) {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I021/230, Roll Angle");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"Roll Angle [º]");
+        v->setText(1, QString::number(this->rollAngle));
+        child->addChild(v);
+    }
+
+    if (this->sccPoa != "N/A") {
+
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I021/271, Surface Capabilities and Characteristics");
         dataItems->addChild(child);
 
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        QTreeWidgetItem *v2 = new QTreeWidgetItem();
+        QTreeWidgetItem *v3 = new QTreeWidgetItem();
+        QTreeWidgetItem *v4 = new QTreeWidgetItem();
+        QTreeWidgetItem *v5 = new QTreeWidgetItem();
+
+
+        v->setText(0,"Position Offset Applied");
+        v->setText(1,this->sccPoa);
+        child->addChild(v);
+        v2->setText(0,"Cockpit Display of Traffic Information Surface");
+        v2->setText(1,this->sccCdti);
+        child->addChild(v2);
+        v3->setText(0,"Class B2 transmit power less than 70 Watts");
+        v3->setText(1,this->sccB2Low);
+        child->addChild(v3);
+        v4->setText(0,"Receiving ATC Services");
+        v4->setText(1,this->sccRas);
+        child->addChild(v4);
+        v5->setText(0,"Setting of “IDENT”-switch");
+        v5->setText(1,this->sccIdent);
+        child->addChild(v5);
+
+        if (this->sccLengthPlusWidth != "N/A") {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0,"Length and width of the aircraft");
+            v->setText(1,this->sccLengthPlusWidth);
+            child->addChild(v);
+        }
     }
 
+    if (!isnan(this->daAOS) || !isnan(this->daARA) || !isnan(this->daAS) || !isnan(this->daBVR) || !isnan(this->daBVR)
+            || !isnan(this->daFL) || !isnan(this->daFSSA) || !isnan(this->daGH) || !isnan(this->daGV)
+            || !isnan(this->daGVR) || !isnan(this->daISSA) || !isnan(this->daM3A) || !isnan(this->daMA)
+            || !isnan(this->daMET) || !isnan(this->daMH) || !isnan(this->daQI) || !isnan(this->daROA) || !isnan(this->daSCC)
+            || !isnan(this->daTAR) || !isnan(this->daTAS) || !isnan(this->daTRD) || !isnan(this->daTS) || !isnan(this->daTaI)
+            || !isnan(this->daTrI)) {
 
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I021/295, Data Ages");
+        dataItems->addChild(child);
 
+        if (!isnan(this->daAOS)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Aircraft Operational Status Age");
+            v->setText(1, QString::number(this->daAOS));
+            child->addChild(v);
+        }
+        if (!isnan(this->daTRD)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Target Report Descriptor Age");
+            v->setText(1, QString::number(this->daTRD));
+            child->addChild(v);
+        }
 
+        if (!isnan(this->daM3A)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Mode 3/A Age");
+            v->setText(1, QString::number(this->daM3A));
+            child->addChild(v);
+        }
 
+        if (!isnan(this->daQI)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Quality Indicators Age");
+            v->setText(1, QString::number(this->daQI));
+            child->addChild(v);
+        }
 
+        if (!isnan(this->daTrI)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Trajectory Intent Age");
+            v->setText(1, QString::number(this->daTrI));
+            child->addChild(v);
+        }
 
+        if (!isnan(this->daMA)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Message Amplitude Age");
+            v->setText(1, QString::number(this->daMA));
+            child->addChild(v);
+        }
 
+        if (!isnan(this->daGH)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Geometric Height Age");
+            v->setText(1, QString::number(this->daGH));
+            child->addChild(v);
+        }
 
+        if (!isnan(this->daFL)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Flight Level Age");
+            v->setText(1, QString::number(this->daFL));
+            child->addChild(v);
+        }
 
+        if (!isnan(this->daISSA)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Intermediate State Selected Altitude Age");
+            v->setText(1, QString::number(this->daISSA));
+            child->addChild(v);
+        }
+
+        if (!isnan(this->daFSSA)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Final State Selected Altitude Age");
+            v->setText(1, QString::number(this->daFSSA));
+            child->addChild(v);
+        }
+
+        if (!isnan(this->daAS)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Air Speed Age");
+            v->setText(1, QString::number(this->daAS));
+            child->addChild(v);
+        }
+
+        if (!isnan(this->daTAS)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "True Air Speed Age");
+            v->setText(1, QString::number(this->daTAS));
+            child->addChild(v);
+        }
+
+        if (!isnan(this->daMH)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Magnetic Heading Age");
+            v->setText(1, QString::number(this->daMH));
+            child->addChild(v);
+        }
+
+        if (!isnan(this->daBVR)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Barometric Vertical Rate Age");
+            v->setText(1, QString::number(this->daBVR));
+            child->addChild(v);
+        }
+
+        if (!isnan(this->daGVR)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Geometric Vertical Rate Age");
+            v->setText(1, QString::number(this->daGVR));
+            child->addChild(v);
+        }
+        if (!isnan(this->daTAR)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Track Angle Rate Age");
+            v->setText(1, QString::number(this->daTAR));
+            child->addChild(v);
+        }
+
+        if (!isnan(this->daTaI)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Target Identification Age");
+            v->setText(1, QString::number(this->daTaI));
+            child->addChild(v);
+        }
+
+        if (!isnan(this->daTS)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Target Status Age");
+            v->setText(1, QString::number(this->daTS));
+            child->addChild(v);
+        }
+
+        if (!isnan(this->daMET)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Met Information Age");
+            v->setText(1, QString::number(this->daGVR));
+            child->addChild(v);
+        }
+
+        if (!isnan(this->daROA)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Roll Angle Age");
+            v->setText(1, QString::number(this->daROA));
+            child->addChild(v);
+        }
+
+        if (!isnan(this->daARA)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "ACAS Resolution Advisory Age");
+            v->setText(1, QString::number(this->daARA));
+            child->addChild(v);
+        }
+
+        if (!isnan(this->daSCC)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0, "Surface Capabilities and Characteristics Age");
+            v->setText(1, QString::number(this->daSCC));
+            child->addChild(v);
+        }
+    }
 
     return root;
-
-
-
 }
 
 

@@ -15,6 +15,7 @@
 #include <hdr/appconfig.h>
 #include <filtersdialog.h>
 #include <hdr/sensor.h>
+#include "packetdetaildialog.h"
 
 #include <hdr/gui/preferenceswindow.h>
 
