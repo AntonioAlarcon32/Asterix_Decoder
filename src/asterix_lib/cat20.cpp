@@ -179,19 +179,418 @@ QTreeWidgetItem* Cat20::GetPacketInfo() {
     len->setText(1,QString::number(this->length));
     root->addChild(len);
 
-    QTreeWidgetItem *sicsac = new QTreeWidgetItem();
-    sicsac->setText(0, "SIC/SAC");
-    root->addChild(sicsac);
+    QTreeWidgetItem *dataItems = new QTreeWidgetItem();
+    dataItems->setText(0, "Data Items");
+    root->addChild(dataItems);
 
-    QTreeWidgetItem *sac = new QTreeWidgetItem();
-    sac->setText(0, "SAC");
-    sac->setText(1,QString::number(this->systemAreaCode));
-    sicsac->addChild(sac);
+    QTreeWidgetItem *dataSourceId = new QTreeWidgetItem();
+    dataSourceId->setText(0, "I020/010, Data Source Identifier");
+    dataItems->addChild(dataSourceId);
+    QTreeWidgetItem *systemAreaCode = new QTreeWidgetItem();
+    systemAreaCode->setText(0,"System Area Code");
+    systemAreaCode->setText(1,QString::number(this->systemAreaCode));
+    dataSourceId->addChild(systemAreaCode);
+    QTreeWidgetItem *systemIdCode = new QTreeWidgetItem();
+    systemIdCode->setText(0,"System Identification Code");
+    systemIdCode->setText(1,QString::number(this->systemIdentificationCode));
+    dataSourceId->addChild(systemIdCode);
 
-    QTreeWidgetItem *sic = new QTreeWidgetItem();
-    sac->setText(0, "SIC");
-    sac->setText(1,QString::number(this->systemIdentificationCode));
-    sicsac->addChild(sic);
+    if (this->trSsr != "N/A") {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/020, Target Report Descriptor");
+        dataItems->addChild(child);
+
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        QTreeWidgetItem *v2 = new QTreeWidgetItem();
+        QTreeWidgetItem *v3 = new QTreeWidgetItem();
+        QTreeWidgetItem *v4 = new QTreeWidgetItem();
+        QTreeWidgetItem *v5 = new QTreeWidgetItem();
+        QTreeWidgetItem *v6 = new QTreeWidgetItem();
+        QTreeWidgetItem *v7 = new QTreeWidgetItem();
+
+        v->setText(0,"SSR");
+        v->setText(1,this->trSsr);
+        child->addChild(v);
+        v2->setText(0,"MS");
+        v2->setText(1,this->trMs);
+        child->addChild(v2);
+        v3->setText(0,"HF");
+        v3->setText(1,this->trHf);
+        child->addChild(v3);
+        v4->setText(0,"VDL4");
+        v4->setText(1,this->trVdl4);
+        child->addChild(v4);
+        v5->setText(0,"UAT");
+        v5->setText(1,this->trUat);
+        child->addChild(v5);
+        v6->setText(0,"DME");
+        v6->setText(1,this->trDme);
+        child->addChild(v6);
+        v7->setText(0,"OT");
+        v7->setText(1,this->trOt);
+        child->addChild(v7);
+
+        if (this->trRab != "N/A") {
+            v->setText(0,"RAB");
+            v->setText(1,this->trRab);
+            child->addChild(v);
+            v2->setText(0,"SPI");
+            v2->setText(1,this->trSpi);
+            child->addChild(v2);
+            v3->setText(0,"CHN");
+            v3->setText(1,this->trChn);
+            child->addChild(v3);
+            v4->setText(0,"GBS");
+            v4->setText(1,this->trGbs);
+            child->addChild(v4);
+            v5->setText(0,"CRT");
+            v5->setText(1,this->trCrt);
+            child->addChild(v5);
+            v6->setText(0,"SIM");
+            v6->setText(1,this->trSim);
+            child->addChild(v6);
+            v7->setText(0,"TST");
+            v7->setText(1,this->trTst);
+            child->addChild(v7);
+        }
+
+        if (this->trCf != "N/A") {
+            v->setText(0,"CF");
+            v->setText(1,this->trCf);
+            child->addChild(v);
+        }
+    }
+
+    if (this->errors.length() != 0) {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/030, Warning/Error Conditions");
+        dataItems->addChild(child);
+    }
+
+
+    if (!isnan(this->wgs84latitude)) {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/041, Position in WGS-84 Co-ordinates");
+        dataItems->addChild(child);
+        QTreeWidgetItem *lat = new QTreeWidgetItem();
+        QTreeWidgetItem *lon = new QTreeWidgetItem();
+        lat->setText(0,"Latitude [º]");
+        lat->setText(1,QString::number(this->wgs84latitude));
+        child->addChild(lat);
+        lon->setText(0,"Longitude [º]");
+        lon->setText(1,QString::number(this->wgs84longitude));
+        child->addChild(lon);
+    }
+
+    if (!isnan(this->cartesianX)) {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/042, Position in Cartesian Co-ordinates");
+        dataItems->addChild(child);
+        QTreeWidgetItem *x = new QTreeWidgetItem();
+        QTreeWidgetItem *y = new QTreeWidgetItem();
+        x->setText(0,"X Component [m]");
+        x->setText(1,QString::number(this->cartesianX));
+        child->addChild(x);
+        y->setText(0,"Y Component [m]");
+        y->setText(1,QString::number(this->cartesianY));
+        child->addChild(y);
+    }
+
+    if (this->M2Code != "N/A") {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/050, Mode-2 Code in Octal Representation");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        QTreeWidgetItem *g = new QTreeWidgetItem();
+        QTreeWidgetItem *l = new QTreeWidgetItem();
+        v->setText(0,"Validated");
+        v->setText(1,this->M2Validated);
+        child->addChild(v);
+        g->setText(0,"Garbled");
+        g->setText(1,this->M2Garbled);
+        child->addChild(g);
+        l->setText(0,"Derived");
+        l->setText(1,this->M2Derivation);
+        child->addChild(l);
+
+        QTreeWidgetItem *m3a = new QTreeWidgetItem();
+        m3a->setText(0,"Mode 2 Code");
+        m3a->setText(1,this->M2Code);
+        child->addChild(m3a);
+    }
+
+    if (this->M1Code != "N/A") {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/055, Mode-1 Code in Octal Representation");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        QTreeWidgetItem *g = new QTreeWidgetItem();
+        QTreeWidgetItem *l = new QTreeWidgetItem();
+        v->setText(0,"Validated");
+        v->setText(1,this->M1Validated);
+        child->addChild(v);
+        g->setText(0,"Garbled");
+        g->setText(1,this->M1Garbled);
+        child->addChild(g);
+        l->setText(0,"Derived");
+        l->setText(1,this->M1Derivation);
+        child->addChild(l);
+
+        QTreeWidgetItem *m3a = new QTreeWidgetItem();
+        m3a->setText(0,"Mode 1 Code");
+        m3a->setText(1,this->M1Code);
+        child->addChild(m3a);
+    }
+
+    if (this->M3ACode != "N/A") {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/070, Mode-3/A Code in Octal Representation");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        QTreeWidgetItem *g = new QTreeWidgetItem();
+        QTreeWidgetItem *l = new QTreeWidgetItem();
+        v->setText(0,"Validated");
+        v->setText(1,this->M3AValidated);
+        child->addChild(v);
+        g->setText(0,"Garbled");
+        g->setText(1,this->M3AGarbled);
+        child->addChild(g);
+        l->setText(0,"Derived");
+        l->setText(1,this->M3ADerivation);
+        child->addChild(l);
+
+        QTreeWidgetItem *m3a = new QTreeWidgetItem();
+        m3a->setText(0,"Mode 3/A Code");
+        m3a->setText(1,this->M3ACode);
+        child->addChild(m3a);
+    }
+
+    if (!isnan(this->flFlightLevel)) {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/090, Flight Level in Binary Representation");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        QTreeWidgetItem *g = new QTreeWidgetItem();
+        QTreeWidgetItem *fl = new QTreeWidgetItem();
+        v->setText(0,"Validated");
+        v->setText(1,this->flValidated);
+        child->addChild(v);
+        g->setText(0,"Garbled");
+        g->setText(1,this->flGarbled);
+        child->addChild(g);
+        fl->setText(0,"Flight Level");
+        fl->setText(1,QString::number(this->flFlightLevel));
+        child->addChild(fl);
+    }
+
+    if (this->ModeCCode != "N/A") {
+
+    }
+
+    if (!isnan(this->geometricHeight)) {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/105, Geometric Height (WGS-84)");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"Geometric Height [ft]");
+        v->setText(1,QString::number(this->geometricHeight));
+        child->addChild(v);
+    }
+
+    if (!isnan(this->measuredHeight)) {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/110, Measured Height (Local Cartesian Coordinates)");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"Measured Height");
+        v->setText(1,QString::number(this->measuredHeight));
+        child->addChild(v);
+    }
+
+    if (this->timeOfDay != QTime()) {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/140, Time of Day");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"Time Of Day");
+        v->setText(1,this->timeOfDay.toString("hh:mm:ss:zzz"));
+        child->addChild(v);
+    }
+
+    if (this->trackNumber != -1) {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/161, Track Number");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"Track Number");
+        v->setText(1,QString::number(this->trackNumber));
+        child->addChild(v);
+    }
+
+    if (this->tsCnf != "N/A") {
+        //FALTA
+    }
+
+    if (!isnan(this->cartesianVx)) {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/202, Calculated Track Velocity in Cartesian Co-ordinates");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"X component [m/s]");
+        v->setText(1,QString::number(this->cartesianVx));
+        child->addChild(v);
+        QTreeWidgetItem *v2 = new QTreeWidgetItem();
+        v2->setText(0,"Y component [m/s]");
+        v2->setText(1,QString::number(this->cartesianVy));
+        child->addChild(v2);
+    }
+
+    if (!isnan(this->cartesianAx)) {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/210, Calculated Acceleration");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"X component [m/s^2]");
+        v->setText(1,QString::number(this->cartesianAx));
+        child->addChild(v);
+        QTreeWidgetItem *v2 = new QTreeWidgetItem();
+        v2->setText(0,"Y component [m/s^2]");
+        v2->setText(1,QString::number(this->cartesianAy));
+        child->addChild(v2);
+    }
+
+    if (this->targetAddress != "N/A") {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/220, Target Address");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"Target Address");
+        v->setText(1,this->targetAddress);
+        child->addChild(v);
+    }
+
+    if (this->cacfsCom != "N/A") {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/230, Communications/ACAS Capability and Flight Status");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"COM");
+        v->setText(1,this->cacfsCom);
+        child->addChild(v);
+        QTreeWidgetItem *v2 = new QTreeWidgetItem();
+        v2->setText(0,"STAT");
+        v2->setText(1,this->cacfsStat);
+        child->addChild(v2);
+        QTreeWidgetItem *v3= new QTreeWidgetItem();
+        v3->setText(0,"MSSC");
+        v3->setText(1,this->cacfsMssc);
+        child->addChild(v3);
+        QTreeWidgetItem *v4 = new QTreeWidgetItem();
+        v4->setText(0,"ARC");
+        v4->setText(1,this->cacfsArc);
+        child->addChild(v4);
+        QTreeWidgetItem *v5 = new QTreeWidgetItem();
+        v5->setText(0,"AIC");
+        v5->setText(1,this->cacfsAic);
+        child->addChild(v);
+    }
+
+    if (this->targetIdentification != "N/A") {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/245, Target Identification");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"Target Identification");
+        v->setText(1,this->targetIdentification);
+        child->addChild(v);
+    }
+
+    if (this->VehicleFleetIdentification != "N/A") {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/300, Vehicle Fleet Identification");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"Vehicle Fleet Identification");
+        v->setText(1,this->VehicleFleetIdentification);
+        child->addChild(v);
+    }
+
+    if (this->ppmMsg != "N/A") {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/310, Pre-programmed Message");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"In Trouble");
+        v->setText(1,this->ppmTrb);
+        child->addChild(v);
+        QTreeWidgetItem *v2 = new QTreeWidgetItem();
+        v2->setText(0,"Message");
+        v2->setText(1,this->ppmMsg);
+        child->addChild(v2);
+    }
+
+    if (this->contributingDevices != "N/A") {
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/400, Contributing Devices");
+        dataItems->addChild(child);
+        QTreeWidgetItem *v = new QTreeWidgetItem();
+        v->setText(0,"Contributing Devices");
+        v->setText(1,this->contributingDevices);
+        child->addChild(v);
+    }
+
+    if (!isnan(this->paSigmaX) || !isnan(this->paSigmaGh) || !isnan(this->paDopX)) {
+
+        QTreeWidgetItem *child = new QTreeWidgetItem();
+        child->setText(0, "I020/500, Position Accuracy");
+        dataItems->addChild(child);
+
+        if (!isnan(this->paDopX)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0,"Subfield #1, DOP of Position");
+            child->addChild(v);
+            QTreeWidgetItem *v1 = new QTreeWidgetItem();
+            v1->setText(0,"DOP X");
+            v1->setText(1,QString::number(this->paDopX));
+            v->addChild(v1);
+            QTreeWidgetItem *v2 = new QTreeWidgetItem();
+            v2->setText(0,"DOP Y");
+            v2->setText(1,QString::number(this->paDopY));
+            v->addChild(v2);
+            QTreeWidgetItem *v3 = new QTreeWidgetItem();
+            v3->setText(0,"DOP XY");
+            v3->setText(1,QString::number(this->paDopXY));
+            v->addChild(v3);
+        }
+
+        if (!isnan(this->paSigmaX)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0,"Subfield #2, Standard Deviation of Position");
+            child->addChild(v);
+            QTreeWidgetItem *v1 = new QTreeWidgetItem();
+            v1->setText(0,"Sigma X");
+            v1->setText(1,QString::number(this->paSigmaX));
+            v->addChild(v1);
+            QTreeWidgetItem *v2 = new QTreeWidgetItem();
+            v2->setText(0,"Sigma Y");
+            v2->setText(1,QString::number(this->paSigmaY));
+            v->addChild(v2);
+            QTreeWidgetItem *v3 = new QTreeWidgetItem();
+            v3->setText(0,"Sigma XY");
+            v3->setText(1,QString::number(this->paSigmaXY));
+            v->addChild(v3);
+        }
+
+        if (!isnan(this->paSigmaGh)) {
+            QTreeWidgetItem *v = new QTreeWidgetItem();
+            v->setText(0,"Subfield #3, Standard Deviation of Geometric Height");
+            child->addChild(v);
+            QTreeWidgetItem *v1 = new QTreeWidgetItem();
+            v1->setText(0,"Sigma GH");
+            v1->setText(1,QString::number(this->paSigmaGh));
+            v->addChild(v1);
+        }
+    }
 
     return root;
 
