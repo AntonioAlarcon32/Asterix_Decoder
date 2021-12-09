@@ -30,10 +30,12 @@ void DataBlock::SetData(QByteArray data) {
 }
 
 void DataBlock::DecodeFSPEC() {
-    while((data[0] & 1) != 0) {
-        this->fspec.append(data[0]);
-        data.remove(0,1);
+    int i = 0;
+    this->fspec.append(data[this->offset]);
+    while((data[this->offset+i] & 1) != 0) {
+        this->fspec.append(data[offset+i+1]);
+        i++;
     }
-    this->fspec.append(data[0]);
-    data.remove(0,1);
+    offset += fspec.length();
+
 }

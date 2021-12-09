@@ -57,8 +57,9 @@ void AsterixFile::readFile(QString path) {
 
                 Cat10 *cat10Block = new Cat10();
                 cat10Block->SetLength(length);
-                QByteArray data = fileBinary.mid(offset + 3,length - 3);
+                QByteArray data = fileBinary.mid(offset,length);
                 cat10Block->SetData(data);
+                cat10Block->offset = 3;
                 cat10Block->DecodeFSPEC();
                 cat10Block->FullDecode();
                 dataBlocks->append(cat10Block);
@@ -67,8 +68,9 @@ void AsterixFile::readFile(QString path) {
             else if (category == 19) {
                 Cat19 *cat19Block = new Cat19();
                 cat19Block->SetLength(length);
-                QByteArray data = fileBinary.mid(offset + 3,length - 3);
+                QByteArray data = fileBinary.mid(offset,length);
                 cat19Block->SetData(data);
+                cat19Block->offset = 3;
                 cat19Block->DecodeFSPEC();
                 cat19Block->FullDecode();
                 dataBlocks->append(cat19Block);
@@ -78,8 +80,9 @@ void AsterixFile::readFile(QString path) {
             else if (category == 20) {
                 Cat20 *cat20Block = new Cat20();
                 cat20Block->SetLength(length);
-                QByteArray data = fileBinary.mid(offset + 3,length - 3);
+                QByteArray data = fileBinary.mid(offset,length);
                 cat20Block->SetData(data);
+                cat20Block->offset = 3;
                 cat20Block->DecodeFSPEC();
                 cat20Block->FullDecode();
                 dataBlocks->append(cat20Block);
@@ -89,8 +92,9 @@ void AsterixFile::readFile(QString path) {
             else if (category == 21) {
                 Cat21 *cat21Block = new Cat21();
                 cat21Block->SetLength(length);
-                QByteArray data = fileBinary.mid(offset + 3,length - 3);
+                QByteArray data = fileBinary.mid(offset,length);
                 cat21Block->SetData(data);
+                cat21Block->offset = 3;
                 cat21Block->DecodeFSPEC();
                 cat21Block->FullDecode();
                 dataBlocks->append(cat21Block);
@@ -100,8 +104,9 @@ void AsterixFile::readFile(QString path) {
 
                 OtherDataBlocks *other = new OtherDataBlocks(category);
                 other->SetLength(length);
-                QByteArray data = fileBinary.mid(offset + 3,length - 3);
+                QByteArray data = fileBinary.mid(offset,length);
                 other->SetData(data);
+                other->offset = 3;
                 dataBlocks->append(other);
             }
             packetDecoded = true;
