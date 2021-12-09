@@ -6,6 +6,7 @@ Cat10::Cat10()
 {
     this->category = 10;
     this->length = 0;
+    this->offset = 0;
 
     this->systemAreaCode = 0;
     this->systemIdentificationCode = 0;
@@ -550,31 +551,31 @@ void Cat10::FullDecode() {
     if (this->fspec.length() > 0) {
 
         if ((this->fspec.at(0) & 0x80) == 0x80) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2,this->offset);
             this->DecodeDataSourceIdentifier(dataItem);
         }
         if ((this->fspec.at(0) & 0x40) == 0x40) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1,this->offset);
             this->DecodeMessageType(dataItem);
         }
         if ((this->fspec.at(0) & 0x20) == 0x20) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data,this->offset);
             this->DecodeTargetReportDescriptor(dataItem);
         }
         if ((this->fspec.at(0) & 0x10) == 0x10) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,3);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,3,this->offset);
             this->DecodeTimeOfDay(dataItem);
         }
         if ((this->fspec.at(0) & 0x08) == 0x08) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,8);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,8,this->offset);
             this->DecodePositionInWGS84Coordinates(dataItem);
         }
         if ((this->fspec.at(0) & 0x04) == 0x04) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4,this->offset);
             this->DecodeMeasuredPositionInPolarCoordinates(dataItem);
         }
         if ((this->fspec.at(0) & 0x02) == 0x02) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4,this->offset);
             this->DecodePositionInCartesianCoordinates(dataItem);
         }
     }
@@ -582,81 +583,81 @@ void Cat10::FullDecode() {
     if (this->fspec.length() > 1) {
 
         if ((this->fspec.at(1) & 0x80) == 0x80) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4,this->offset);
             this->DecodeCalculatedTrackVelocityInPolarCoordinates(dataItem);
         }
         if ((this->fspec.at(1) & 0x40) == 0x40) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4,this->offset);
             this->DecodeCalculatedTrackVelocityInCartesianCoordinates(dataItem);
         }
         if ((this->fspec.at(1) & 0x20) == 0x20) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2,this->offset);
             this->DecodeTrackNumber(dataItem);
         }
         if ((this->fspec.at(1) & 0x10) == 0x10) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data,this->offset);
             this->DecodeTrackStatus(dataItem);
         }
         if ((this->fspec.at(1) & 0x08) == 0x08) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2,this->offset);
             this->DecodeMode3ACodeInOctalRepresentation(dataItem);
         }
         if ((this->fspec.at(1) & 0x04) == 0x04) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,3);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,3,this->offset);
             this->DecodeTargetAddress(dataItem);
         }
         if ((this->fspec.at(1) & 0x02) == 0x02) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,7);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,7,this->offset);
             this->DecodeTargetIdentification(dataItem);
         }
     }
     if (this->fspec.length() > 2) {
 
         if ((this->fspec.at(2) & 0x80) == 0x80) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetRepetitiveDataItem(this->data,8);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetRepetitiveDataItem(this->data,8,this->offset);
             this->DecodeModeSMBData(dataItem);
         }
         if ((this->fspec.at(2) & 0x40) == 0x40) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1,this->offset);
             this->DecodeVehicleFleetIdentification(dataItem);
         }
         if ((this->fspec.at(2) & 0x20) == 0x20) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2,this->offset);
             this->DecodeFlightLevelInBinaryRepresentation(dataItem);
         }
         if ((this->fspec.at(2) & 0x10) == 0x10) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2,this->offset);
             this->DecodeMeasuredHeight(dataItem);
         }
         if ((this->fspec.at(2) & 0x08) == 0x08) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data,this->offset);
             this->DecodeTargetSizeAndOrientation(dataItem);
         }
         if ((this->fspec.at(2) & 0x04) == 0x04) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1,this->offset);
             this->DecodeSystemStatus(dataItem);
         }
         if ((this->fspec.at(2) & 0x02) == 0x02) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1,this->offset);
             this->DecodePreProgrammedMessage(dataItem);
         }
     }
     if (this->fspec.length() > 3) {
 
         if ((this->fspec.at(3) & 0x80) == 0x80) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,4,this->offset);
             this->DecodeStandardDeviationOfPosition(dataItem);
         }
         if ((this->fspec.at(3) & 0x40) == 0x40) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetRepetitiveDataItem(this->data,2);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetRepetitiveDataItem(this->data,2,this->offset);
             this->DecodePresence(dataItem);
         }
         if ((this->fspec.at(3) & 0x20) == 0x20) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1,this->offset);
             this->DecodeAmplitudeOfPrimaryPlot(dataItem);
         }
         if ((this->fspec.at(3) & 0x10) == 0x10) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2,this->offset);
             this->DecodeCalculatedAcceleration(dataItem);
         }
         if ((this->fspec.at(3) & 0x08) == 0x08) {

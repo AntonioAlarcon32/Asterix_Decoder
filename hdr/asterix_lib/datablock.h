@@ -15,6 +15,7 @@ public:
     int category;
     int length;
     int numOfPacket;
+    int offset;
     QByteArray data;
     QVector<unsigned char> fspec;
 

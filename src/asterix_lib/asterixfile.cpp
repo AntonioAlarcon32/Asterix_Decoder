@@ -33,6 +33,7 @@ void AsterixFile::readFile(QString path) {
     QElapsedTimer* testTime = new QElapsedTimer();
     testTime->start();
     int offset;
+    bool packetDecoded = false;
     if (fileInfo_.completeSuffix() == "ast") {
         offset = 0;
     }
@@ -48,6 +49,7 @@ void AsterixFile::readFile(QString path) {
 
         int category = fileBinary[offset];
         int length =  fileBinary[offset + 2] << fileBinary[offset + 1] ;
+        packetDecoded = false;
 
         try {
 
@@ -102,40 +104,45 @@ void AsterixFile::readFile(QString path) {
                 other->SetData(data);
                 dataBlocks->append(other);
             }
+            packetDecoded = true;
+
 
         }  catch (...) {
 
+            packetDecoded = false;
             qDebug() << "ERROR IN PACKET" << numOfPackets + 1;
 
         }
 
         //Cat10 *inten = static_cast<Cat10*>(dataBlocks->at(0));
         //Cat10 *inten2 = dynamic_cast<Cat10*>(dataBlocks->at(0));
+        if (packetDecoded == true) {
+            numOfPackets++;
 
-        if (categoryStats_.value(category,0) == 0) {
-            categoryStats_.insert(category,1);
+            if (categoryStats_.value(category,0) == 0) {
+                categoryStats_.insert(category,1);
+            }
+            else {
+                categoryStats_[category]++;
+            }
+
+            dataBlocks->at(numOfPackets-1)->SetNumOfPacket(numOfPackets);
+
+            QString typeOfMessage = dataBlocks->last()->GetTypeOfMessage();
+            QTime timeOfReception = dataBlocks->last()->GetTimeOfReception();
+            QString sicsac = dataBlocks->last()->GetSACSIC();
+            QString timeToShow = "N/A";
+
+            if (!timeOfReception.isNull()) {
+                timeToShow = timeOfReception.toString("hh:mm:ss:zzz");
+            }
+
+            if ((numOfPackets % 1000) == 0) {
+                emit packetLoaded();
+            }
+            packetTable_->appendRow({new QStandardItem(QString::number(numOfPackets)),new QStandardItem(QString::number(category)),new QStandardItem(QString::number(length)),new QStandardItem(sicsac),
+                                     new QStandardItem(timeToShow),new QStandardItem(typeOfMessage)});
         }
-        else {
-            categoryStats_[category]++;
-        }
-
-        numOfPackets++;
-        dataBlocks->at(numOfPackets-1)->SetNumOfPacket(numOfPackets);
-
-        QString typeOfMessage = dataBlocks->last()->GetTypeOfMessage();
-        QTime timeOfReception = dataBlocks->last()->GetTimeOfReception();
-        QString sicsac = dataBlocks->last()->GetSACSIC();
-        QString timeToShow = "N/A";
-
-        if (!timeOfReception.isNull()) {
-            timeToShow = timeOfReception.toString("hh:mm:ss:zzz");
-        }
-
-        if ((numOfPackets % 1000) == 0) {
-            emit packetLoaded();
-        }
-        packetTable_->appendRow({new QStandardItem(QString::number(numOfPackets)),new QStandardItem(QString::number(category)),new QStandardItem(QString::number(length)),new QStandardItem(sicsac),
-                          new QStandardItem(timeToShow),new QStandardItem(typeOfMessage)});
         offset += length;
         if (fileInfo_.completeSuffix() == "gps") {
             offset += 10;
@@ -241,9 +248,7 @@ void AsterixFile::FilterByCallSign(QString callSign) {
                                      new QStandardItem(timeToShow),new QStandardItem(typeOfMessage)});
         }
     }
-
     packetTable_->setHorizontalHeaderLabels({"Packet","Category", "Length", "SAC/SIC", "Time of Transmission", "Type of Message"});
-
 }
 
 

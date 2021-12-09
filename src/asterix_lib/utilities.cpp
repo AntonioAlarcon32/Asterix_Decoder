@@ -4,18 +4,18 @@
 namespace Utilities {
 
 
-QVector<unsigned char> DataTools::GetFixedLengthDataItem(QByteArray &message, int length) {
+QVector<unsigned char> DataTools::GetFixedLengthDataItem(QByteArray &message, int length, int &offset) {
 
     int i = 0;
     QVector<unsigned char> dataItem(length);
 
-    if (message.length() >= length) {
+    if (message.length() - offset >= length) {
 
         while (i < length) {
-            dataItem[i] = message.at(0);
-            message.remove(0,1);
+            dataItem[i] = message.at(i+offset);
             i++;
         }
+        offset += i;
         return dataItem;
     }
 
@@ -24,37 +24,35 @@ QVector<unsigned char> DataTools::GetFixedLengthDataItem(QByteArray &message, in
     }
 }
 
-QVector<unsigned char> DataTools::GetVariableLengthDataItem(QByteArray &message) {
+QVector<unsigned char> DataTools::GetVariableLengthDataItem(QByteArray &message, int &offset) {
     int i = 0;
     QVector<unsigned char> dataItem;
 
-    dataItem.append(message.at(0));
-    message.remove(0,1);
+    dataItem.append(message.at(offset));
 
     while ((dataItem.at(i) & 0x01) == 1) {
-        dataItem.append(message.at(0));
-        message.remove(0,1);
+        dataItem.append(message.at(offset+i+1));
         i++;
     }
+    offset += i + 1;
     return dataItem;
 }
 
-QVector<unsigned char> DataTools::GetRepetitiveDataItem(QByteArray &message, int factor) {
+QVector<unsigned char> DataTools::GetRepetitiveDataItem(QByteArray &message, int factor, int &offset) {
 
     QVector<unsigned char> dataItem;
-    short repFactor = (short) message.at(0);
-    dataItem.append(message.at(0));
-    message.remove(0,1);
+    short repFactor = (short) message.at(offset);
+    dataItem.append(message.at(offset));
 
     int i = 0;
 
-    if (factor * repFactor <= message.length()) {
+    if (factor * repFactor <= message.length() - offset) {
 
         while (i < (repFactor * factor)) {
-            dataItem.append(message.at(0));
-            message.remove(0,1);
+            dataItem.append(message.at(offset+i+1));
             i++;
         }
+        offset += (i+1);
         return dataItem;
     }
 

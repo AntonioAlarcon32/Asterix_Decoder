@@ -4,6 +4,7 @@ Cat19::Cat19()
 {
     this->category = 19;
     this->length = 0;
+    this->offset = 0;
 
     this->systemAreaCode = 0;
     this->systemIdentificationCode = 0;
@@ -257,31 +258,31 @@ void Cat19::FullDecode() {
     if (this->fspec.length() > 0) {
 
         if ((this->fspec.at(0) & 0x80) == 0x80) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2,this->offset);
             this->DecodeDataSourceIdentifier(dataItem);
         }
         if ((this->fspec.at(0) & 0x40) == 0x40) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1,this->offset);
             this->DecodeMessageType(dataItem);
         }
         if ((this->fspec.at(0) & 0x20) == 0x20) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,3);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,3,this->offset);
             this->DecodeTimeOfDay(dataItem);
         }
         if ((this->fspec.at(0) & 0x10) == 0x10) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1,this->offset);
             this->DecodeSystemStatus(dataItem);
         }
         if ((this->fspec.at(0) & 0x08) == 0x08) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1,this->offset);
             this->DecodeTrackingProcessorDetailedStatus(dataItem);
         }
         if ((this->fspec.at(0) & 0x04) == 0x04) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetRepetitiveDataItem(this->data,2);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetRepetitiveDataItem(this->data,2,this->offset);
             this->DecodeRemoteSensorDetailedStatus(dataItem);
         }
         if ((this->fspec.at(0) & 0x02) == 0x02) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetVariableLengthDataItem(this->data,this->offset);
             this->DecodeReferenceTrasponderDetailedStatus(dataItem);
         }
     }
@@ -289,15 +290,15 @@ void Cat19::FullDecode() {
     if (this->fspec.length() > 1) {
 
         if ((this->fspec.at(1) & 0x80) == 0x80) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,8);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,8,this->offset);
             this->DecodePositionOfTheMLTSystemReferencePoint(dataItem);
         }
         if ((this->fspec.at(1) & 0x40) == 0x40) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,2,this->offset);
             this->DecodeHeightOfTheMLTSystemReferencePoint(dataItem);
         }
         if ((this->fspec.at(1) & 0x20) == 0x20) {
-            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1);
+            QVector<unsigned char> dataItem = Utilities::DataTools::GetFixedLengthDataItem(this->data,1,this->offset);
             this->DecodeWGS84Undulation(dataItem);
         }
         if ((this->fspec.at(1) & 0x10) == 0x10) {
