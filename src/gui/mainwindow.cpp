@@ -117,7 +117,7 @@ void MainWindow::on_pushButton_clicked()
 }
 
 void MainWindow::on_FinishedLoading() {
-    loadingDialog_->setMinimum(0);
+    numberOfPackets_ = 0;
     loadingDialog_->reset();
 }
 
