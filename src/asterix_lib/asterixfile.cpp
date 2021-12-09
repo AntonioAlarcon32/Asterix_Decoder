@@ -256,6 +256,19 @@ void AsterixFile::FilterByCallSign(QString callSign) {
     packetTable_->setHorizontalHeaderLabels({"Packet","Category", "Length", "SAC/SIC", "Time of Transmission", "Type of Message"});
 }
 
+void AsterixFile::writeFile(QString filePath) {
+    QFile file(filePath);
+    if (!file.open(QFile::WriteOnly)) {
+        qDebug() << "Could not open file for writing";
+        return;
+    }
+
+    for (int i = 0; i < this->dataBlocks->length(); i++) {
+        DataBlock* dataBlock = dataBlocks->at(i);
+        file.write(dataBlock->GetData());
+    }
+}
+
 
 
 

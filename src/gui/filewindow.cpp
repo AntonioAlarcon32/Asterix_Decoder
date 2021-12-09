@@ -94,7 +94,7 @@ void FileWindow::ConnectSignalsSlots() {
     connect(playTimer_, &QTimer::timeout, this, &FileWindow::on_TimerTick);
     connect(this->ui->filtersButton, &QAbstractButton::clicked, this, &FileWindow::on_filtersButton_clicked);
     connect(this->ui->showPacketDetailsButton, &QAbstractButton::clicked, this, &FileWindow::on_PacketRowClicked);
-
+    connect(this->ui->actionSave_File, &QAction::triggered, this, &FileWindow::on_SaveFileClicked);
 }
 
 void FileWindow::on_TimerTick() {
@@ -163,3 +163,27 @@ void FileWindow::SetFileDetailsTab() {
     ui->statsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->statsTable->verticalHeader()->setVisible(false);
 }
+
+void FileWindow::on_SaveFileClicked() {
+    QFileDialog dialog(this);
+
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setNameFilter(tr("Valid Files (*.ast *.gps)"));
+    dialog.setViewMode(QFileDialog::Detail);
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+
+    QStringList fileNames;
+
+    if (dialog.exec())
+        fileNames = dialog.selectedFiles();
+
+    if (fileNames.length() == 1) {
+        QString filePath = fileNames.at(0);
+        this->astFile_->writeFile(filePath);
+    }
+
+    else {
+    }
+}
+
+

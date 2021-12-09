@@ -47,6 +47,8 @@ private:
     void ConnectSignalsSlots();
     void SetFileDetailsTab();
 
+
+
 signals:
     void startLoading(QString path);
     void packetLoaded();
@@ -60,6 +62,8 @@ private slots:
     void on_TimerTick();
     void on_filtersButton_clicked();
     void on_PacketRowClicked();
+    void on_SaveFileClicked();
+
 };
 
 
