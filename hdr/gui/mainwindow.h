@@ -15,7 +15,7 @@
 
 #include <hdr/gui/preferenceswindow.h>
 #include <hdr/gui/filewindow.h>
-#include <hdr/testwindow.h>
+#include <hdr/gui/testwindow.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

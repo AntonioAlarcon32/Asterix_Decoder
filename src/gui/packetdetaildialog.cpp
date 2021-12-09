@@ -1,4 +1,4 @@
-#include "packetdetaildialog.h"
+#include "hdr/gui/packetdetaildialog.h"
 #include "ui_packetdetaildialog.h"
 
 PacketDetailDialog::PacketDetailDialog(QWidget *parent, QTreeWidgetItem* packetStruct) :

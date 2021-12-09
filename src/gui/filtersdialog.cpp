@@ -1,4 +1,4 @@
-#include "filtersdialog.h"
+#include "hdr/gui/filtersdialog.h"
 #include "ui_filtersdialog.h"
 
 FiltersDialog::FiltersDialog(QWidget *parent) :

@@ -13,9 +13,9 @@
 
 #include <hdr/asterix_lib/asterixfile.h>
 #include <hdr/appconfig.h>
-#include <filtersdialog.h>
+#include <hdr/gui/filtersdialog.h>
 #include <hdr/sensor.h>
-#include "packetdetaildialog.h"
+#include "hdr/gui/packetdetaildialog.h"
 
 #include <hdr/gui/preferenceswindow.h>
 

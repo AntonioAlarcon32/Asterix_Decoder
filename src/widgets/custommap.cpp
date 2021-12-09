@@ -1,4 +1,4 @@
-#include "custommap.h"
+#include "hdr/widgets/custommap.h"
 #include "ui_custommap.h"
 
 CustomMap::CustomMap(QWidget *parent) :

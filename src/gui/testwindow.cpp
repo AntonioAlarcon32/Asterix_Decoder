@@ -1,4 +1,4 @@
-#include "hdr/testwindow.h"
+#include "hdr/gui/testwindow.h"
 #include "ui_testwindow.h"
 
 

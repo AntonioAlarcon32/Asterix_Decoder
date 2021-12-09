@@ -1,4 +1,4 @@
-#include "emitter.h"
+#include "hdr/emitter.h"
 
 Emitter::Emitter(QString identifier)
 {

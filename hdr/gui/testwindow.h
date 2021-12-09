@@ -6,7 +6,7 @@
 #include "QQuickItem"
 #include "QGeoCoordinate"
 #include "QQmlContext"
-#include "custommap.h"
+#include "hdr/widgets/custommap.h"
 
 namespace Ui {
 class TestWindow;

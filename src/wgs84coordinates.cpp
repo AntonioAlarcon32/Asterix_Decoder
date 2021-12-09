@@ -1,4 +1,4 @@
-#include "wgs84coordinates.h"
+#include "hdr/wgs84coordinates.h"
 
 WGS84Coordinates::WGS84Coordinates(double latitude,double longitude, double altitude)
 {

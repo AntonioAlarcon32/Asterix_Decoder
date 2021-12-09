@@ -9,10 +9,10 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    custommap.cpp \
-    emitter.cpp \
-    filtersdialog.cpp \
-    packetdetaildialog.cpp \
+    src/widgets/custommap.cpp \
+    src/emitter.cpp \
+    src/gui/filtersdialog.cpp \
+    src/gui/packetdetaildialog.cpp \
     src/appconfig.cpp \
     src/asterix_lib/otherdatablocks.cpp \
     src/gui/filewindow.cpp \
@@ -27,13 +27,13 @@ SOURCES += \
     src/asterix_lib/datablock.cpp \
     src/asterix_lib/utilities.cpp \
     src/asterix_lib/cat10.cpp \
-    src/testwindow.cpp \
-    wgs84coordinates.cpp
+    src/gui/testwindow.cpp \
+    src/wgs84coordinates.cpp
 
 HEADERS += \
-    custommap.h \
-    emitter.h \
-    filtersdialog.h \
+    hdr/widgets/custommap.h \
+    hdr/emitter.h \
+    hdr/gui/filtersdialog.h \
     hdr/appconfig.h \
     hdr/gui/filewindow.h \
     hdr/asterix_lib/cat19.h \
@@ -46,19 +46,19 @@ HEADERS += \
     hdr/asterix_lib/cat10.h \
     hdr/gui/preferenceswindow.h \
     hdr/asterix_lib/otherdatablocks.h \
-    hdr/ensor.h \
-    hdr/testwindow.h \
-    packetdetaildialog.h \
-    wgs84coordinates.h
+    hdr/sensor.h \
+    hdr/gui/testwindow.h \
+    hdr/gui/packetdetaildialog.h \
+    hdr/wgs84coordinates.h
 
 FORMS += \
-    custommap.ui \
-    filtersdialog.ui \
-    packetdetaildialog.ui \
-    ui/widgets/testwindow.ui \
-    ui/widgets/filewindow.ui \
-    ui/widgets/preferenceswindow.ui \
-    ui/widgets/mainwindow.ui
+    ui/widgets/custommap.ui \
+    ui/filtersdialog.ui \
+    ui/packetdetaildialog.ui \
+    ui/testwindow.ui \
+    ui/filewindow.ui \
+    ui/preferenceswindow.ui \
+    ui/mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
