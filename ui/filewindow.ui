@@ -222,7 +222,15 @@
     <property name="title">
      <string>File</string>
     </property>
+    <widget class="QMenu" name="menuExport_as">
+     <property name="title">
+      <string>Export as...</string>
+     </property>
+     <addaction name="actionKML"/>
+     <addaction name="actionCSV"/>
+    </widget>
     <addaction name="actionSave_File"/>
+    <addaction name="menuExport_as"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -230,6 +238,16 @@
   <action name="actionSave_File">
    <property name="text">
     <string>Save File</string>
+   </property>
+  </action>
+  <action name="actionKML">
+   <property name="text">
+    <string>KML</string>
+   </property>
+  </action>
+  <action name="actionCSV">
+   <property name="text">
+    <string>CSV</string>
    </property>
   </action>
  </widget>

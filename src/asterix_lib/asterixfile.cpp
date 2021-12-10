@@ -144,7 +144,8 @@ void AsterixFile::readFile(QString path) {
             if ((numOfPackets % 1000) == 0) {
                 emit packetLoaded();
             }
-            packetTable_->appendRow({new QStandardItem(QString::number(numOfPackets)),new QStandardItem(QString::number(category)),new QStandardItem(QString::number(length)),new QStandardItem(sicsac),
+            packetTable_->appendRow({new QStandardItem(QString::number(numOfPackets)),new QStandardItem(QString::number(category)),
+                                     new QStandardItem(QString::number(length)),new QStandardItem(sicsac),
                                      new QStandardItem(timeToShow),new QStandardItem(typeOfMessage)});
         }
         offset += length;
@@ -204,8 +205,6 @@ void AsterixFile::ProcessEmitters() {
         if (dataBlock->GetIdentifier() != "N/A") {
             int index = identifiers.indexOf(dataBlock->GetIdentifier());
             i++;
-            if (i == 42)
-                int c = 1;
 
             if (index == -1) {
                 Emitter newEmitter = Emitter(dataBlock->GetIdentifier());
@@ -223,13 +222,11 @@ void AsterixFile::ProcessEmitters() {
         emitterTable_->appendRow({new QStandardItem(emitter.GetIdentifier()),
                                   new QStandardItem(emitter.GetFirstReport().toString("hh:mm:ss:zzz")),
                                   new QStandardItem(emitter.GetLastReport().toString("hh:mm:ss:zzz"))});
-
     }
     emitterTable_->setHorizontalHeaderLabels({"CallSign", "First Report at", "Last Report At"});
 }
 
 void AsterixFile::FilterByCallSign(QString callSign, QList<int> &packetList) {
-
     for (DataBlock *dataBlock : *dataBlocks) {
         if (callSign == dataBlock->GetCallSign().replace(" ","")) {
             packetList.append(dataBlock->GetNumOfPacket());
@@ -238,7 +235,6 @@ void AsterixFile::FilterByCallSign(QString callSign, QList<int> &packetList) {
 }
 
 void AsterixFile::FilterByCategory(int category, QList<int> &packetList) {
-
     for (DataBlock *dataBlock : *dataBlocks) {
         if (category == dataBlock->category) {
             packetList.append(dataBlock->GetNumOfPacket());
@@ -298,16 +294,17 @@ void AsterixFile::ApplyFilters(int category, QString callSign, QString address, 
             timeToShow = timeOfReception.toString("hh:mm:ss:zzz");
         }
 
-        packetTable_->appendRow({new QStandardItem(QString::number(packetNumber)),new QStandardItem(QString::number(category)),new QStandardItem(QString::number(length)),new QStandardItem(sicsac),
-                                             new QStandardItem(timeToShow),new QStandardItem(typeOfMessage)});
+        packetTable_->appendRow({new QStandardItem(QString::number(packetNumber)),new QStandardItem(QString::number(category)),
+                                 new QStandardItem(QString::number(length)),new QStandardItem(sicsac),
+                                 new QStandardItem(timeToShow),new QStandardItem(typeOfMessage)});
     }
     packetTable_->setHorizontalHeaderLabels({"Packet","Category", "Length", "SAC/SIC", "Time of Transmission", "Type of Message"});
 }
 
 void AsterixFile::ResetFilters() {
     filteredPackets_.clear();
+    packetTable_->clear();
     for (DataBlock *dataBlock : *dataBlocks) {
-        filteredPackets_.append(dataBlock->GetNumOfPacket());
         QString typeOfMessage = dataBlock->GetTypeOfMessage();
         QTime timeOfReception = dataBlock->GetTimeOfReception();
         QString sicsac = dataBlock->GetSACSIC();
@@ -320,8 +317,9 @@ void AsterixFile::ResetFilters() {
             timeToShow = timeOfReception.toString("hh:mm:ss:zzz");
         }
 
-        packetTable_->appendRow({new QStandardItem(QString::number(packetNumber)),new QStandardItem(QString::number(category)),new QStandardItem(QString::number(length)),new QStandardItem(sicsac),
-                                             new QStandardItem(timeToShow),new QStandardItem(typeOfMessage)});
+        packetTable_->appendRow({new QStandardItem(QString::number(packetNumber)),new QStandardItem(QString::number(category)),
+                                 new QStandardItem(QString::number(length)),new QStandardItem(sicsac),
+                                 new QStandardItem(timeToShow),new QStandardItem(typeOfMessage)});
     }
     packetTable_->setHorizontalHeaderLabels({"Packet","Category", "Length", "SAC/SIC", "Time of Transmission", "Type of Message"});
 }
@@ -333,9 +331,17 @@ void AsterixFile::writeFile(QString filePath) {
         return;
     }
 
-    for (int i : this->filteredPackets_) {
-        DataBlock* dataBlock = dataBlocks->at(i-1);
-        file.write(dataBlock->GetData());
+    if (this->filteredPackets_.length() != 0) {
+        for (int i : this->filteredPackets_) {
+            DataBlock* dataBlock = dataBlocks->at(i-1);
+            file.write(dataBlock->GetData());
+        }
+    }
+
+    else {
+        for (DataBlock* dataBlock : *this->dataBlocks) {
+            file.write(dataBlock->GetData());
+        }
     }
 }
 
