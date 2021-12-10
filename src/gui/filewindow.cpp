@@ -6,7 +6,6 @@ FileWindow::FileWindow(QWidget *parent) :
     ui(new Ui::FileWindow)
 {
     ui->setupUi(this);
-    ui->setupUi(this);
     astFile_ = new AsterixFile();
     appConfig_ = AppConfig::GetInstance();
     playTimer_ = new QTimer();
@@ -63,7 +62,7 @@ void FileWindow::on_FinishLoading() {
     this->SetFileDetailsTab();
 
     currentTime_ = QTime(hour,min,sec,0);
-    this->ui->timerLabel->setText(currentTime_.toString("hh:mm:ss"));
+    this->ui->timerLabel->setText(currentTime_.toString("hh:mm:ss:zzz"));
     this->show();
     this->raise();
     loadingThread->quit();
@@ -98,8 +97,9 @@ void FileWindow::ConnectSignalsSlots() {
 }
 
 void FileWindow::on_TimerTick() {
-
-    this->ui->timerLabel->setText(currentTime_.toString("hh:mm:ss"));
+    currentTime_ = currentTime_.addMSecs(500);
+    this->ui->timerLabel->setText(currentTime_.toString("hh:mm:ss:zzz"));
+    this->RefreshMap();
 }
 
 
@@ -116,6 +116,37 @@ void FileWindow::on_filtersButton_clicked()
         int trackNumber = filtersDialog->trackNumber_;
         int category = filtersDialog->category_;
         astFile_->ApplyFilters(category,callSign,address,trackNumber);
+    }
+}
+
+void FileWindow::RefreshMap() {
+
+    if (this->currentTime_.msec() == 0) {
+        this->ui->widget->Clear();
+        this->alreadyAdded_.clear();
+    }
+
+    for (;packetCounter_ < astFile_->dataBlocks->length(); packetCounter_++) {
+        DataBlock* dataBlock = astFile_->dataBlocks->at(packetCounter_);
+        int msecsTo = this->currentTime_.msecsTo(dataBlock->GetTimeOfReception());
+        if (msecsTo >= -500 && msecsTo <= 500) {
+            if (alreadyAdded_.indexOf(dataBlock->GetIdentifier()) == -1) {
+                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,"red", dataBlock->GetIdentifier());
+                alreadyAdded_.append(dataBlock->GetIdentifier());
+            }
+            else {
+                this->ui->widget->DeleteMarker(dataBlock->GetIdentifier());
+                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,"red", dataBlock->GetIdentifier());
+            }
+        }
+
+        else if (msecsTo <= -500) {
+
+        }
+
+        else if (msecsTo >= 500) {
+            break;
+        }
     }
 }
 
@@ -192,5 +223,15 @@ void FileWindow::on_SaveFileClicked() {
 void FileWindow::on_ResetPacketsClicked() {
     astFile_->ResetFilters();
 }
+
+void FileWindow::on_ExportAsKMLCLicked() {
+
+}
+
+void FileWindow::on_ExportAsCSVCLicked() {
+
+}
+
+
 
 

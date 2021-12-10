@@ -41,7 +41,6 @@ Rectangle {
             item.color = color;
             testMap.addMapItemGroup(item);
             testMap.addedItems.push(item);
-            console.log(testMap.addedItems)
         }
 
         function removeItem(id) {
@@ -49,7 +48,6 @@ Rectangle {
                 if (id === testMap.addedItems[i].callSign) {
                     testMap.removeMapItemGroup(testMap.addedItems[i])
                     testMap.addedItems.splice(i,1)
-                    console.log(testMap.addedItems)
                     return
                 }
             }

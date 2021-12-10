@@ -18,5 +18,17 @@ MapItemGroup {
         sourceItem: Rectangle { id: markerDraw; width: radius; height: radius; color: "red"; smooth: true; radius: radius }
         anchorPoint: Qt.point(sourceItem.width/2, sourceItem.height/2)
     }
+
+    MapQuickItem {
+        sourceItem: Text{
+            text: callSign
+            color:"#242424"
+            styleColor: "#ECECEC"
+            style: Text.Outline
+            font.pointSize: 10
+        }
+        coordinate: position
+        anchorPoint:Qt.point(radius*2,radius*2)
+    }
 }
 

@@ -16,6 +16,7 @@
 #include <hdr/gui/filtersdialog.h>
 #include <hdr/sensor.h>
 #include "hdr/gui/packetdetaildialog.h"
+#include <hdr/widgets/custommap.h>
 
 #include <hdr/gui/preferenceswindow.h>
 
@@ -46,6 +47,7 @@ private:
     void closeEvent(QCloseEvent *event);
     void ConnectSignalsSlots();
     void SetFileDetailsTab();
+    void RefreshMap();
 
 
 
@@ -64,7 +66,8 @@ private slots:
     void on_PacketRowClicked();
     void on_SaveFileClicked();
     void on_ResetPacketsClicked();
-
+    void on_ExportAsKMLCLicked();
+    void on_ExportAsCSVCLicked();
 };
 
 
