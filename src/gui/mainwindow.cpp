@@ -6,7 +6,8 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
-      prefWindow_(nullptr)
+      prefWindow_(nullptr),
+    liveCapture_(nullptr)
 
 {
     ui->setupUi(this);
@@ -109,15 +110,23 @@ void MainWindow::on_PacketLoaded() {
     loadingDialog_->setValue(numberOfPackets_);
 }
 
-void MainWindow::on_pushButton_clicked()
-{
-    TestWindow *testWindow = new TestWindow(this);
-    testWindow->show();
-    testWindow->raise();
-}
-
 void MainWindow::on_FinishedLoading() {
     numberOfPackets_ = 0;
     loadingDialog_->reset();
+}
+
+
+void MainWindow::on_liveCaptureButton_clicked()
+{
+    if (liveCapture_ == nullptr) {
+        liveCapture_ = new LiveCaptureWindow(this);
+        liveCapture_->show();
+        liveCapture_->raise();
+    }
+    else {
+        liveCapture_->show();
+        liveCapture_->raise();
+    }
+
 }
 

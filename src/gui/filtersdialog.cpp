@@ -7,8 +7,9 @@ FiltersDialog::FiltersDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     callSign_ = "";
-    trackNumber_ = "";
-    trackNumber_ = "";
+    address_ = "";
+    trackNumber_ = -1;
+    category_ = -1;
 }
 
 FiltersDialog::~FiltersDialog()
@@ -21,17 +22,28 @@ void FiltersDialog::on_buttonBox_accepted()
     callSignChecked_ = ui->callSignCheck->isChecked();
     trackNumberChecked_ = ui->trackNumberCheck->isChecked();
     addressChecked_ = ui->AddressCheck->isChecked();
+    categoryChecked_ = ui->categoryCheck->isChecked();
 
     if (callSignChecked_) {
         callSign_ = ui->callSignText->text();
     }
 
-    if (trackNumberChecked_) {
+    if (addressChecked_) {
         address_ = ui->addressText->text();
     }
 
-    if (addressChecked_) {
-        trackNumber_ = ui->trackNumberText->text();
+    if (trackNumberChecked_) {
+        QString text = ui->trackNumberText->text();
+        trackNumber_ = text.toInt();
     }
+    if (categoryChecked_) {
+        category_ = ui->categoryText->text().toInt();
+    }
+}
+
+
+void FiltersDialog::on_resetFiltersButton_clicked()
+{
+    emit ResetPacketsClicked();
 }
 

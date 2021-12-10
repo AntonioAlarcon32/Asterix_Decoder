@@ -31,10 +31,20 @@ public:
     QVector<DataBlock *> *dataBlocks;
     QList<Emitter> emitters_;
     int numberOfPackets;
+    QList<int> filteredPackets_;
     void decodeFlights();
-    void FilterByCallSign(QString callSign);
+
 
     int GetTotalPackets(QString path);
+
+    void ResetFilters();
+    void FilterByCallSign(QString callSign, QList<int> &packetList);
+    void FilterByCategory(int category,QList<int> &packetList);
+    void FilterByAddress(QString address,QList<int> &packetList);
+    void FilterByTrackNumber(int trackNumber,QList<int> &packetList);
+
+    void ApplyFilters(int category = -1, QString callSign = "", QString address = "", int trackNumber = -1);
+
 
     QStandardItemModel* packetTable_;
     QStandardItemModel* emitterTable_;

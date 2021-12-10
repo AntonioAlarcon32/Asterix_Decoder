@@ -106,13 +106,16 @@ void FileWindow::on_TimerTick() {
 void FileWindow::on_filtersButton_clicked()
 {
     FiltersDialog *filtersDialog = new FiltersDialog(this);
-    filtersDialog->exec();
-    QString callSign = filtersDialog->callSign_;
-    QString address = filtersDialog->address_;
-    QString trackNumber = filtersDialog->trackNumber_;
+    connect(filtersDialog, &FiltersDialog::ResetPacketsClicked, this, &FileWindow::on_ResetPacketsClicked);
+    int code = filtersDialog->exec();
 
-    if (callSign != "") {
-        astFile_->FilterByCallSign(callSign);
+    if (code == QDialog::Accepted) {
+
+        QString callSign = filtersDialog->callSign_;
+        QString address = filtersDialog->address_;
+        int trackNumber = filtersDialog->trackNumber_;
+        int category = filtersDialog->category_;
+        astFile_->ApplyFilters(category,callSign,address,trackNumber);
     }
 }
 
@@ -184,6 +187,10 @@ void FileWindow::on_SaveFileClicked() {
 
     else {
     }
+}
+
+void FileWindow::on_ResetPacketsClicked() {
+    astFile_->ResetFilters();
 }
 
 

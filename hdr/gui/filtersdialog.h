@@ -18,13 +18,19 @@ public:
     bool callSignChecked_;
     bool addressChecked_;
     bool trackNumberChecked_;
+    bool categoryChecked_;
 
     QString callSign_;
     QString address_;
-    QString trackNumber_;
+    int trackNumber_;
+    int category_;
+
+signals:
+    void ResetPacketsClicked();
 
 private slots:
     void on_buttonBox_accepted();
+    void on_resetFiltersButton_clicked();
 
 private:
     Ui::FiltersDialog *ui;

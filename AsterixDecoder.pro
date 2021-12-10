@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    livecapturewindow.cpp \
     src/widgets/custommap.cpp \
     src/emitter.cpp \
     src/gui/filtersdialog.cpp \
@@ -27,7 +28,6 @@ SOURCES += \
     src/asterix_lib/datablock.cpp \
     src/asterix_lib/utilities.cpp \
     src/asterix_lib/cat10.cpp \
-    src/gui/testwindow.cpp \
     src/wgs84coordinates.cpp
 
 HEADERS += \
@@ -47,11 +47,12 @@ HEADERS += \
     hdr/gui/preferenceswindow.h \
     hdr/asterix_lib/otherdatablocks.h \
     hdr/sensor.h \
-    hdr/gui/testwindow.h \
     hdr/gui/packetdetaildialog.h \
-    hdr/wgs84coordinates.h
+    hdr/wgs84coordinates.h \
+    livecapturewindow.h
 
 FORMS += \
+    livecapturewindow.ui \
     ui/widgets/custommap.ui \
     ui/filtersdialog.ui \
     ui/packetdetaildialog.ui \

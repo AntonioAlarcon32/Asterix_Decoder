@@ -15,7 +15,7 @@
 
 #include <hdr/gui/preferenceswindow.h>
 #include <hdr/gui/filewindow.h>
-#include <hdr/gui/testwindow.h>
+#include <livecapturewindow.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -39,9 +39,9 @@ private slots:
 
     void on_PacketLoaded();
 
-    void on_pushButton_clicked();
-
     void on_FinishedLoading();
+
+    void on_liveCaptureButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -49,6 +49,7 @@ private:
     int numberOfPackets_;
     QProgressDialog *loadingDialog_;
     PreferencesWindow *prefWindow_;
+    LiveCaptureWindow *liveCapture_;
 
     void InitialConfig();
 };

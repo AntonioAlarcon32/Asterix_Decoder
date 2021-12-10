@@ -63,6 +63,7 @@ private slots:
     void on_filtersButton_clicked();
     void on_PacketRowClicked();
     void on_SaveFileClicked();
+    void on_ResetPacketsClicked();
 
 };
 
