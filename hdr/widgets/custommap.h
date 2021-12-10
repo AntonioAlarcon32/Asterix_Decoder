@@ -24,6 +24,8 @@ public:
     void AddCircleMarker(WGS84Coordinates coordinates, int radius, QString color, QString id);
     void Clear();
     void DeleteMarker(QString id);
+    void ShowLabels();
+    void HideLabels();
 
 private:
     Ui::CustomMap *ui;

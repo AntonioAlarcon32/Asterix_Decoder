@@ -49,4 +49,12 @@ void CustomMap::DeleteMarker(QString id) {
     QMetaObject::invokeMethod(map_, "removeItem",Q_ARG(QVariant, id));
 }
 
+void CustomMap::ShowLabels() {
+    QMetaObject::invokeMethod(map_, "showCallSign");
+}
+
+void CustomMap::HideLabels() {
+    QMetaObject::invokeMethod(map_, "hideCallSign");
+}
+
 

@@ -233,5 +233,14 @@ void FileWindow::on_ExportAsCSVCLicked() {
 }
 
 
+void FileWindow::on_showMarkersCheck_stateChanged(int arg1)
+{
+    if (this->ui->showMarkersCheck->isChecked()) {
+        this->ui->widget->ShowLabels();
+    }
 
+    else if (!this->ui->showMarkersCheck->isChecked()) {
+        this->ui->widget->HideLabels();
+    }
+}
 

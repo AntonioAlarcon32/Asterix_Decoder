@@ -68,6 +68,7 @@ private slots:
     void on_ResetPacketsClicked();
     void on_ExportAsKMLCLicked();
     void on_ExportAsCSVCLicked();
+    void on_showMarkersCheck_stateChanged(int arg1);
 };
 
 

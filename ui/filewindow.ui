@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="packetTab">
        <attribute name="title">
@@ -202,6 +202,13 @@
            </widget>
           </item>
          </layout>
+        </item>
+        <item row="2" column="0">
+         <widget class="QCheckBox" name="showMarkersCheck">
+          <property name="text">
+           <string>Show Markers</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

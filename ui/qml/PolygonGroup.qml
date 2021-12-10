@@ -11,6 +11,7 @@ MapItemGroup {
     property alias radius: markerDraw.radius
     property alias color: markerDraw.color
     property string callSign: ""
+    property bool callSignVisible: false
 
     MapQuickItem {
         id: marker
@@ -20,6 +21,7 @@ MapItemGroup {
     }
 
     MapQuickItem {
+        id: textCallSign
         sourceItem: Text{
             text: callSign
             color:"#242424"
@@ -28,7 +30,12 @@ MapItemGroup {
             font.pointSize: 10
         }
         coordinate: position
-        anchorPoint:Qt.point(radius*2,radius*2)
+        anchorPoint:Qt.point(-radius,radius*2)
+        visible: callSignVisible
+    }
+
+    function setCallSign(value) {
+        itemGroup.callSignVisible = value
     }
 }
 

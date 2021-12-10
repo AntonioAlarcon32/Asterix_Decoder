@@ -17,6 +17,7 @@ Rectangle {
         center: QtPositioning.coordinate(59.91, 10.75) // Oslo
         zoomLevel: 14
         property var addedItems: []
+        property bool showMarkers: false
 
 
         function changeCenterPos(lat, lon) {
@@ -39,6 +40,9 @@ Rectangle {
             item.position = QtPositioning.coordinate(lat, lon);
             item.radius = radius;
             item.color = color;
+            if (showMarkers) {
+                item.callSignVisible = true;
+            }
             testMap.addMapItemGroup(item);
             testMap.addedItems.push(item);
         }
@@ -50,6 +54,18 @@ Rectangle {
                     testMap.addedItems.splice(i,1)
                     return
                 }
+            }
+        }
+        function showCallSign() {
+            testMap.showMarkers = true;
+            for (var i = 0; i < testMap.addedItems.length; i++) {
+                testMap.addedItems[i].setCallSign(true)
+            }
+        }
+        function hideCallSign() {
+            testMap.showMarkers = false;
+            for (var i = 0; i < testMap.addedItems.length; i++) {
+                testMap.addedItems[i].setCallSign(false)
             }
         }
     }
