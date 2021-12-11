@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="packetTab">
        <attribute name="title">
@@ -121,6 +121,13 @@
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0">
          <widget class="QTableView" name="loadedFlights"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QToolButton" name="seeEmitterDetailsButton">
+          <property name="text">
+           <string>See Details</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -262,7 +269,7 @@
   <customwidget>
    <class>CustomMap</class>
    <extends>QWidget</extends>
-   <header>custommap.h</header>
+   <header>hdr/widgets/custommap.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

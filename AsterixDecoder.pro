@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    emitterdetailswindow.cpp \
     livecapturewindow.cpp \
     src/widgets/custommap.cpp \
     src/emitter.cpp \
@@ -31,6 +32,7 @@ SOURCES += \
     src/wgs84coordinates.cpp
 
 HEADERS += \
+    emitterdetailswindow.h \
     hdr/widgets/custommap.h \
     hdr/emitter.h \
     hdr/gui/filtersdialog.h \
@@ -52,6 +54,7 @@ HEADERS += \
     livecapturewindow.h
 
 FORMS += \
+    emitterdetailswindow.ui \
     livecapturewindow.ui \
     ui/widgets/custommap.ui \
     ui/filtersdialog.ui \

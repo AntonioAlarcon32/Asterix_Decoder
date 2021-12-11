@@ -96,6 +96,7 @@ void FileWindow::ConnectSignalsSlots() {
     connect(this->ui->actionSave_File, &QAction::triggered, this, &FileWindow::on_SaveFileClicked);
     connect(this->ui->actionKML, &QAction::triggered, this, &FileWindow::on_ExportAsKMLCLicked);
     connect(this->ui->actionCSV, &QAction::triggered, this, &FileWindow::on_ExportAsCSVCLicked);
+    connect(this->ui->seeEmitterDetailsButton, &QAbstractButton::clicked, this, &FileWindow::on_SeeEmittersDetailsClicked);
 }
 
 void FileWindow::on_TimerTick() {
@@ -298,5 +299,17 @@ void FileWindow::SaveKMLFile() {
             stream << "</kml>" << endl;
         }
 
+}
+
+void FileWindow::on_SeeEmittersDetailsClicked() {
+
+    QModelIndexList indexes = ui->loadedFlights->selectionModel()->selectedRows();
+    QModelIndex index = indexes.at(0);
+    int emitterNum = index.row();
+    Emitter emitterSelected = this->astFile_->emitters_.at(emitterNum);
+
+    EmitterDetailsWindow* emitterWindow = new EmitterDetailsWindow(this, &emitterSelected);
+    emitterWindow->show();
+    emitterWindow->raise();
 }
 

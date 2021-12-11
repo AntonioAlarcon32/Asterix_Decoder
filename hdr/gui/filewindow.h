@@ -17,6 +17,7 @@
 #include <hdr/sensor.h>
 #include "hdr/gui/packetdetaildialog.h"
 #include <hdr/widgets/custommap.h>
+#include "emitterdetailswindow.h"
 
 #include <hdr/gui/preferenceswindow.h>
 
@@ -71,6 +72,7 @@ private slots:
     void on_ExportAsKMLCLicked();
     void on_ExportAsCSVCLicked();
     void on_showMarkersCheck_stateChanged(int arg1);
+    void on_SeeEmittersDetailsClicked();
 };
 
 
