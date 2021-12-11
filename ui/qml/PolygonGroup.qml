@@ -12,6 +12,7 @@ MapItemGroup {
     property alias color: markerDraw.color
     property string callSign: ""
     property bool callSignVisible: false
+    property int cycles: 0
 
     MapQuickItem {
         id: marker

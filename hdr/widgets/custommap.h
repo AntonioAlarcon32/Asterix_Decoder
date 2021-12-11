@@ -23,9 +23,12 @@ public:
     void SetZoom(int level);
     void AddCircleMarker(WGS84Coordinates coordinates, int radius, QString color, QString id);
     void Clear();
+    void ClearItemsWithTwoCycles();
     void DeleteMarker(QString id);
     void ShowLabels();
     void HideLabels();
+    int GetAddedItemsLength();
+    QString GetAddedItem(int pos);
 
 private:
     Ui::CustomMap *ui;

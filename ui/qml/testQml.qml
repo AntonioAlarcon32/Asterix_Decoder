@@ -10,6 +10,7 @@ Rectangle {
     height: Qt.platform.os == "android" ? Screen.height : 512
     visible: true
 
+
     Map {
         id: testMap
         anchors.fill: parent
@@ -18,7 +19,6 @@ Rectangle {
         zoomLevel: 14
         property var addedItems: []
         property bool showMarkers: false
-
 
         function changeCenterPos(lat, lon) {
             testMap.center =  QtPositioning.coordinate(lat, lon)
@@ -62,13 +62,36 @@ Rectangle {
                 testMap.addedItems[i].setCallSign(true)
             }
         }
+
         function hideCallSign() {
             testMap.showMarkers = false;
             for (var i = 0; i < testMap.addedItems.length; i++) {
                 testMap.addedItems[i].setCallSign(false)
             }
         }
+
+        function clearItemsWithTwoCycles() {
+            for (var i = 0; i < testMap.addedItems.length;) {
+                if (1 === testMap.addedItems[i].cycles) {
+                    testMap.removeMapItemGroup(testMap.addedItems[i])
+                    testMap.addedItems.splice(i,1)
+                }
+                else {
+                    testMap.addedItems[i].cycles++
+                    i++
+                }
+            }
+        }
+
+        function getNumberOfAddedItems() {
+            return addedItems.length;
+        }
+
+        function  getAddedItem(pos) {
+            return addedItems[pos].callSign
+        }
     }
+
     Plugin {
             id: mapPlugin
             name: "osm" // "mapboxgl", "esri", ...

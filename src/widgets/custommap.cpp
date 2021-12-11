@@ -57,4 +57,21 @@ void CustomMap::HideLabels() {
     QMetaObject::invokeMethod(map_, "hideCallSign");
 }
 
+void CustomMap::ClearItemsWithTwoCycles() {
+    QMetaObject::invokeMethod(map_, "clearItemsWithTwoCycles");
+
+}
+
+int CustomMap::GetAddedItemsLength() {
+    QVariant length;
+    QMetaObject::invokeMethod(map_, "getNumberOfAddedItems",Q_RETURN_ARG(QVariant, length));
+    return length.toInt();
+}
+
+QString CustomMap::GetAddedItem(int pos) {
+    QVariant addedItem;
+    QMetaObject::invokeMethod(map_, "getAddedItem",Q_RETURN_ARG(QVariant, addedItem), Q_ARG(QVariant, pos));
+    return addedItem.toString();
+}
+
 

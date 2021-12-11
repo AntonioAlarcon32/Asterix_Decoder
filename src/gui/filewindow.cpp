@@ -123,9 +123,16 @@ void FileWindow::on_filtersButton_clicked()
 
 void FileWindow::RefreshMap() {
 
-    if (this->currentTime_.msec() == 0) {
-        this->ui->widget->Clear();
-        this->alreadyAdded_.clear();
+    alreadyAdded_.clear();
+    this->ui->widget->ClearItemsWithTwoCycles();
+
+    int numOfItems = this->ui->widget->GetAddedItemsLength();
+
+    int i = 0;
+
+    while (i < numOfItems) {
+        alreadyAdded_.append(this->ui->widget->GetAddedItem(i));
+        i++;
     }
 
     for (;packetCounter_ < astFile_->dataBlocks->length(); packetCounter_++) {
