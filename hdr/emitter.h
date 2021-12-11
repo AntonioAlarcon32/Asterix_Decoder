@@ -19,11 +19,12 @@ public:
     QTime GetFirstReport();
     QTime GetLastReport();
 
-private:
-    QString identifier;
     QList<WGS84Coordinates> pointsCat21;
     QList<WGS84Coordinates> pointsCat20;
     QList<WGS84Coordinates> pointsCat10;
+
+private:
+    QString identifier;
 
     QList<QTime> timeStampsCat21;
     QList<QTime> timeStampsCat20;

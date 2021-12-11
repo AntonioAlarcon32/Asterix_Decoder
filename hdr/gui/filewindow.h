@@ -39,6 +39,7 @@ private:
     AsterixFile *astFile_;
     int packetCounter_;
     QList<QString> alreadyAdded_;
+
     int secsValue_;
     AppConfig *appConfig_;
     QThread *loadingThread;
@@ -48,6 +49,7 @@ private:
     void ConnectSignalsSlots();
     void SetFileDetailsTab();
     void RefreshMap();
+    void SaveKMLFile();
 
 
 

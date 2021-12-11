@@ -94,6 +94,8 @@ void FileWindow::ConnectSignalsSlots() {
     connect(this->ui->filtersButton, &QAbstractButton::clicked, this, &FileWindow::on_filtersButton_clicked);
     connect(this->ui->showPacketDetailsButton, &QAbstractButton::clicked, this, &FileWindow::on_PacketRowClicked);
     connect(this->ui->actionSave_File, &QAction::triggered, this, &FileWindow::on_SaveFileClicked);
+    connect(this->ui->actionKML, &QAction::triggered, this, &FileWindow::on_ExportAsKMLCLicked);
+    connect(this->ui->actionCSV, &QAction::triggered, this, &FileWindow::on_ExportAsCSVCLicked);
 }
 
 void FileWindow::on_TimerTick() {
@@ -225,11 +227,11 @@ void FileWindow::on_ResetPacketsClicked() {
 }
 
 void FileWindow::on_ExportAsKMLCLicked() {
-
+    SaveKMLFile();
 }
 
 void FileWindow::on_ExportAsCSVCLicked() {
-
+    int c = 1;
 }
 
 
@@ -242,5 +244,52 @@ void FileWindow::on_showMarkersCheck_stateChanged(int arg1)
     else if (!this->ui->showMarkersCheck->isChecked()) {
         this->ui->widget->HideLabels();
     }
+}
+
+void FileWindow::SaveKMLFile() {
+
+
+    QString filename = QDir::currentPath() + "/test.kml";
+        QFile file(filename);
+        if (file.open(QIODevice::ReadWrite)) {
+            QTextStream stream(&file);
+            stream << "<?xml version='1.0' encoding='UTF-8'?>" << endl;
+            stream << "<kml xmlns='http://www.opengis.net/kml/2.2'>" << endl;
+            stream << "<Document>" << endl;
+            stream << "<Folder><name>CAT21</name><open>1</open>" << endl;
+            stream << "<Style id='cat21Style'>" << endl;
+            stream << "<LineStyle>" << endl;
+            stream << "<color>641400FF</color>" << endl;
+            stream << "<width>4</width>" << endl;
+            stream << "</LineStyle>" << endl;
+            stream << "<PolyStyle>" << endl;
+            stream << "<color>641400FF</color>" << endl;
+            stream << "</PolyStyle>" << endl;
+            stream <<"</Style>" << endl;
+
+            for (Emitter emitter : this->astFile_->emitters_) {
+                stream << "<Placemark>" << endl;
+                stream << "<name>" << emitter.GetIdentifier().replace(" ","") << "</name>" << endl;
+                stream << "<styleUrl>#cat21Style</styleUrl>" << endl;
+                stream << "<LineString>" << endl;
+                stream << "<coordinates>" << endl;
+
+                for (WGS84Coordinates coord : emitter.pointsCat21) {
+
+                    stream << QString::number(coord.longitude,'g',15) << "," << QString::number(coord.latitude,'g',15) << endl;
+
+                }
+
+                stream << "</coordinates>" << endl;
+                stream << "</LineString>" << endl;
+                stream << "</Placemark>" << endl;
+
+            }
+
+            stream << "</Folder>" << endl;
+            stream << "</Document>" << endl;
+            stream << "</kml>" << endl;
+        }
+
 }
 
