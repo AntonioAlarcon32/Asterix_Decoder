@@ -122,6 +122,7 @@ void AsterixFile::readFile(QString path) {
         //Cat10 *inten2 = dynamic_cast<Cat10*>(dataBlocks->at(0));
         if (packetDecoded == true) {
             numOfPackets++;
+            filteredPackets_.append(numOfPackets);
 
             if (categoryStats_.value(category,0) == 0) {
                 categoryStats_.insert(category,1);
@@ -227,34 +228,62 @@ void AsterixFile::ProcessEmitters() {
 }
 
 void AsterixFile::FilterByCallSign(QString callSign, QList<int> &packetList) {
-    for (DataBlock *dataBlock : *dataBlocks) {
-        if (callSign == dataBlock->GetCallSign().replace(" ","")) {
-            packetList.append(dataBlock->GetNumOfPacket());
+    int i = 0;
+    while (i < packetList.length()) {
+        int numOfPacket = packetList.at(i);
+        DataBlock* dataBlock = dataBlocks->at(numOfPacket-1);
+        if (dataBlock->GetCallSign().replace(" ","") == callSign) {
+            i++;
         }
+        else {
+            packetList.removeAt(i);
+        }
+
     }
 }
 
 void AsterixFile::FilterByCategory(int category, QList<int> &packetList) {
-    for (DataBlock *dataBlock : *dataBlocks) {
-        if (category == dataBlock->category) {
-            packetList.append(dataBlock->GetNumOfPacket());
+    int i = 0;
+    while (i < packetList.length()) {
+        int numOfPacket = packetList.at(i);
+        DataBlock* dataBlock = dataBlocks->at(numOfPacket-1);
+        if (dataBlock->GetCategory() == category) {
+            i++;
         }
+        else {
+            packetList.removeAt(i);
+        }
+
     }
 }
 
 void AsterixFile::FilterByAddress(QString address, QList<int> &packetList) {
-    for (DataBlock *dataBlock : *dataBlocks) {
-        if (address == dataBlock->GetAddress()) {
-            packetList.append(dataBlock->GetNumOfPacket());
+    int i = 0;
+    while (i < packetList.length()) {
+        int numOfPacket = packetList.at(i);
+        DataBlock* dataBlock = dataBlocks->at(numOfPacket-1);
+        if (dataBlock->GetAddress().replace(" ","") == address) {
+            i++;
         }
+        else {
+            packetList.removeAt(i);
+        }
+
     }
 }
 
 void AsterixFile::FilterByTrackNumber(int trackNumber, QList<int> &packetList) {
-    for (DataBlock *dataBlock : *dataBlocks) {
-        if (trackNumber == dataBlock->GetTrackNumber().toInt()) {
-            packetList.append(dataBlock->GetNumOfPacket());
+    int i = 0;
+    while (i < packetList.length()) {
+        int numOfPacket = packetList.at(i);
+        DataBlock* dataBlock = dataBlocks->at(numOfPacket-1);
+        if (dataBlock->GetTrackNumber() == trackNumber) {
+            i++;
         }
+        else {
+            packetList.removeAt(i);
+        }
+
     }
 }
 
@@ -312,6 +341,7 @@ void AsterixFile::ResetFilters() {
         int category = dataBlock->GetCategory();
         int packetNumber = dataBlock->GetNumOfPacket();
         int length = dataBlock->GetLength();
+        filteredPackets_.append(dataBlock->GetNumOfPacket());
 
         if (!timeOfReception.isNull()) {
             timeToShow = timeOfReception.toString("hh:mm:ss:zzz");
