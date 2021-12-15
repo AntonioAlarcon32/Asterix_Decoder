@@ -23,8 +23,8 @@ CustomMap::~CustomMap()
 
 
 void CustomMap::SetPosition(WGS84Coordinates coordinates) {
-    QVariant lat = coordinates.latitude;
-    QVariant lon = coordinates.longitude;
+    QVariant lat = coordinates.GetLatitude();
+    QVariant lon = coordinates.GetLongitude();
     QMetaObject::invokeMethod(map_, "changeCenterPos",
             Q_ARG(QVariant, lat),Q_ARG(QVariant, lon));
 }
@@ -36,8 +36,8 @@ void CustomMap::SetZoom(int level) {
 }
 
 void CustomMap::AddCircleMarker(WGS84Coordinates coordinates, int radius, QString color, QString id) {
-    QVariant lat = coordinates.latitude;
-    QVariant lon = coordinates.longitude;
+    QVariant lat = coordinates.GetLatitude();
+    QVariant lon = coordinates.GetLongitude();
     QMetaObject::invokeMethod(map_, "addItemToMap", Q_ARG(QVariant, lat),Q_ARG(QVariant, lon),Q_ARG(QVariant, radius),Q_ARG(QVariant, color),Q_ARG(QVariant, id));
 }
 

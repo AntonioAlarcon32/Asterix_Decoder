@@ -284,7 +284,7 @@ void FileWindow::SaveKMLFile() {
 
                 for (WGS84Coordinates coord : emitter.pointsCat21) {
 
-                    stream << QString::number(coord.longitude,'g',15) << "," << QString::number(coord.latitude,'g',15) << endl;
+                    stream << QString::number(coord.GetLongitude(),'g',15) << "," << QString::number(coord.GetLatitude(),'g',15) << endl;
 
                 }
 
