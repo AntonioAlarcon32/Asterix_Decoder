@@ -245,6 +245,9 @@ QString Cat21::GetAddress() {
 QString Cat21::GetTrackNumber() {
     return QString::number(trackNumber);
 }
+QString Cat21::GetMode3A() {
+    return this->m3ACode;
+}
 
 QTreeWidgetItem* Cat21::GetPacketInfo() {
     QTreeWidgetItem *root = new QTreeWidgetItem();

@@ -42,6 +42,7 @@ public:
     virtual QString GetCallSign() = 0;
     virtual QString GetAddress() = 0;
     virtual QString GetTrackNumber() = 0;
+    virtual QString GetMode3A() = 0;
 
     virtual QTreeWidgetItem* GetPacketInfo() = 0;
 };

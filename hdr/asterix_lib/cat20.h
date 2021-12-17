@@ -22,6 +22,7 @@ public:
     QString GetCallSign();
     QString GetAddress();
     QString GetTrackNumber();
+    QString GetMode3A();
     QTreeWidgetItem* GetPacketInfo();
 
 private:

@@ -47,7 +47,7 @@ void FileWindow::on_FinishLoading() {
     ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableView->verticalHeader()->setVisible(false);
-    ui->loadedPackets->setText("Loaded " + QString::number(astFile_->numberOfPackets) + " packets");
+    ui->loadedPackets->setText("Loaded " + QString::number(astFile_->numberOfPackets_) + " packets");
 
     ui->loadedFlights->setModel(astFile_->emitterTable_);
     ui->loadedFlights->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -118,7 +118,8 @@ void FileWindow::on_filtersButton_clicked()
         QString address = filtersDialog->address_;
         int trackNumber = filtersDialog->trackNumber_;
         int category = filtersDialog->category_;
-        astFile_->ApplyFilters(category,callSign,address,trackNumber);
+        int mode3ACode = filtersDialog->mode3A_;
+        astFile_->ApplyFilters(category,callSign,address,trackNumber, mode3ACode);
     }
 }
 
@@ -197,7 +198,7 @@ void FileWindow::SetFileDetailsTab() {
         this->ui->statsTable->setItem(1, i+1, count);
     }
     QTableWidgetItem *totalLabel = new QTableWidgetItem("Total");
-    QTableWidgetItem *totalCount = new QTableWidgetItem(QString::number(astFile_->numberOfPackets));
+    QTableWidgetItem *totalCount = new QTableWidgetItem(QString::number(astFile_->numberOfPackets_));
     this->ui->statsTable->setItem(0,i+1, totalLabel);
     this->ui->statsTable->setItem(1,i+1, totalCount);
 

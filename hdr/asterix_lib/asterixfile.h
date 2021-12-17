@@ -30,7 +30,7 @@ public:
 
     QVector<DataBlock *> *dataBlocks;
     QList<Emitter> emitters_;
-    int numberOfPackets;
+    int numberOfPackets_;
     QList<int> filteredPackets_;
     void decodeFlights();
 
@@ -42,8 +42,10 @@ public:
     void FilterByCategory(int category,QList<int> &packetList);
     void FilterByAddress(QString address,QList<int> &packetList);
     void FilterByTrackNumber(int trackNumber,QList<int> &packetList);
+    void FilterByMode3A(int mode3ACode,QList<int> &packetList);
+    bool AddPacketToList(QByteArray data);
 
-    void ApplyFilters(int category = -1, QString callSign = "", QString address = "", int trackNumber = -1);
+    void ApplyFilters(int category = -1, QString callSign = "", QString address = "", int trackNumber = -1, int mode3ACode = -1);
 
 
     QStandardItemModel* packetTable_;

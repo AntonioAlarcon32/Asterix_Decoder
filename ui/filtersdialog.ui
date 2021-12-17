@@ -125,13 +125,36 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>160</y>
+     <y>180</y>
      <width>113</width>
      <height>32</height>
     </rect>
    </property>
    <property name="text">
     <string>Reset Filters</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="mode3AText">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>150</y>
+     <width>113</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="mode3ACheck">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>150</y>
+     <width>111</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Mode 3/A</string>
    </property>
   </widget>
  </widget>

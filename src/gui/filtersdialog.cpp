@@ -10,6 +10,7 @@ FiltersDialog::FiltersDialog(QWidget *parent) :
     address_ = "";
     trackNumber_ = -1;
     category_ = -1;
+    mode3A_ = -1;
 }
 
 FiltersDialog::~FiltersDialog()
@@ -23,6 +24,7 @@ void FiltersDialog::on_buttonBox_accepted()
     trackNumberChecked_ = ui->trackNumberCheck->isChecked();
     addressChecked_ = ui->AddressCheck->isChecked();
     categoryChecked_ = ui->categoryCheck->isChecked();
+    m3aChecked_ = ui->mode3ACheck->isChecked();
 
     if (callSignChecked_) {
         callSign_ = ui->callSignText->text();
@@ -38,6 +40,9 @@ void FiltersDialog::on_buttonBox_accepted()
     }
     if (categoryChecked_) {
         category_ = ui->categoryText->text().toInt();
+    }
+    if (m3aChecked_) {
+        mode3A_ = ui->mode3AText->text().toInt();
     }
 }
 

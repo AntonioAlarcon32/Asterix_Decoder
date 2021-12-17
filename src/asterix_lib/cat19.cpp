@@ -75,6 +75,11 @@ QString Cat19::GetTrackNumber() {
     return "N/A";
 }
 
+QString Cat19::GetMode3A() {
+    return "N/A";
+}
+
+
 QTreeWidgetItem* Cat19::GetPacketInfo() {
     QTreeWidgetItem *root = new QTreeWidgetItem();
     root->setText(0, "Packet " + QString::number(this->numOfPacket));

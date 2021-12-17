@@ -19,11 +19,13 @@ public:
     bool addressChecked_;
     bool trackNumberChecked_;
     bool categoryChecked_;
+    bool m3aChecked_;
 
     QString callSign_;
     QString address_;
     int trackNumber_;
     int category_;
+    int mode3A_;
 
 signals:
     void ResetPacketsClicked();

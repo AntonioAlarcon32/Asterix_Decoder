@@ -36,6 +36,10 @@ QString OtherDataBlocks::GetAddress() {
 QString OtherDataBlocks::GetTrackNumber() {
     return "N/A";
 }
+QString OtherDataBlocks::GetMode3A() {
+    return "N/A";
+}
+
 
 QTreeWidgetItem* OtherDataBlocks::GetPacketInfo() {
     QTreeWidgetItem *root = new QTreeWidgetItem();

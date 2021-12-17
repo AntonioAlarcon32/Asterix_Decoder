@@ -152,6 +152,9 @@ QString Cat10::GetAddress() {
 QString Cat10::GetTrackNumber() {
     return QString::number(trackNumber);
 }
+QString Cat10::GetMode3A() {
+    return this->M3ACode;
+}
 
 
 QTreeWidgetItem* Cat10::GetPacketInfo() {
