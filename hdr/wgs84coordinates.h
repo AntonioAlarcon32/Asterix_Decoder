@@ -7,6 +7,7 @@
 class WGS84Coordinates
 {
 public:
+    WGS84Coordinates();
     WGS84Coordinates(double latitude,double longitude, double height);
     WGS84Coordinates(double latitude,double longitude);
 

@@ -21,7 +21,7 @@ public:
 
     void SetPosition(WGS84Coordinates coordinates);
     void SetZoom(int level);
-    void AddCircleMarker(WGS84Coordinates coordinates, int radius, QString color, QString id);
+    void AddCircleMarker(WGS84Coordinates coordinates, int radius, int color, QString id);
     void Clear();
     void ClearItemsWithTwoCycles();
     void DeleteMarker(QString id);
@@ -29,6 +29,14 @@ public:
     void HideLabels();
     int GetAddedItemsLength();
     QString GetAddedItem(int pos);
+
+    enum Colors {
+        CAT21 = 21,
+        CAT20 = 20,
+        CAT19 = 19,
+        CAT10MLAT = 101,
+        CAT10SMR = 102
+    };
 
 private:
     Ui::CustomMap *ui;

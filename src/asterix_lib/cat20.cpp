@@ -139,7 +139,18 @@ QString Cat20::GetSACSIC() {
 }
 
 WGS84Coordinates Cat20::GetPosition() {
-    return WGS84Coordinates(0,0,0);
+    if (!isnan(this->cartesianX) && !isnan(this->cartesianY)) {
+        AppConfig *conf = AppConfig::GetInstance();
+        Sensor *sensor = conf->GetSensorFromSACSIC(systemAreaCode,systemIdentificationCode);
+        if (sensor != 0) {
+            CoordinatesXYZ radarCartesian = CoordinatesXYZ(this->cartesianX, this->cartesianY,0);
+            WGS84Coordinates radarPos = WGS84Coordinates(sensor->sensorLatitude, sensor->sensorLongitude);
+            CoordinatesXYZ geocentric = Utilities::RadarTools::ChangeRadarCartesianToGeocentric(radarPos, radarCartesian);
+            WGS84Coordinates geodesic = Utilities::RadarTools::ChangeGeocentricToGeodesic(geocentric);
+            return geodesic;
+        }
+    }
+    return WGS84Coordinates();
 }
 
 QString Cat20::GetCallSign() {

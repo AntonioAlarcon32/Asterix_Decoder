@@ -134,8 +134,11 @@ WGS84Coordinates Cat10::GetPosition() {
             CoordinatesXYZ radarCartesian = CoordinatesXYZ(this->cartesianX, this->cartesianY,0);
             WGS84Coordinates radarPos = WGS84Coordinates(sensor->sensorLatitude, sensor->sensorLongitude);
             CoordinatesXYZ geocentric = Utilities::RadarTools::ChangeRadarCartesianToGeocentric(radarPos, radarCartesian);
+            WGS84Coordinates geodesic = Utilities::RadarTools::ChangeGeocentricToGeodesic(geocentric);
+            return geodesic;
         }
     }
+    return WGS84Coordinates();
 }
 
 QString Cat10::GetCallSign() {

@@ -17,7 +17,7 @@ MapItemGroup {
     MapQuickItem {
         id: marker
         property int radius: 1
-        sourceItem: Rectangle { id: markerDraw; width: radius; height: radius; color: "red"; smooth: true; radius: radius }
+        sourceItem: Rectangle { id: markerDraw; width: radius; height: radius; color: "#002fff"; smooth: true; radius: radius }
         anchorPoint: Qt.point(sourceItem.width/2, sourceItem.height/2)
     }
 

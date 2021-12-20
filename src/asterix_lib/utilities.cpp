@@ -223,7 +223,7 @@ QString DataTools::GetAircraftIDFromBytes(QVector<unsigned char> bytes) {
             break;
         }
     }
-    return result;
+    return result.replace(" ","");
 }
 
 double DataTools::DecodeSpecialTwosComplement(QVector<unsigned char> bytes, double resolution, unsigned char  mask, int signIndicator) {
@@ -263,6 +263,9 @@ double RadarTools::PI = 3.14159265359;
 double RadarTools::DEG2RAD = PI/180.0;
 double RadarTools::A = 6378137.0;
 double RadarTools::E2 = 0.00669437999013;
+double RadarTools::ALMOST_ZERO = 1e-10;
+double RadarTools::REQUIRED_PRECISION = 1e-8;
+double RadarTools::RAD2DEG = 180.0/PI;
 
 CoordinatesXYZ RadarTools::ChangeRadarCartesianToGeocentric(WGS84Coordinates radarCoords, CoordinatesXYZ radarCartesian) {
 
@@ -273,16 +276,6 @@ CoordinatesXYZ RadarTools::ChangeRadarCartesianToGeocentric(WGS84Coordinates rad
     double xl = radarCartesian.GetX();
     double yl = radarCartesian.GetY();
     double zl = radarCartesian.GetZ();
-
-    double A = -(sin(lon));
-    double B = cos(lon);
-    double C = 0;
-    double D = -(sin(lat) * cos(lon));
-    double E = -(sin(lat) * sin(lon));
-    double F = cos(lat);
-    double G = cos(lat) * cos(lon);
-    double H = cos(lat) * sin(lon);
-    double I = sin(lat);
 
     double nu = (RadarTools::A) / (sqrt(1 - E2 * pow(sin(lat),2)));
 
@@ -298,6 +291,71 @@ CoordinatesXYZ RadarTools::ChangeRadarCartesianToGeocentric(WGS84Coordinates rad
     return CoordinatesXYZ(xg,yg,zg);
     int c = 1;
 }
+
+WGS84Coordinates RadarTools::ChangeGeocentricToGeodesic(CoordinatesXYZ objectGeocenctric) {
+    double x = objectGeocenctric.GetX();
+    double y = objectGeocenctric.GetY();
+    double z = objectGeocenctric.GetZ();
+    WGS84Coordinates result = WGS84Coordinates();
+
+    double lat, lon, height;
+
+
+
+    double b = 6356752.3142;
+
+    if ((abs(x) < ALMOST_ZERO) && (abs(y) < ALMOST_ZERO))
+    {
+        if (abs(z) < ALMOST_ZERO)
+        {
+            // the point is at the center of earth :)
+            result.SetLatitude(PI / 2.0);
+        }
+        else
+        {
+            result.SetLatitude((PI / 2.0) * ((z / abs(z)) + 0.5));
+        }
+        result.SetLongitude(0);
+        result.SetHeight(abs(z) - b);
+        return result;
+    }
+
+    double d_xy = sqrt(x * x + y * y);
+                // from formula 20
+                lat = atan((z / d_xy) /
+                    (1 - (A * E2) / sqrt(d_xy * d_xy + z * z)));
+                // from formula 24
+                double nu = A / sqrt(1 - E2 * pow(sin(lat), 2.0));
+                // from formula 20
+                height = (d_xy / cos(lat)) - nu;
+
+                // iteration from formula 20b
+                double Lat_over;
+                if (lat >= 0) {
+                    Lat_over = -0.1;
+                }
+                else {
+                    Lat_over = 0.1;
+                }
+
+                int loop_count = 0;
+                while ((abs(lat - Lat_over) > REQUIRED_PRECISION) && (loop_count < 50)) {
+                    loop_count++;
+                    Lat_over = lat;
+                    lat = atan((z * (1 + height / nu)) / (d_xy * ((1 - E2) + (height / nu))));
+                    nu = A / sqrt(1 - E2 * pow(sin(lat), 2.0));
+                    height = d_xy / cos(lat) - nu;
+                }
+                lon = atan2(y, x);
+                // if (loop_count == 50) { // exception }
+
+                result.SetLatitude(lat*RAD2DEG);
+                result.SetLongitude(lon*RAD2DEG);
+                result.SetHeight(height);
+                return result;
+}
+
+
 
 }
 

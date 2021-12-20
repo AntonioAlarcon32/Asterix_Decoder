@@ -141,13 +141,31 @@ void FileWindow::RefreshMap() {
         DataBlock* dataBlock = astFile_->dataBlocks->at(packetCounter_);
         int msecsTo = this->currentTime_.msecsTo(dataBlock->GetTimeOfReception());
         if (msecsTo >= -500 && msecsTo <= 500) {
+            int color;
+            QString address;
+            if (dataBlock->GetCategory() == 21) {
+                color = CustomMap::CAT21;
+                address = dataBlock->GetAddress();
+            }
+            else if (dataBlock->GetCategory() == 20) {
+                color = CustomMap::CAT20;
+                address = dataBlock->GetAddress();
+            }
+            else if (dataBlock->GetCategory() == 10 && dataBlock->GetTypeOfTransmission() == "CAT 10: PSR") {
+                color = CustomMap::CAT10SMR;
+                address = dataBlock->GetTrackNumber();
+            }
+            else if (dataBlock->GetCategory() == 10 && dataBlock->GetTypeOfTransmission() == "CAT 10: MLAT") {
+                color = CustomMap::CAT10MLAT;
+                address = dataBlock->GetAddress();
+            }
             if (alreadyAdded_.indexOf(dataBlock->GetAddress()) == -1) {
-                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,"red", dataBlock->GetAddress());
+                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,color, address);
                 alreadyAdded_.append(dataBlock->GetAddress());
             }
             else {
                 this->ui->widget->DeleteMarker(dataBlock->GetAddress());
-                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,"red", dataBlock->GetAddress());
+                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,color, address);
             }
         }
 

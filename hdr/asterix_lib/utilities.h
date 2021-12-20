@@ -25,8 +25,12 @@ namespace Utilities
         static double E2;
         static double A;
         static double DEG2RAD;
+        static double RAD2DEG;
+        static double ALMOST_ZERO;
+        static double REQUIRED_PRECISION;
     public:
         static CoordinatesXYZ ChangeRadarCartesianToGeocentric(WGS84Coordinates radarCoords, CoordinatesXYZ radarCartesian);
+        static WGS84Coordinates ChangeGeocentricToGeodesic(CoordinatesXYZ objectGeocenctric);
 
     };
 };

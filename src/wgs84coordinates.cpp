@@ -1,4 +1,11 @@
 #include "hdr/wgs84coordinates.h"
+#include "math.h"
+
+WGS84Coordinates::WGS84Coordinates() {
+    this->height = nan("");
+    this->latitude = nan("");
+    this->longitude = nan("");
+}
 
 WGS84Coordinates::WGS84Coordinates(double latitude,double longitude, double height)
 {
