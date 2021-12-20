@@ -59,27 +59,27 @@ void AppConfig::DeleteSensor(int uniqueId) {
     }
 }
 
-Sensor AppConfig::GetSensorFromSACSIC(short sac, short sic) {
+Sensor* AppConfig::GetSensorFromSACSIC(short sac, short sic) {
 
     int i = 0;
     while (i < this->sensorList_.length()) {
         if (sensorList_.at(i).systemAreaCode == sac && sensorList_.at(i).systemIdCode == sic) {
-            return sensorList_.at(i);
+            return &sensorList_[i];
         }
         i++;
     }
-    return Sensor();
+    return nullptr;
 }
 
-Sensor AppConfig::GetSensorInfo(int uniqueId) {
+Sensor* AppConfig::GetSensorInfo(int uniqueId) {
     int i = 0;
     while (i < this->sensorList_.length()) {
         if (sensorList_.at(i).uniqueId == uniqueId) {
-            return sensorList_.at(i);
+            return &sensorList_[i];
         }
         i++;
     }
-    return Sensor();
+    return nullptr;
 }
 
 void AppConfig::SaveXMLFile(QString path) {
@@ -102,16 +102,16 @@ void AppConfig::SaveXMLFile(QString path) {
     QList<int> uniqueIds = this->GetUniqueIds();
 
     for (int id : uniqueIds) {
-        Sensor sensor = this->GetSensorInfo(id);
+        Sensor *sensor = this->GetSensorInfo(id);
         xmlWriter.writeStartElement("Sensor");
-        xmlWriter.writeTextElement("unique_id",QString::number(sensor.uniqueId));
-        xmlWriter.writeTextElement("description",sensor.sensorDescription);
-        xmlWriter.writeTextElement("ip",sensor.sensorIp);
-        xmlWriter.writeTextElement("latitude",QString::number(sensor.sensorLatitude,'g',8));
-        xmlWriter.writeTextElement("longitude",QString::number(sensor.sensorLongitude,'g',8));
-        xmlWriter.writeTextElement("category",QString::number(sensor.category));
-        xmlWriter.writeTextElement("system_id_code",QString::number(sensor.systemIdCode));
-        xmlWriter.writeTextElement("system_area_code",QString::number(sensor.systemAreaCode));
+        xmlWriter.writeTextElement("unique_id",QString::number(sensor->uniqueId));
+        xmlWriter.writeTextElement("description",sensor->sensorDescription);
+        xmlWriter.writeTextElement("ip",sensor->sensorIp);
+        xmlWriter.writeTextElement("latitude",QString::number(sensor->sensorLatitude,'g',8));
+        xmlWriter.writeTextElement("longitude",QString::number(sensor->sensorLongitude,'g',8));
+        xmlWriter.writeTextElement("category",QString::number(sensor->category));
+        xmlWriter.writeTextElement("system_id_code",QString::number(sensor->systemIdCode));
+        xmlWriter.writeTextElement("system_area_code",QString::number(sensor->systemAreaCode));
         xmlWriter.writeEndElement();
     }
     xmlWriter.writeEndElement();

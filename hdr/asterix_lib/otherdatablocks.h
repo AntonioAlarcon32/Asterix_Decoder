@@ -8,6 +8,7 @@ class OtherDataBlocks: public DataBlock
 {
 public:
     OtherDataBlocks(int category);
+    ~OtherDataBlocks();
 
     void FullDecode();
     QString GetTypeOfMessage();
@@ -20,6 +21,7 @@ public:
     QString GetTrackNumber();
     QString GetMode3A();
     QTreeWidgetItem* GetPacketInfo();
+    QString GetTypeOfTransmission();
 };
 
 #endif // OTHERDATABLOCKS_H

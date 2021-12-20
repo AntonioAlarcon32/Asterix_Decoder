@@ -21,7 +21,11 @@ EmitterDetailsWindow::EmitterDetailsWindow(QWidget *parent, Emitter *emitter) :
     this->ui->detailsMap->SetPosition(middleCoord);
     this->ui->detailsMap->SetZoom(7);
 
-    this->ui->detailsList->addItem("CallSign: " + emitter_->GetIdentifier());
+    this->ui->detailsList->addItem("CallSign: " + emitter_->GetCallSign());
+    this->ui->detailsList->addItem("Address: " + emitter_->GetTargetAddress());
+    this->ui->detailsList->addItem("Mode 3/A Code: " + emitter_->GetMode3ACode());
+    this->ui->detailsList->addItem("Track Number: " + emitter_->GetTrackNumber());
+
     this->ui->detailsList->addItem("First Packet: " + emitter_->GetFirstReport().toString("hh:mm:ss:zzz"));
     this->ui->detailsList->addItem("Last Packet: " + emitter_->GetLastReport().toString("hh:mm:ss:zzz"));
     this->ui->detailsList->addItem("Number of Packets of CAT21: " + QString::number(emitter_->pointsCat21.length()));

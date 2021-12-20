@@ -192,6 +192,10 @@ Cat21::Cat21()
     this->daSCC = nanf("");
 }
 
+Cat21::~Cat21() {
+
+}
+
 QString Cat21::GetTypeOfMessage() {
     return "N/A";
 }
@@ -203,9 +207,11 @@ QTime Cat21::GetTimeOfReception() {
 QString Cat21::GetSACSIC() {
 
     AppConfig *conf = AppConfig::GetInstance();
-    Sensor sensor = conf->GetSensorFromSACSIC(systemAreaCode,systemIdentificationCode);
-    if (sensor.systemAreaCode == systemAreaCode && sensor.systemIdCode == systemIdentificationCode) {
-        return sensor.sensorDescription;
+    Sensor *sensor = conf->GetSensorFromSACSIC(systemAreaCode,systemIdentificationCode);
+    if (sensor != 0) {
+        if (sensor->systemAreaCode == systemAreaCode && sensor->systemIdCode == systemIdentificationCode) {
+            return sensor->sensorDescription;
+        }
     }
     else {
         return QString::number(systemAreaCode) + "/" + QString::number(systemIdentificationCode);
@@ -215,25 +221,6 @@ QString Cat21::GetSACSIC() {
 
 WGS84Coordinates Cat21::GetPosition() {
     return WGS84Coordinates(wgs84latitude,wgs84longitude, geometricHeight*0.3048);
-}
-
-QString Cat21::GetIdentifier() {
-
-    if (targetIdentification != "N/A") {
-            return targetIdentification;
-    }
-
-    else if (targetAddress != "N/A") {
-        return targetAddress;
-    }
-
-    else if (trackNumber != -1) {
-        return QString::number(trackNumber);
-    }
-
-    else {
-        return "N/A";
-    }
 }
 
 QString Cat21::GetCallSign() {
@@ -247,6 +234,10 @@ QString Cat21::GetTrackNumber() {
 }
 QString Cat21::GetMode3A() {
     return this->m3ACode;
+}
+
+QString Cat21::GetTypeOfTransmission() {
+    return "CAT 21: ADS-B";
 }
 
 QTreeWidgetItem* Cat21::GetPacketInfo() {
@@ -1522,8 +1513,7 @@ void Cat21::DecodeTargetAddress(QVector<unsigned char> &dataItem){
     QString buildAddress = "0x";
 
     for (unsigned char byte : dataItem) {
-        short a = (short) byte;
-        QString str = QString("%1").arg(a,0,16);
+        QString str = QString("%1").arg(byte, 2, 16, QChar('0'));
         buildAddress.append(str);
     }
     this->targetAddress = buildAddress;

@@ -141,13 +141,13 @@ void FileWindow::RefreshMap() {
         DataBlock* dataBlock = astFile_->dataBlocks->at(packetCounter_);
         int msecsTo = this->currentTime_.msecsTo(dataBlock->GetTimeOfReception());
         if (msecsTo >= -500 && msecsTo <= 500) {
-            if (alreadyAdded_.indexOf(dataBlock->GetIdentifier()) == -1) {
-                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,"red", dataBlock->GetIdentifier());
-                alreadyAdded_.append(dataBlock->GetIdentifier());
+            if (alreadyAdded_.indexOf(dataBlock->GetAddress()) == -1) {
+                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,"red", dataBlock->GetAddress());
+                alreadyAdded_.append(dataBlock->GetAddress());
             }
             else {
-                this->ui->widget->DeleteMarker(dataBlock->GetIdentifier());
-                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,"red", dataBlock->GetIdentifier());
+                this->ui->widget->DeleteMarker(dataBlock->GetAddress());
+                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,"red", dataBlock->GetAddress());
             }
         }
 
@@ -164,12 +164,15 @@ void FileWindow::RefreshMap() {
 void FileWindow::on_PacketRowClicked() {
 
     QModelIndexList indexes = ui->tableView->selectionModel()->selection().indexes();
-    QModelIndex index = indexes.at(0);
-    int packet = index.data().toInt();
-    QTreeWidgetItem *packetDetails = astFile_->dataBlocks->at(packet-1)->GetPacketInfo();
-    PacketDetailDialog* details = new PacketDetailDialog(this,packetDetails);
-    details->show();
-    details->raise();
+    if (indexes.length() != 0) {
+        QModelIndex index = indexes.at(0);
+        int packet = index.data().toInt();
+        QTreeWidgetItem *packetDetails = astFile_->dataBlocks->at(packet-1)->GetPacketInfo();
+        PacketDetailDialog* details = new PacketDetailDialog(this,packetDetails);
+        details->show();
+        details->raise();
+    }
+
 }
 
 void FileWindow::SetFileDetailsTab() {
@@ -278,7 +281,7 @@ void FileWindow::SaveKMLFile() {
 
             for (Emitter emitter : this->astFile_->emitters_) {
                 stream << "<Placemark>" << endl;
-                stream << "<name>" << emitter.GetIdentifier().replace(" ","") << "</name>" << endl;
+                stream << "<name>" << emitter.GetCallSign().replace(" ","") << "</name>" << endl;
                 stream << "<styleUrl>#cat21Style</styleUrl>" << endl;
                 stream << "<LineString>" << endl;
                 stream << "<coordinates>" << endl;
@@ -305,12 +308,20 @@ void FileWindow::SaveKMLFile() {
 void FileWindow::on_SeeEmittersDetailsClicked() {
 
     QModelIndexList indexes = ui->loadedFlights->selectionModel()->selectedRows();
-    QModelIndex index = indexes.at(0);
-    int emitterNum = index.row();
-    Emitter emitterSelected = this->astFile_->emitters_.at(emitterNum);
+    if (indexes.length() != 0) {
+        QModelIndex index = indexes.at(0);
+        int emitterNum = index.row();
+        Emitter emitterSelected = this->astFile_->emitters_.at(emitterNum);
 
-    EmitterDetailsWindow* emitterWindow = new EmitterDetailsWindow(this, &emitterSelected);
-    emitterWindow->show();
-    emitterWindow->raise();
+        EmitterDetailsWindow* emitterWindow = new EmitterDetailsWindow(this, &emitterSelected);
+        emitterWindow->show();
+        emitterWindow->raise();
+    }
+    else {
+        QMessageBox *errorDialog = new QMessageBox(this);
+        errorDialog->setText("Select a Emitter first");
+        errorDialog->setIcon(QMessageBox::Warning);
+        errorDialog->exec();
+    }
 }
 

@@ -15,6 +15,11 @@ AsterixFile::AsterixFile()
 }
 
 AsterixFile::~AsterixFile() {
+
+
+    while (dataBlocks->count())
+         delete dataBlocks->takeLast();
+
     delete dataBlocks;
     delete packetTable_;
 }
@@ -199,33 +204,69 @@ int AsterixFile::GetTotalPackets(QString path) {
 
 void AsterixFile::ProcessEmitters() {
 
-    QList<QString> identifiers = QList<QString>();
-    int i = 0;
+    QList<QString> addresses = QList<QString>();
+    int c = 0;
 
     for (DataBlock *dataBlock : *dataBlocks) {
 
-        if (dataBlock->GetIdentifier() != "N/A") {
-            int index = identifiers.indexOf(dataBlock->GetIdentifier());
-            i++;
+        if (dataBlock->GetAddress() == "N/A") {
+            QString trackNumber = dataBlock->GetTrackNumber();
+            if (trackNumber != "N/A" && trackNumber != "-1") {
 
-            if (index == -1) {
-                Emitter newEmitter = Emitter(dataBlock->GetIdentifier());
-                newEmitter.AddPoint(dataBlock->GetPosition(), dataBlock->GetTimeOfReception(), dataBlock->category);
-                identifiers.append(dataBlock->GetIdentifier());
-                emitters_.append(newEmitter);
-            }
+                int index = addresses.indexOf(trackNumber);
+
+                if (index == -1) {
+                    Emitter emitter = Emitter("N/A",dataBlock->GetTypeOfTransmission());
+                    emitter.SetTrackNumber(trackNumber);
+                    emitter.AddPoint(dataBlock->GetPosition(),dataBlock->GetTimeOfReception(),dataBlock->GetCategory(),dataBlock->GetTypeOfTransmission());
+                    emitters_.append(emitter);
+                    addresses.append(trackNumber);
+                }
+
                 else {
-                emitters_[index].AddPoint(dataBlock->GetPosition(), dataBlock->GetTimeOfReception(), dataBlock->category);
+                    emitters_[index].AddPoint(dataBlock->GetPosition(),dataBlock->GetTimeOfReception(),dataBlock->GetCategory(),dataBlock->GetTypeOfTransmission());
+                }
             }
 
         }
+
+        else if (dataBlock->GetAddress() != "N/A") {
+            QString address = dataBlock->GetAddress();
+            int index = addresses.indexOf(address);
+
+            if (index == -1) {
+                Emitter emitter = Emitter(address,dataBlock->GetTypeOfTransmission());
+                emitter.AddPoint(dataBlock->GetPosition(),dataBlock->GetTimeOfReception(),dataBlock->GetCategory(),dataBlock->GetTypeOfTransmission());
+                if (dataBlock->GetCallSign() != "N/A") {
+                    emitter.SetCallSign(dataBlock->GetCallSign());
+                }
+                if (dataBlock->GetTrackNumber() != "N/A") {
+                    emitter.SetTrackNumber(dataBlock->GetTrackNumber());
+                }
+
+                if (dataBlock->GetMode3A() != "N/A") {
+                    emitter.SetMode3ACode(dataBlock->GetMode3A());
+                }
+
+                emitters_.append(emitter);
+                addresses.append(address);
+            }
+            else {
+                emitters_[index].AddPoint(dataBlock->GetPosition(),dataBlock->GetTimeOfReception(),dataBlock->GetCategory(),dataBlock->GetTypeOfTransmission());
+            }
+        }
     }
     for (Emitter emitter: emitters_) {
-        emitterTable_->appendRow({new QStandardItem(emitter.GetIdentifier()),
+        QString detectedEmission = "N/A";
+        if (emitter.GetDetectedEmissions().length() != 0) {
+            detectedEmission = emitter.GetDetectedEmissions().join(",");
+        }
+
+        emitterTable_->appendRow({new QStandardItem(emitter.GetCallSign()), new QStandardItem(emitter.GetTargetAddress()),
                                   new QStandardItem(emitter.GetFirstReport().toString("hh:mm:ss:zzz")),
-                                  new QStandardItem(emitter.GetLastReport().toString("hh:mm:ss:zzz"))});
+                                  new QStandardItem(emitter.GetLastReport().toString("hh:mm:ss:zzz")),new QStandardItem(detectedEmission)});
     }
-    emitterTable_->setHorizontalHeaderLabels({"CallSign", "First Report at", "Last Report At"});
+    emitterTable_->setHorizontalHeaderLabels({"CallSign","Target Address", "First Report at", "Last Report At", "Detected Emissions"});
 }
 
 void AsterixFile::FilterByCallSign(QString callSign, QList<int> &packetList) {

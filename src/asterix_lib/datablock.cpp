@@ -1,6 +1,10 @@
 #include "hdr/asterix_lib/datablock.h"
 
 
+DataBlock::~DataBlock() {
+
+}
+
 int DataBlock::GetCategory() {
     return this->category;
 };

@@ -14,6 +14,7 @@ class Cat10: public DataBlock
 public:
 
     Cat10();
+    ~Cat10();
     void FullDecode();
     QString GetTypeOfMessage();
     QTime GetTimeOfReception();
@@ -25,6 +26,7 @@ public:
     QString GetTrackNumber();
     QString GetMode3A();
     QTreeWidgetItem* GetPacketInfo();
+    QString GetTypeOfTransmission();
 
 private:
 

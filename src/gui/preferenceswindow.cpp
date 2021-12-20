@@ -26,10 +26,10 @@ void PreferencesWindow::LoadSensorsToTable() {
     QList<int> uniqueIds = appConfig_->GetUniqueIds();
 
     for (int id: uniqueIds) {
-        Sensor sensor = appConfig_->GetSensorInfo(id);
-        QString coordinates = QString::number(sensor.sensorLatitude) + "," + QString::number(sensor.sensorLongitude);
-        table_->appendRow({new QStandardItem(QString::number(sensor.systemIdCode)),new QStandardItem(QString::number(sensor.systemAreaCode)),new QStandardItem(sensor.sensorDescription),
-                           new QStandardItem(QString::number(sensor.category)),new QStandardItem(sensor.sensorIp),new QStandardItem(coordinates)});
+        Sensor *sensor = appConfig_->GetSensorInfo(id);
+        QString coordinates = QString::number(sensor->sensorLatitude) + "," + QString::number(sensor->sensorLongitude);
+        table_->appendRow({new QStandardItem(QString::number(sensor->systemIdCode)),new QStandardItem(QString::number(sensor->systemAreaCode)),new QStandardItem(sensor->sensorDescription),
+                           new QStandardItem(QString::number(sensor->category)),new QStandardItem(sensor->sensorIp),new QStandardItem(coordinates)});
     }
     ui->tableView->setModel(table_);
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);

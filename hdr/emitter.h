@@ -11,24 +11,39 @@
 class Emitter
 {
 public:
-    Emitter(QString id);
+    Emitter(QString id, QString detectedEmission);
 
-    QString GetIdentifier();
-    void AddPoint(WGS84Coordinates point, QTime timeStamp, int category);
+    QString GetCallSign();
+    QString GetTargetAddress();
+    QString GetTrackNumber();
+    QString GetMode3ACode();
+    QList<QString> GetDetectedEmissions();
+
+    void SetCallSign(QString callSign);
+    void SetTrackNumber(QString trackNumber);
+    void SetMode3ACode(QString mode3ACode);
+
+    void AddPoint(WGS84Coordinates point, QTime timeStamp, int category, QString typeOfEmission);
 
     QTime GetFirstReport();
     QTime GetLastReport();
 
     QList<WGS84Coordinates> pointsCat21;
     QList<WGS84Coordinates> pointsCat20;
-    QList<WGS84Coordinates> pointsCat10;
+    QList<WGS84Coordinates> pointsCat10Mlat;
+    QList<WGS84Coordinates> pointsCat10Smr;
 
 private:
-    QString identifier;
+    QString callSign;
+    QString targetAddress;
+    QString trackNumber;
+    QString mode3ACode;
 
     QList<QTime> timeStampsCat21;
     QList<QTime> timeStampsCat20;
-    QList<QTime> timeStampsCat10;
+    QList<QTime> timeStampsCat10Mlat;
+    QList<QTime> timeStampsCat10Smr;
+    QList<QString> detectedEmissions;
 };
 
 #endif // EMITTER_H

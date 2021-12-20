@@ -5,6 +5,10 @@ OtherDataBlocks::OtherDataBlocks(int category)
     this->category = category;
 }
 
+OtherDataBlocks::~OtherDataBlocks() {
+
+}
+
 void OtherDataBlocks::FullDecode() {
 
 }
@@ -37,6 +41,10 @@ QString OtherDataBlocks::GetTrackNumber() {
     return "N/A";
 }
 QString OtherDataBlocks::GetMode3A() {
+    return "N/A";
+}
+
+QString OtherDataBlocks::GetTypeOfTransmission() {
     return "N/A";
 }
 

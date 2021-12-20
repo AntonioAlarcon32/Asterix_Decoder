@@ -110,6 +110,10 @@ Cat20::Cat20()
 
 }
 
+Cat20::~Cat20() {
+
+}
+
 
 QString Cat20::GetTypeOfMessage() {
     return "N/A";
@@ -122,9 +126,11 @@ QTime Cat20::GetTimeOfReception() {
 QString Cat20::GetSACSIC() {
 
     AppConfig *conf = AppConfig::GetInstance();
-    Sensor sensor = conf->GetSensorFromSACSIC(systemAreaCode,systemIdentificationCode);
-    if (sensor.systemAreaCode == systemAreaCode && sensor.systemIdCode == systemIdentificationCode) {
-        return sensor.sensorDescription;
+    Sensor *sensor = conf->GetSensorFromSACSIC(systemAreaCode,systemIdentificationCode);
+    if (sensor != 0) {
+        if (sensor->systemAreaCode == systemAreaCode && sensor->systemIdCode == systemIdentificationCode) {
+            return sensor->sensorDescription;
+        }
     }
     else {
         return QString::number(systemAreaCode) + "/" + QString::number(systemIdentificationCode);
@@ -135,26 +141,6 @@ QString Cat20::GetSACSIC() {
 WGS84Coordinates Cat20::GetPosition() {
     return WGS84Coordinates(0,0,0);
 }
-
-QString Cat20::GetIdentifier() {
-
-    if (targetIdentification != "N/A") {
-            return targetIdentification;
-    }
-
-    else if (targetAddress != "N/A") {
-        return targetAddress;
-    }
-
-    else if (trackNumber != -1) {
-        return QString::number(trackNumber);
-    }
-
-    else {
-        return "N/A";
-    }
-}
-
 
 QString Cat20::GetCallSign() {
     return targetIdentification;
@@ -167,6 +153,10 @@ QString Cat20::GetTrackNumber() {
 }
 QString Cat20::GetMode3A() {
     return this->M3ACode;
+}
+
+QString Cat20::GetTypeOfTransmission() {
+    return "CAT 20: MLAT";
 }
 
 
@@ -1145,8 +1135,7 @@ void Cat20::DecodeTargetAddress(QVector<unsigned char> &dataItem) {
     QString buildAddress = "0x";
 
     for (unsigned char byte : dataItem) {
-        short a = (short) byte;
-        QString str = QString("%1").arg(a,0,16);
+        QString str = QString("%1").arg(byte, 2, 16, QChar('0'));
         buildAddress.append(str);
     }
     this->targetAddress = buildAddress;

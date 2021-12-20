@@ -12,6 +12,8 @@ class DataBlock
 {
 public:
 
+    virtual ~DataBlock()=0;
+
     int category;
     int length;
     int numOfPacket;
@@ -37,12 +39,12 @@ public:
     virtual QTime GetTimeOfReception() = 0;
     virtual QString GetSACSIC() = 0;
     virtual WGS84Coordinates GetPosition() = 0;
-    virtual QString GetIdentifier() = 0;
 
     virtual QString GetCallSign() = 0;
     virtual QString GetAddress() = 0;
     virtual QString GetTrackNumber() = 0;
     virtual QString GetMode3A() = 0;
+    virtual QString GetTypeOfTransmission() = 0;
 
     virtual QTreeWidgetItem* GetPacketInfo() = 0;
 };

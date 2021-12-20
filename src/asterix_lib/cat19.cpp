@@ -35,6 +35,10 @@ Cat19::Cat19()
     this->wgs84undulation = -128;
 }
 
+Cat19::~Cat19() {
+
+}
+
 
 QString Cat19::GetTypeOfMessage() {
     return this->typeOfMessage;
@@ -46,9 +50,11 @@ QTime Cat19::GetTimeOfReception() {
 
 QString Cat19::GetSACSIC() {
     AppConfig *conf = AppConfig::GetInstance();
-    Sensor sensor = conf->GetSensorFromSACSIC(systemAreaCode,systemIdentificationCode);
-    if (sensor.systemAreaCode == systemAreaCode && sensor.systemIdCode == systemIdentificationCode) {
-        return sensor.sensorDescription;
+    Sensor *sensor = conf->GetSensorFromSACSIC(systemAreaCode,systemIdentificationCode);
+    if (sensor != 0) {
+        if (sensor->systemAreaCode == systemAreaCode && sensor->systemIdCode == systemIdentificationCode) {
+            return sensor->sensorDescription;
+        }
     }
     else {
         return QString::number(systemAreaCode) + "/" + QString::number(systemIdentificationCode);
@@ -61,9 +67,6 @@ WGS84Coordinates Cat19::GetPosition() {
     return WGS84Coordinates(0,0,0);
 }
 
-QString Cat19::GetIdentifier() {
-    return "N/A";
-}
 
 QString Cat19::GetCallSign() {
     return "N/A";
@@ -77,6 +80,10 @@ QString Cat19::GetTrackNumber() {
 
 QString Cat19::GetMode3A() {
     return "N/A";
+}
+
+QString Cat19::GetTypeOfTransmission() {
+    return "CAT 19: MLAT System Status Message";
 }
 
 

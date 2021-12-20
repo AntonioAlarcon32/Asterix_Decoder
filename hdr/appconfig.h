@@ -22,8 +22,8 @@ public:
     QList<short> GetSystemAreaCodes();
     QList<short> GetSystemIdCodes();
     void ClearSensors();
-    Sensor GetSensorInfo(int uniqueId);
-    Sensor GetSensorFromSACSIC(short sac, short sic);
+    Sensor* GetSensorInfo(int uniqueId);
+    Sensor* GetSensorFromSACSIC(short sac, short sic);
     void LoadXMLFile(QString path);
     void SaveXMLFile(QString path);
     void DeleteSensor(int uniqueId);

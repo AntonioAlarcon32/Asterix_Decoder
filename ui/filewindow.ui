@@ -42,6 +42,9 @@
             <property name="text">
              <string>Apply Filters</string>
             </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
            </widget>
           </item>
           <item>

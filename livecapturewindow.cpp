@@ -11,7 +11,7 @@ LiveCaptureWindow::LiveCaptureWindow(QWidget *parent) :
     astFile_ = new AsterixFile();
 
     QList<int> sensorIDs = appConfig_->GetUniqueIds();
-    Sensor sensor = appConfig_->GetSensorInfo(sensorIDs.at(0));
+    Sensor *sensor = appConfig_->GetSensorInfo(sensorIDs.at(0));
 
     groupAddress4_ = QHostAddress("225.31.214.1");
 

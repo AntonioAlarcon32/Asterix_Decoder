@@ -13,6 +13,7 @@ class Cat20: public DataBlock
 public:
 
     Cat20();
+    ~Cat20();
     void FullDecode();
     QString GetTypeOfMessage();
     QTime GetTimeOfReception();
@@ -24,6 +25,7 @@ public:
     QString GetTrackNumber();
     QString GetMode3A();
     QTreeWidgetItem* GetPacketInfo();
+    QString GetTypeOfTransmission();
 
 private:
 

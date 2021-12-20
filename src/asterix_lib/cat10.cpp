@@ -99,6 +99,9 @@ Cat10::Cat10()
     this->presenceDTheta = QVector<unsigned char>();
 }
 
+Cat10::~Cat10() {
+
+}
 
 QString Cat10::GetTypeOfMessage() {
     return this->typeOfMessage;
@@ -111,9 +114,11 @@ QTime Cat10::GetTimeOfReception() {
 QString Cat10::GetSACSIC() {
 
     AppConfig *conf = AppConfig::GetInstance();
-    Sensor sensor = conf->GetSensorFromSACSIC(systemAreaCode,systemIdentificationCode);
-    if (sensor.systemAreaCode == systemAreaCode && sensor.systemIdCode == systemIdentificationCode) {
-        return sensor.sensorDescription;
+    Sensor *sensor = conf->GetSensorFromSACSIC(systemAreaCode,systemIdentificationCode);
+    if (sensor != 0) {
+        if (sensor->systemAreaCode == systemAreaCode && sensor->systemIdCode == systemIdentificationCode) {
+            return sensor->sensorDescription;
+        }
     }
     else {
         return QString::number(systemAreaCode) + "/" + QString::number(systemIdentificationCode);
@@ -124,24 +129,6 @@ QString Cat10::GetSACSIC() {
 WGS84Coordinates Cat10::GetPosition() {
     return WGS84Coordinates(0,0,0);
 }
-QString Cat10::GetIdentifier() {
-
-    if (targetIdentification != "N/A") {
-            return targetIdentification;
-    }
-
-    else if (targetAddress != "N/A") {
-        return targetAddress;
-    }
-
-    else if (trackNumber != -1) {
-        return QString::number(trackNumber);
-    }
-
-    else {
-        return "N/A";
-    }
-}
 
 QString Cat10::GetCallSign() {
     return targetIdentification;
@@ -150,10 +137,28 @@ QString Cat10::GetAddress() {
     return targetAddress;
 }
 QString Cat10::GetTrackNumber() {
-    return QString::number(trackNumber);
+
+    QString trackNumber = "N/A";
+
+    if (this->trackNumber != -1) {
+         trackNumber = QString::number(this->trackNumber,10).rightJustified(4,'0');
+    }
+    return trackNumber;
 }
+
 QString Cat10::GetMode3A() {
-    return this->M3ACode;
+    return this->M3ACode.rightJustified(3,'0');
+}
+
+QString Cat10::GetTypeOfTransmission() {
+
+    if (this->trTYP == "PSR") {
+        return "CAT 10: PSR";
+    }
+
+    else {
+        return "CAT 10: MLAT";
+    }
 }
 
 
@@ -1136,8 +1141,7 @@ void Cat10::DecodeTargetAddress(QVector<unsigned char> &dataItem) {
     QString buildAddress = "0x";
 
     for (unsigned char byte : dataItem) {
-        short a = (short) byte;
-        QString str = QString("%1").arg(a,0,16);
+        QString str = QString("%1").arg(byte, 2, 16, QChar('0'));
         buildAddress.append(str);
     }
     this->targetAddress = buildAddress;
