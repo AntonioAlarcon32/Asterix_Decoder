@@ -2,6 +2,8 @@
 #define COORDINATESXYZ_H
 
 #include "QString"
+#include "hdr/wgs84coordinates.h"
+#include "math.h"
 
 
 class CoordinatesXYZ

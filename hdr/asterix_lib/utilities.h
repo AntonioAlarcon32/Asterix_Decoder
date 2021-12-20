@@ -1,6 +1,8 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 #include "QVector"
+#include "hdr/wgs84coordinates.h"
+#include "coordinatesxyz.h"
 
 namespace Utilities
 {
@@ -15,6 +17,17 @@ namespace Utilities
         static double DecodeTwosComplementToDouble(QVector<unsigned char> bytes, double resolution);
         static double DecodeSpecialTwosComplement(QVector<unsigned char> bytes, double resolution, unsigned char  mask, int signIndicator);
         static QString GetAircraftIDFromBytes(QVector<unsigned char> bytes);
+    };
+
+    class RadarTools {
+    private:
+        static double PI;
+        static double E2;
+        static double A;
+        static double DEG2RAD;
+    public:
+        static CoordinatesXYZ ChangeRadarCartesianToGeocentric(WGS84Coordinates radarCoords, CoordinatesXYZ radarCartesian);
+
     };
 };
 

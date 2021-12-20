@@ -259,4 +259,48 @@ double DataTools::DecodeSpecialTwosComplement(QVector<unsigned char> bytes, doub
 
 }
 
+double RadarTools::PI = 3.14159265359;
+double RadarTools::DEG2RAD = PI/180.0;
+double RadarTools::A = 6378137.0;
+double RadarTools::E2 = 0.00669437999013;
+
+CoordinatesXYZ RadarTools::ChangeRadarCartesianToGeocentric(WGS84Coordinates radarCoords, CoordinatesXYZ radarCartesian) {
+
+    double lat = radarCoords.GetLatitude() * DEG2RAD;
+    double lon = radarCoords.GetLongitude() * DEG2RAD;
+    double height = radarCoords.GetHeight();
+
+    double xl = radarCartesian.GetX();
+    double yl = radarCartesian.GetY();
+    double zl = radarCartesian.GetZ();
+
+    double A = -(sin(lon));
+    double B = cos(lon);
+    double C = 0;
+    double D = -(sin(lat) * cos(lon));
+    double E = -(sin(lat) * sin(lon));
+    double F = cos(lat);
+    double G = cos(lat) * cos(lon);
+    double H = cos(lat) * sin(lon);
+    double I = sin(lat);
+
+    double nu = (RadarTools::A) / (sqrt(1 - E2 * pow(sin(lat),2)));
+
+    double t1 = (nu + height) * cos(lat) * cos(lon);
+    double t2 = (nu + height) * cos(lat) * sin(lon);
+    double t3 = (nu * (1 - E2) + height) * sin(lat);
+
+
+    double xg = (-sin(lon))*xl + (-sin(lat)*cos(lon))*yl + (cos(lat)*cos(lon))*zl + t1;
+    double yg = (cos(lon)*xl) + (-sin(lat)*sin(lon))*yl + (cos(lat)*sin(lon))*zl + t2;
+    double zg = (cos(lat)*yl) + (sin(lat))*zl + t3;
+
+    return CoordinatesXYZ(xg,yg,zg);
+    int c = 1;
 }
+
+}
+
+
+
+
