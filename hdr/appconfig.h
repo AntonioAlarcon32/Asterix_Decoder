@@ -7,7 +7,7 @@
 #include "QFile"
 #include "QDebug"
 
-#include "sensor.h"
+#include "hdr/asterix_lib/sensor.h"
 
 class AppConfig
 {

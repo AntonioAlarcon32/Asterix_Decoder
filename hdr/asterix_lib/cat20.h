@@ -3,8 +3,8 @@
 
 #include "QTime"
 
-#include "hdr/asterix_lib/datablock.h"
-#include "hdr/asterix_lib/utilities.h"
+#include "datablock.h"
+#include "utilities.h"
 #include "hdr/appconfig.h"
 
 

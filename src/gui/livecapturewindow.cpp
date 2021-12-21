@@ -1,4 +1,4 @@
-#include "livecapturewindow.h"
+#include "hdr/gui/livecapturewindow.h"
 #include "ui_livecapturewindow.h"
 
 LiveCaptureWindow::LiveCaptureWindow(QWidget *parent) :

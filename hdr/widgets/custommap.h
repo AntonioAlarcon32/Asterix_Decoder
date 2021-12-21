@@ -5,7 +5,7 @@
 #include "QQmlContext"
 #include "QQuickWidget"
 #include "QQuickItem"
-#include "hdr/wgs84coordinates.h"
+#include "hdr/asterix_lib/wgs84coordinates.h"
 
 namespace Ui {
 class CustomMap;

@@ -5,7 +5,7 @@
 #include "QList"
 #include "QString"
 #include "QTime"
-#include "hdr/asterix_lib/utilities.h"
+#include "utilities.h"
 #include "wgs84coordinates.h"
 
 class Emitter

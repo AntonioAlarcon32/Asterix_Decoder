@@ -2,8 +2,8 @@
 #define EMITTERDETAILSWINDOW_H
 
 #include <QMainWindow>
-#include "hdr/wgs84coordinates.h"
-#include "hdr/emitter.h"
+#include "hdr/asterix_lib/wgs84coordinates.h"
+#include "hdr/asterix_lib/emitter.h"
 
 namespace Ui {
 class EmitterDetailsWindow;

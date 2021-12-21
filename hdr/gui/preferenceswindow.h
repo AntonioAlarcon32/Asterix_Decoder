@@ -9,7 +9,7 @@
 #include "QStandardItemModel"
 
 #include <hdr/appconfig.h>
-#include <hdr/sensor.h>
+#include <hdr/asterix_lib/sensor.h>
 
 
 namespace Ui {

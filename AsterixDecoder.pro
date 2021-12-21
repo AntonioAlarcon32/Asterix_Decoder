@@ -10,18 +10,18 @@ CONFIG += app_bundle
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    coordinatesxyz.cpp \
-    emitterdetailswindow.cpp \
-    livecapturewindow.cpp \
+    src/asterix_lib/coordinatesxyz.cpp \
+    src/gui/emitterdetailswindow.cpp \
+    src/gui/livecapturewindow.cpp \
     src/widgets/custommap.cpp \
-    src/emitter.cpp \
+    src/asterix_lib/emitter.cpp \
     src/gui/filtersdialog.cpp \
     src/gui/packetdetaildialog.cpp \
     src/appconfig.cpp \
     src/asterix_lib/otherdatablocks.cpp \
     src/gui/filewindow.cpp \
     src/gui/preferenceswindow.cpp \
-    src/sensor.cpp \
+    src/asterix_lib/sensor.cpp \
     src/asterix_lib/cat19.cpp \
     src/asterix_lib/cat20.cpp \
     src/asterix_lib/cat21.cpp \
@@ -31,13 +31,13 @@ SOURCES += \
     src/asterix_lib/datablock.cpp \
     src/asterix_lib/utilities.cpp \
     src/asterix_lib/cat10.cpp \
-    src/wgs84coordinates.cpp
+    src/asterix_lib/wgs84coordinates.cpp
 
 HEADERS += \
-    coordinatesxyz.h \
-    emitterdetailswindow.h \
+    hdr/asterix_lib/coordinatesxyz.h \
+    hdr/gui/emitterdetailswindow.h \
     hdr/widgets/custommap.h \
-    hdr/emitter.h \
+    hdr/asterix_lib/emitter.h \
     hdr/gui/filtersdialog.h \
     hdr/appconfig.h \
     hdr/gui/filewindow.h \
@@ -51,14 +51,14 @@ HEADERS += \
     hdr/asterix_lib/cat10.h \
     hdr/gui/preferenceswindow.h \
     hdr/asterix_lib/otherdatablocks.h \
-    hdr/sensor.h \
+    hdr/asterix_lib/sensor.h \
     hdr/gui/packetdetaildialog.h \
-    hdr/wgs84coordinates.h \
-    livecapturewindow.h
+    hdr/asterix_lib/wgs84coordinates.h \
+    hdr/gui/livecapturewindow.h
 
 FORMS += \
-    emitterdetailswindow.ui \
-    livecapturewindow.ui \
+    ui/emitterdetailswindow.ui \
+    ui/livecapturewindow.ui \
     ui/widgets/custommap.ui \
     ui/filtersdialog.ui \
     ui/packetdetaildialog.ui \

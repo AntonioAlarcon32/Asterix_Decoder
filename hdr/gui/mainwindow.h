@@ -11,11 +11,11 @@
 
 #include <hdr/asterix_lib/asterixfile.h>
 #include <hdr/appconfig.h>
-#include <hdr/sensor.h>
+#include <hdr/asterix_lib/sensor.h>
 
 #include <hdr/gui/preferenceswindow.h>
 #include <hdr/gui/filewindow.h>
-#include <livecapturewindow.h>
+#include <hdr/gui/livecapturewindow.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

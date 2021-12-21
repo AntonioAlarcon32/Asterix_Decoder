@@ -1,7 +1,7 @@
 #ifndef OTHERDATABLOCKS_H
 #define OTHERDATABLOCKS_H
 
-#include "hdr/asterix_lib/datablock.h"
+#include "datablock.h"
 
 
 class OtherDataBlocks: public DataBlock

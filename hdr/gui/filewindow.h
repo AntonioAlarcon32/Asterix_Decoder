@@ -14,7 +14,7 @@
 #include <hdr/asterix_lib/asterixfile.h>
 #include <hdr/appconfig.h>
 #include <hdr/gui/filtersdialog.h>
-#include <hdr/sensor.h>
+#include <hdr/asterix_lib/sensor.h>
 #include "hdr/gui/packetdetaildialog.h"
 #include <hdr/widgets/custommap.h>
 #include "emitterdetailswindow.h"

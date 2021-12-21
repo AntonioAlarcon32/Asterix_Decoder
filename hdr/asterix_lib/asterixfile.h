@@ -15,7 +15,7 @@
 #include "cat20.h"
 #include "cat21.h"
 #include "otherdatablocks.h"
-#include "hdr/emitter.h"
+#include "emitter.h"
 
 #include "hdr/appconfig.h"
 

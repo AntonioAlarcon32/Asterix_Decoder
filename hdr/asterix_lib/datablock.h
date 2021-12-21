@@ -4,7 +4,7 @@
 #include "QString"
 #include "QVector"
 #include "QTime"
-#include "hdr/wgs84coordinates.h"
+#include "wgs84coordinates.h"
 #include "QTreeWidgetItem"
 
 

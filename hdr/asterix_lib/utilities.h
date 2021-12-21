@@ -1,7 +1,7 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 #include "QVector"
-#include "hdr/wgs84coordinates.h"
+#include "wgs84coordinates.h"
 #include "coordinatesxyz.h"
 
 namespace Utilities

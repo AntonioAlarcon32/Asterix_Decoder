@@ -1,4 +1,4 @@
-#include "emitterdetailswindow.h"
+#include "hdr/gui/emitterdetailswindow.h"
 #include "ui_emitterdetailswindow.h"
 
 EmitterDetailsWindow::EmitterDetailsWindow(QWidget *parent, Emitter *emitter) :
