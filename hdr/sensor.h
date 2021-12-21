@@ -10,8 +10,8 @@ public:
 
     Sensor();
 
-    Sensor(QString sensorId,double sensorLatitude,double sensorLongitude,QString sensorIp,int category,short systemIdCode, short systemAreaCode);
-    Sensor(int uniqueId, QString sensorId,double sensorLatitude,double sensorLongitude,QString sensorIp,int category,short systemIdCode, short systemAreaCode);
+    Sensor(QString sensorId,double sensorLatitude,double sensorLongitude,QString sensorIp,int category,short systemIdCode, short systemAreaCode, int port);
+    Sensor(int uniqueId, QString sensorId,double sensorLatitude,double sensorLongitude,QString sensorIp,int category,short systemIdCode, short systemAreaCode, int port);
 
     int uniqueId;
     QString sensorDescription;
@@ -19,6 +19,7 @@ public:
     double sensorLongitude;
     QString sensorIp;
     int category;
+    int port;
     short systemAreaCode;
     short systemIdCode;
 

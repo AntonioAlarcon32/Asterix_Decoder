@@ -34,6 +34,8 @@ private slots:
 
     void on_cancelButton_clicked();
 
+    void on_tableView_doubleClicked(const QModelIndex &index);
+
 private:
 
     Ui::PreferencesWindow *ui;

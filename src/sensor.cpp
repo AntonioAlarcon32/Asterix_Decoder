@@ -6,7 +6,7 @@ Sensor::Sensor() {
 }
 
 
-Sensor::Sensor(QString description,double sensorLatitude,double sensorLongitude,QString sensorIp, int category,short systemIdCode, short systemAreaCode) {
+Sensor::Sensor(QString description,double sensorLatitude,double sensorLongitude,QString sensorIp, int category,short systemIdCode, short systemAreaCode, int port) {
 
     this->uniqueId = rand();
     this->sensorDescription = description;
@@ -16,9 +16,10 @@ Sensor::Sensor(QString description,double sensorLatitude,double sensorLongitude,
     this->category = category;
     this->systemAreaCode = systemAreaCode;
     this->systemIdCode = systemIdCode;
+    this->port = port;
 }
 
-Sensor::Sensor(int uniqueId, QString description,double sensorLatitude,double sensorLongitude,QString sensorIp, int category,short systemIdCode, short systemAreaCode) {
+Sensor::Sensor(int uniqueId, QString description,double sensorLatitude,double sensorLongitude,QString sensorIp, int category,short systemIdCode, short systemAreaCode, int port) {
 
     this->uniqueId = uniqueId;
     this->sensorDescription = description;
@@ -28,6 +29,7 @@ Sensor::Sensor(int uniqueId, QString description,double sensorLatitude,double se
     this->category = category;
     this->systemAreaCode = systemAreaCode;
     this->systemIdCode = systemIdCode;
+    this->port = port;
 }
 
 void Sensor::AssignUniqueId() {

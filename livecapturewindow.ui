@@ -28,6 +28,13 @@
     <item row="2" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
+       <widget class="QToolButton" name="startCaptureButton">
+        <property name="text">
+         <string>Start Capture</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QToolButton" name="showPacketDetailsButton">
         <property name="text">
          <string>Show Packet Details</string>

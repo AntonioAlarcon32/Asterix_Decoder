@@ -9,19 +9,24 @@ LiveCaptureWindow::LiveCaptureWindow(QWidget *parent) :
 
     appConfig_ = AppConfig::GetInstance();
     astFile_ = new AsterixFile();
+    udpSockets4_ = QList<QUdpSocket*>();
+    groupAddresses4_ = QList<QHostAddress>();
+    udpPorts_ = QList<int>();
 
     QList<int> sensorIDs = appConfig_->GetUniqueIds();
-    Sensor *sensor = appConfig_->GetSensorInfo(sensorIDs.at(0));
 
-    groupAddress4_ = QHostAddress("225.31.214.1");
+    for (int uniqueId : sensorIDs) {
+        Sensor *sensor = appConfig_->GetSensorInfo(uniqueId);
+        QHostAddress newAddress = QHostAddress(sensor->sensorIp);
+        QUdpSocket *newSocket = new QUdpSocket();
+        udpSockets4_.append(newSocket);
+        groupAddresses4_.append(newAddress);
+        udpPorts_.append(sensor->port);
+    }
 
-
-    udpSocket4_.bind(QHostAddress::AnyIPv4, 10000, QUdpSocket::ShareAddress);
     packetCounter_ = 0;
-    bool joined = udpSocket4_.joinMulticastGroup(groupAddress4_);
-    connect(&udpSocket4_, &QUdpSocket::readyRead,
-                this, &LiveCaptureWindow::ProcessPendingDatagrams);
     connect(this->ui->showPacketDetailsButton, &QAbstractButton::clicked, this, &LiveCaptureWindow::on_PacketRowClicked);
+    connect(this->ui->startCaptureButton, &QAbstractButton::clicked, this, &LiveCaptureWindow::on_StartCaptureClicked);
 
     ui->tableView->setModel(astFile_->packetTable_);
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -50,12 +55,27 @@ void LiveCaptureWindow::on_PacketRowClicked() {
 }
 
 void LiveCaptureWindow::ProcessPendingDatagrams() {
-    while (udpSocket4_.hasPendingDatagrams()) {
-            QNetworkDatagram dgram = udpSocket4_.receiveDatagram();
+    for (QUdpSocket *socket : udpSockets4_) {
+        while (socket->hasPendingDatagrams()) {
+            QNetworkDatagram dgram = socket->receiveDatagram();
             QByteArray data = dgram.data();
             packetCounter_++;
             astFile_->AddPacketToList(data);
         }
+    }
+}
+
+void LiveCaptureWindow::on_StartCaptureClicked() {
+
+    for (int i = 0; i < groupAddresses4_.length(); i++) {
+        QHostAddress address = groupAddresses4_.at(i);
+        QUdpSocket *socket = udpSockets4_.at(i);
+        int port = udpPorts_.at(i);
+        socket->bind(QHostAddress::AnyIPv4, port, QUdpSocket::ShareAddress);
+        bool joined = socket->joinMulticastGroup(address);
+        connect(socket, &QUdpSocket::readyRead,
+                        this, &LiveCaptureWindow::ProcessPendingDatagrams);
+    }
 }
 
 

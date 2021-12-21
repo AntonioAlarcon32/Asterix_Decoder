@@ -29,7 +29,7 @@ void PreferencesWindow::LoadSensorsToTable() {
         Sensor *sensor = appConfig_->GetSensorInfo(id);
         QString coordinates = QString::number(sensor->sensorLatitude) + "," + QString::number(sensor->sensorLongitude);
         table_->appendRow({new QStandardItem(QString::number(sensor->systemIdCode)),new QStandardItem(QString::number(sensor->systemAreaCode)),new QStandardItem(sensor->sensorDescription),
-                           new QStandardItem(QString::number(sensor->category)),new QStandardItem(sensor->sensorIp),new QStandardItem(coordinates)});
+                           new QStandardItem(QString::number(sensor->category)),new QStandardItem(sensor->sensorIp+":"+QString::number(sensor->port)),new QStandardItem(coordinates)});
     }
     ui->tableView->setModel(table_);
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -51,7 +51,9 @@ void PreferencesWindow::SaveSensorsToConfig() {
 
         newSensor.sensorDescription = table_->data(table_->index(i,2)).toString();
         newSensor.category = table_->data(table_->index(i,3)).toInt();
-        newSensor.sensorIp = table_->data(table_->index(i,4)).toString();
+        QStringList ipAndPort = table_->data(table_->index(i,4)).toString().split(":");
+        newSensor.sensorIp =ipAndPort.at(0);
+        newSensor.port = ipAndPort.at(1).toInt();
         QStringList coord = table_->data(table_->index(i,5)).toString().split(",");
         newSensor.sensorLatitude = coord.at(0).toDouble();
         newSensor.sensorLongitude = coord.at(1).toDouble();
@@ -107,5 +109,11 @@ void PreferencesWindow::reject() {
         }
     }
     QDialog::reject();
+}
+
+
+void PreferencesWindow::on_tableView_doubleClicked(const QModelIndex &index)
+{
+    changesMade_ = true;
 }
 

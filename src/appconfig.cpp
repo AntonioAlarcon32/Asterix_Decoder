@@ -106,7 +106,7 @@ void AppConfig::SaveXMLFile(QString path) {
         xmlWriter.writeStartElement("Sensor");
         xmlWriter.writeTextElement("unique_id",QString::number(sensor->uniqueId));
         xmlWriter.writeTextElement("description",sensor->sensorDescription);
-        xmlWriter.writeTextElement("ip",sensor->sensorIp);
+        xmlWriter.writeTextElement("ip",sensor->sensorIp + ":" + QString::number(sensor->port));
         xmlWriter.writeTextElement("latitude",QString::number(sensor->sensorLatitude,'g',8));
         xmlWriter.writeTextElement("longitude",QString::number(sensor->sensorLongitude,'g',8));
         xmlWriter.writeTextElement("category",QString::number(sensor->category));
@@ -136,7 +136,9 @@ void AppConfig::LoadXMLFile(QString path) {
                             Sensor sensor = Sensor();
                             while (reader.readNextStartElement()) {
                                 if (reader.name() == "ip") {
-                                    sensor.sensorIp = reader.readElementText();
+                                    QStringList ipAndPort = reader.readElementText().split(":");
+                                    sensor.port = ipAndPort.at(1).toInt();
+                                    sensor.sensorIp = ipAndPort.at(0);
                                 }
                                 else if (reader.name() == "description") {
                                     sensor.sensorDescription = reader.readElementText();

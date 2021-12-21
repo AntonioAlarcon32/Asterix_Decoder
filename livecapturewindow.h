@@ -23,8 +23,9 @@ public:
 
 private:
     Ui::LiveCaptureWindow *ui;
-    QUdpSocket udpSocket4_;
-    QHostAddress groupAddress4_;
+    QList<QUdpSocket*> udpSockets4_;
+    QList<QHostAddress> groupAddresses4_;
+    QList<int> udpPorts_;
     AppConfig* appConfig_;
     int packetCounter_;
     AsterixFile* astFile_;
@@ -32,6 +33,7 @@ private:
 private slots:
     void ProcessPendingDatagrams();
     void on_PacketRowClicked();
+    void on_StartCaptureClicked();
 };
 
 #endif // LIVECAPTUREWINDOW_H
