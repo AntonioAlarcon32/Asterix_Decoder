@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QUdpSocket>
 #include <QHostAddress>
-#include <QNetworkDatagram>
 #include <hdr/appconfig.h>
 #include "hdr/asterix_lib/asterixfile.h"
 #include "hdr/gui/packetdetaildialog.h"

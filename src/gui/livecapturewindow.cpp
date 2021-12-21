@@ -57,10 +57,11 @@ void LiveCaptureWindow::on_PacketRowClicked() {
 void LiveCaptureWindow::ProcessPendingDatagrams() {
     for (QUdpSocket *socket : udpSockets4_) {
         while (socket->hasPendingDatagrams()) {
-            QNetworkDatagram dgram = socket->receiveDatagram();
-            QByteArray data = dgram.data();
+            QByteArray datagram;
+            datagram.resize(int(socket->pendingDatagramSize()));
+            socket->readDatagram(datagram.data(), datagram.size());
             packetCounter_++;
-            astFile_->AddPacketToList(data);
+            astFile_->AddPacketToList(datagram);
         }
     }
 }
