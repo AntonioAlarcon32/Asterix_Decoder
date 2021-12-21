@@ -35,7 +35,7 @@ void CustomMap::SetZoom(int level) {
             Q_ARG(QVariant, value));
 }
 
-void CustomMap::AddCircleMarker(WGS84Coordinates coordinates, int radius, int color, QString id) {
+void CustomMap::AddCircleMarker(WGS84Coordinates coordinates, int radius, int color, QString itemId, QString callSign, QString address, QString trackNumber) {
     QVariant lat = coordinates.GetLatitude();
     QVariant lon = coordinates.GetLongitude();
     QString colorCode = "";
@@ -50,12 +50,13 @@ void CustomMap::AddCircleMarker(WGS84Coordinates coordinates, int radius, int co
         colorCode = "#1eff00";
     }
     else if (color == this->CAT10MLAT) {
-        colorCode = "##ffaa00";
+        colorCode = "#ff9900";
     }
     else if (color == this->CAT10SMR) {
         colorCode = "#ff0000";
     }
-    QMetaObject::invokeMethod(map_, "addItemToMap", Q_ARG(QVariant, lat),Q_ARG(QVariant, lon),Q_ARG(QVariant, radius),Q_ARG(QVariant, colorCode),Q_ARG(QVariant, id));
+    QMetaObject::invokeMethod(map_, "addItemToMap", Q_ARG(QVariant, lat),Q_ARG(QVariant, lon),Q_ARG(QVariant, radius),Q_ARG(QVariant, colorCode),
+                              Q_ARG(QVariant, itemId),Q_ARG(QVariant, callSign),Q_ARG(QVariant, address),Q_ARG(QVariant, trackNumber));
 }
 
 void CustomMap::Clear() {

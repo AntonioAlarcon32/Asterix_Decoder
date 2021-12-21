@@ -33,15 +33,19 @@ Rectangle {
             testMap.zoomLevel = level
         }
 
-        function addItemToMap(lat, lon, radius, color, id) {
+        function addItemToMap(lat, lon, radius, color, id, callSign, address, trackNumber) {
             var component = Qt.createComponent("PolygonGroup.qml");
             var item = component.createObject(testMap);
-            item.callSign = id;
+            item.aircraftId = id;
+            item.callSign = callSign;
+            item.address = address;
+            item.trackNumber = trackNumber;
             item.position = QtPositioning.coordinate(lat, lon);
             item.radius = radius;
             item.color = color;
             if (showMarkers) {
-                item.callSignVisible = true;
+                item.labelVisible = true;
+                item.setLabel(true);
             }
             testMap.addMapItemGroup(item);
             testMap.addedItems.push(item);
@@ -49,7 +53,7 @@ Rectangle {
 
         function removeItem(id) {
             for (var i = 0; i < testMap.addedItems.length; i++) {
-                if (id === testMap.addedItems[i].callSign) {
+                if (id === testMap.addedItems[i].aircraftId) {
                     testMap.removeMapItemGroup(testMap.addedItems[i])
                     testMap.addedItems.splice(i,1)
                     return
@@ -59,14 +63,14 @@ Rectangle {
         function showCallSign() {
             testMap.showMarkers = true;
             for (var i = 0; i < testMap.addedItems.length; i++) {
-                testMap.addedItems[i].setCallSign(true)
+                testMap.addedItems[i].setLabel(true)
             }
         }
 
         function hideCallSign() {
             testMap.showMarkers = false;
             for (var i = 0; i < testMap.addedItems.length; i++) {
-                testMap.addedItems[i].setCallSign(false)
+                testMap.addedItems[i].setLabel(false)
             }
         }
 
@@ -88,7 +92,7 @@ Rectangle {
         }
 
         function  getAddedItem(pos) {
-            return addedItems[pos].callSign
+            return addedItems[pos].aircraftId;
         }
     }
 

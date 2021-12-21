@@ -140,32 +140,59 @@ void FileWindow::RefreshMap() {
     for (;packetCounter_ < astFile_->dataBlocks->length(); packetCounter_++) {
         DataBlock* dataBlock = astFile_->dataBlocks->at(packetCounter_);
         int msecsTo = this->currentTime_.msecsTo(dataBlock->GetTimeOfReception());
-        if (msecsTo >= -500 && msecsTo <= 500) {
-            int color;
-            QString address;
-            if (dataBlock->GetCategory() == 21) {
-                color = CustomMap::CAT21;
-                address = dataBlock->GetAddress();
-            }
-            else if (dataBlock->GetCategory() == 20) {
-                color = CustomMap::CAT20;
-                address = dataBlock->GetAddress();
-            }
-            else if (dataBlock->GetCategory() == 10 && dataBlock->GetTypeOfTransmission() == "CAT 10: PSR") {
-                color = CustomMap::CAT10SMR;
-                address = dataBlock->GetTrackNumber();
-            }
-            else if (dataBlock->GetCategory() == 10 && dataBlock->GetTypeOfTransmission() == "CAT 10: MLAT") {
-                color = CustomMap::CAT10MLAT;
-                address = dataBlock->GetAddress();
-            }
-            if (alreadyAdded_.indexOf(dataBlock->GetAddress()) == -1) {
-                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,color, address);
-                alreadyAdded_.append(dataBlock->GetAddress());
+        QString address = "", id = "", callSign = "", trackNumber = "";
+        int color;
+        if (dataBlock->GetCategory() == 21) {
+            color = CustomMap::CAT21;
+            address = dataBlock->GetAddress();
+            id = address + "ADSB";
+            if (dataBlock->GetCallSign() != "N/A") {
+                callSign = dataBlock->GetCallSign();
             }
             else {
-                this->ui->widget->DeleteMarker(dataBlock->GetAddress());
-                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,color, address);
+                callSign = "";
+            }
+            trackNumber = dataBlock->GetTrackNumber();
+        }
+        else if (dataBlock->GetCategory() == 20) {
+            color = CustomMap::CAT20;
+            address = dataBlock->GetAddress();
+            id = address + "MLAT20";
+            if (dataBlock->GetCallSign() != "N/A") {
+                callSign = dataBlock->GetCallSign();
+            }
+            else {
+                callSign = "";
+            }
+            trackNumber = dataBlock->GetTrackNumber();
+        }
+        else if (dataBlock->GetCategory() == 10 && dataBlock->GetTypeOfTransmission() == "CAT 10: PSR") {
+            color = CustomMap::CAT10SMR;
+            address = "";
+            callSign = "";
+            id = dataBlock->GetTrackNumber() + "SMR10";
+            trackNumber = dataBlock->GetTrackNumber();
+        }
+        else if (dataBlock->GetCategory() == 10 && dataBlock->GetTypeOfTransmission() == "CAT 10: MLAT") {
+            color = CustomMap::CAT10MLAT;
+            address = dataBlock->GetAddress();
+            id = address + "MLAT10";
+            if (dataBlock->GetCallSign() != "N/A") {
+                callSign = dataBlock->GetCallSign();
+            }
+            else {
+                callSign = "";
+            }
+            trackNumber = dataBlock->GetTrackNumber();
+        }
+        if (msecsTo >= -500 && msecsTo <= 500) {
+            if (alreadyAdded_.indexOf(id) == -1) {
+                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,color,id,callSign,address,trackNumber);
+                alreadyAdded_.append(id);
+            }
+            else {
+                this->ui->widget->DeleteMarker(id);
+                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,color,id,callSign,address,trackNumber);
             }
         }
 

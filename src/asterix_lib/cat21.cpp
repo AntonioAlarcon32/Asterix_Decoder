@@ -609,7 +609,7 @@ QTreeWidgetItem* Cat21::GetPacketInfo() {
         child->addChild(fl2);
     }
 
-    if (!isnan(this->saAltitude)) {
+    if (!isnan(this->asAirSpeed)) {
         QTreeWidgetItem *child = new QTreeWidgetItem();
         child->setText(0, "I021/150, Air Speed");
         dataItems->addChild(child);

@@ -7,11 +7,15 @@ import QtPositioning 5.6
 
 MapItemGroup {
     id: itemGroup
+    property string aircraftId: ""
+    property string callSign: ""
+    property string address: ""
+    property string trackNumber: ""
+    property string label: ""
     property alias position: marker.coordinate
     property alias radius: markerDraw.radius
     property alias color: markerDraw.color
-    property string callSign: ""
-    property bool callSignVisible: false
+    property bool labelVisible: false
     property int cycles: 0
 
     MapQuickItem {
@@ -24,7 +28,7 @@ MapItemGroup {
     MapQuickItem {
         id: textCallSign
         sourceItem: Text{
-            text: callSign
+            text: label
             color:"#242424"
             styleColor: "#ECECEC"
             style: Text.Outline
@@ -32,11 +36,20 @@ MapItemGroup {
         }
         coordinate: position
         anchorPoint:Qt.point(-radius,radius*2)
-        visible: callSignVisible
+        visible: labelVisible
     }
 
-    function setCallSign(value) {
-        itemGroup.callSignVisible = value
+    function setLabel(value) {
+        itemGroup.labelVisible = value
+        if (callSign != "") {
+            itemGroup.label = callSign
+        }
+        else if (address != "") {
+            itemGroup.label = address
+        }
+        else {
+            itemGroup.label = trackNumber
+        }
     }
 }
 
