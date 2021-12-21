@@ -1,4 +1,4 @@
-#include "hdr/emitter.h"
+#include "hdr/asterix_lib/emitter.h"
 
 Emitter::Emitter(QString targetAddress, QString detectedEmission)
 {

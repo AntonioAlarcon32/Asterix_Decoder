@@ -1,4 +1,4 @@
-#include "coordinatesxyz.h"
+#include "hdr/asterix_lib/coordinatesxyz.h"
 
 CoordinatesXYZ::CoordinatesXYZ()
 {

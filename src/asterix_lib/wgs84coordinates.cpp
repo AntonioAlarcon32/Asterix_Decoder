@@ -1,4 +1,4 @@
-#include "hdr/wgs84coordinates.h"
+#include "hdr/asterix_lib/wgs84coordinates.h"
 #include "math.h"
 
 WGS84Coordinates::WGS84Coordinates() {
