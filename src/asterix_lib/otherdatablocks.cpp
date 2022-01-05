@@ -48,6 +48,10 @@ QString OtherDataBlocks::GetTypeOfTransmission() {
     return "N/A";
 }
 
+double OtherDataBlocks::GetTrackAngle() {
+        return nan("");
+}
+
 
 QTreeWidgetItem* OtherDataBlocks::GetPacketInfo() {
     QTreeWidgetItem *root = new QTreeWidgetItem();

@@ -86,6 +86,12 @@ QString Cat19::GetTypeOfTransmission() {
     return "CAT 19: MLAT System Status Message";
 }
 
+double Cat19::GetTrackAngle() {
+
+    return 400;
+
+}
+
 
 QTreeWidgetItem* Cat19::GetPacketInfo() {
     QTreeWidgetItem *root = new QTreeWidgetItem();

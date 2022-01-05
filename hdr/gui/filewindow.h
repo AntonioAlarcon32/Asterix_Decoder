@@ -73,6 +73,10 @@ private slots:
     void on_ExportAsCSVCLicked();
     void on_showMarkersCheck_stateChanged(int arg1);
     void on_SeeEmittersDetailsClicked();
+    void on_x1Clicked();
+    void on_x2Clicked();
+    void on_x8Clicked();
+    void on_x16Clicked();
 };
 
 

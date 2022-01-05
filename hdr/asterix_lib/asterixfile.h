@@ -28,21 +28,21 @@ public:
     AsterixFile();
     ~AsterixFile();
 
-    QVector<DataBlock *> *dataBlocks;
+    QList<DataBlock*> *dataBlocks;
     QList<Emitter> emitters_;
     int numberOfPackets_;
-    QList<int> filteredPackets_;
+    QList<DataBlock*> filteredPackets_;
     void decodeFlights();
 
 
     int GetTotalPackets(QString path);
 
     void ResetFilters();
-    void FilterByCallSign(QString callSign, QList<int> &packetList);
-    void FilterByCategory(int category,QList<int> &packetList);
-    void FilterByAddress(QString address,QList<int> &packetList);
-    void FilterByTrackNumber(int trackNumber,QList<int> &packetList);
-    void FilterByMode3A(int mode3ACode,QList<int> &packetList);
+    void FilterByCallSign(QString callSign, QList<DataBlock*> &packetList);
+    void FilterByCategory(int category,QList<DataBlock*> &packetList);
+    void FilterByAddress(QString address,QList<DataBlock*> &packetList);
+    void FilterByTrackNumber(int trackNumber,QList<DataBlock*> &packetList);
+    void FilterByMode3A(int mode3ACode,QList<DataBlock*> &packetList);
     bool AddPacketToList(QByteArray data);
 
     void ApplyFilters(int category = -1, QString callSign = "", QString address = "", int trackNumber = -1, int mode3ACode = -1);

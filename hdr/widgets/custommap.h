@@ -21,7 +21,7 @@ public:
 
     void SetPosition(WGS84Coordinates coordinates);
     void SetZoom(int level);
-    void AddCircleMarker(WGS84Coordinates coordinates, int radius, int color, QString itemId, QString callSign, QString address, QString trackNumber);
+    void AddCircleMarker(WGS84Coordinates coordinates, int radius, int color, QString itemId, QString callSign, QString address, QString trackNumber, double trackAngle);
     void Clear();
     void ClearItemsWithTwoCycles();
     void DeleteMarker(QString id);

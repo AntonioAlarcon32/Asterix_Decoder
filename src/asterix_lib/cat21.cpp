@@ -240,6 +240,15 @@ QString Cat21::GetTypeOfTransmission() {
     return "CAT 21: ADS-B";
 }
 
+double Cat21::GetTrackAngle() {
+    if (!isnan(this->agvTrackAngle)) {
+        return this->agvTrackAngle;
+    }
+    else {
+        return 400;
+    }
+}
+
 QTreeWidgetItem* Cat21::GetPacketInfo() {
     QTreeWidgetItem *root = new QTreeWidgetItem();
     root->setText(0, "Packet " + QString::number(this->numOfPacket));

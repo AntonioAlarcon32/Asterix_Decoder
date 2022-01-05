@@ -97,6 +97,10 @@ void FileWindow::ConnectSignalsSlots() {
     connect(this->ui->actionKML, &QAction::triggered, this, &FileWindow::on_ExportAsKMLCLicked);
     connect(this->ui->actionCSV, &QAction::triggered, this, &FileWindow::on_ExportAsCSVCLicked);
     connect(this->ui->seeEmitterDetailsButton, &QAbstractButton::clicked, this, &FileWindow::on_SeeEmittersDetailsClicked);
+    connect(this->ui->x1Button, &QAbstractButton::clicked, this, &FileWindow::on_x1Clicked);
+    connect(this->ui->x2Button, &QAbstractButton::clicked, this, &FileWindow::on_x2Clicked);
+    connect(this->ui->x8Button, &QAbstractButton::clicked, this, &FileWindow::on_x8Clicked);
+    connect(this->ui->x16Button, &QAbstractButton::clicked, this, &FileWindow::on_x16Clicked);
 }
 
 void FileWindow::on_TimerTick() {
@@ -120,7 +124,9 @@ void FileWindow::on_filtersButton_clicked()
         int category = filtersDialog->category_;
         int mode3ACode = filtersDialog->mode3A_;
         astFile_->ApplyFilters(category,callSign,address,trackNumber, mode3ACode);
+
     }
+    filtersDialog->close();
 }
 
 void FileWindow::RefreshMap() {
@@ -142,6 +148,7 @@ void FileWindow::RefreshMap() {
         int msecsTo = this->currentTime_.msecsTo(dataBlock->GetTimeOfReception());
         QString address = "", id = "", callSign = "", trackNumber = "";
         int color;
+        double trackAngle = 400;
         if (dataBlock->GetCategory() == 21) {
             color = CustomMap::CAT21;
             address = dataBlock->GetAddress();
@@ -153,6 +160,7 @@ void FileWindow::RefreshMap() {
                 callSign = "";
             }
             trackNumber = dataBlock->GetTrackNumber();
+            trackAngle = dataBlock->GetTrackAngle();
         }
         else if (dataBlock->GetCategory() == 20) {
             color = CustomMap::CAT20;
@@ -165,6 +173,7 @@ void FileWindow::RefreshMap() {
                 callSign = "";
             }
             trackNumber = dataBlock->GetTrackNumber();
+            trackAngle = dataBlock->GetTrackAngle();
         }
         else if (dataBlock->GetCategory() == 10 && dataBlock->GetTypeOfTransmission() == "CAT 10: PSR") {
             color = CustomMap::CAT10SMR;
@@ -172,6 +181,7 @@ void FileWindow::RefreshMap() {
             callSign = "";
             id = dataBlock->GetTrackNumber() + "SMR10";
             trackNumber = dataBlock->GetTrackNumber();
+            trackAngle = dataBlock->GetTrackAngle();
         }
         else if (dataBlock->GetCategory() == 10 && dataBlock->GetTypeOfTransmission() == "CAT 10: MLAT") {
             color = CustomMap::CAT10MLAT;
@@ -184,15 +194,16 @@ void FileWindow::RefreshMap() {
                 callSign = "";
             }
             trackNumber = dataBlock->GetTrackNumber();
+            trackAngle = dataBlock->GetTrackAngle();
         }
         if (msecsTo >= -500 && msecsTo <= 500) {
             if (alreadyAdded_.indexOf(id) == -1) {
-                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,color,id,callSign,address,trackNumber);
+                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,color,id,callSign,address,trackNumber,trackAngle);
                 alreadyAdded_.append(id);
             }
             else {
                 this->ui->widget->DeleteMarker(id);
-                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,color,id,callSign,address,trackNumber);
+                this->ui->widget->AddCircleMarker(dataBlock->GetPosition(),10,color,id,callSign,address,trackNumber,trackAngle);
             }
         }
 
@@ -368,5 +379,20 @@ void FileWindow::on_SeeEmittersDetailsClicked() {
         errorDialog->setIcon(QMessageBox::Warning);
         errorDialog->exec();
     }
+}
+
+void FileWindow::on_x1Clicked() {
+    playTimer_->setInterval(500);
+}
+
+void FileWindow::on_x2Clicked() {
+    playTimer_->setInterval(250);
+}
+void FileWindow::on_x8Clicked() {
+    playTimer_->setInterval(62);
+
+}
+void FileWindow::on_x16Clicked() {
+    playTimer_->setInterval(31);
 }
 

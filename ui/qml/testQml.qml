@@ -33,7 +33,7 @@ Rectangle {
             testMap.zoomLevel = level
         }
 
-        function addItemToMap(lat, lon, radius, color, id, callSign, address, trackNumber) {
+        function addItemToMap(lat, lon, radius, color, id, callSign, address, trackNumber, trackAngle) {
             var component = Qt.createComponent("PolygonGroup.qml");
             var item = component.createObject(testMap);
             item.aircraftId = id;
@@ -43,10 +43,12 @@ Rectangle {
             item.position = QtPositioning.coordinate(lat, lon);
             item.radius = radius;
             item.color = color;
+            item.angle = trackAngle;
             if (showMarkers) {
                 item.labelVisible = true;
                 item.setLabel(true);
             }
+            item.selectIcon();
             testMap.addMapItemGroup(item);
             testMap.addedItems.push(item);
         }
@@ -95,7 +97,6 @@ Rectangle {
             return addedItems[pos].aircraftId;
         }
     }
-
     Plugin {
             id: mapPlugin
             name: "osm" // "mapboxgl", "esri", ...

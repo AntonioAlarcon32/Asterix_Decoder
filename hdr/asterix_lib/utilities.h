@@ -21,7 +21,6 @@ namespace Utilities
 
     class RadarTools {
     private:
-        static double PI;
         static double E2;
         static double A;
         static double DEG2RAD;
@@ -31,6 +30,7 @@ namespace Utilities
     public:
         static CoordinatesXYZ ChangeRadarCartesianToGeocentric(WGS84Coordinates radarCoords, CoordinatesXYZ radarCartesian);
         static WGS84Coordinates ChangeGeocentricToGeodesic(CoordinatesXYZ objectGeocenctric);
+        static double PI;
 
     };
 };

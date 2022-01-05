@@ -45,6 +45,7 @@ public:
     virtual QString GetTrackNumber() = 0;
     virtual QString GetMode3A() = 0;
     virtual QString GetTypeOfTransmission() = 0;
+    virtual double GetTrackAngle() = 0;
 
     virtual QTreeWidgetItem* GetPacketInfo() = 0;
 };

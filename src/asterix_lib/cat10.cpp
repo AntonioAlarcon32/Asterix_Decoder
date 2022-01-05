@@ -172,6 +172,16 @@ QString Cat10::GetTypeOfTransmission() {
     }
 }
 
+double Cat10::GetTrackAngle() {
+
+    if (!isnan(this->targetOrientation)) {
+        return targetOrientation;
+    }
+    else {
+        return 400;
+    }
+}
+
 
 QTreeWidgetItem* Cat10::GetPacketInfo() {
     QTreeWidgetItem *root = new QTreeWidgetItem();

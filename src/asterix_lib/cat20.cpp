@@ -170,6 +170,10 @@ QString Cat20::GetTypeOfTransmission() {
     return "CAT 20: MLAT";
 }
 
+double Cat20::GetTrackAngle() {
+        return 400;
+}
+
 
 QTreeWidgetItem* Cat20::GetPacketInfo() {
     QTreeWidgetItem *root = new QTreeWidgetItem();

@@ -2,6 +2,11 @@
     <qresource prefix="/qml">
         <file>ui/qml/testQml.qml</file>
         <file>ui/qml/PolygonGroup.qml</file>
+        <file>ui/qml/icon19.png</file>
+        <file>ui/qml/icon20.png</file>
+        <file>ui/qml/icon21.png</file>
+        <file>ui/qml/icon101.png</file>
+        <file>ui/qml/arrow102.png</file>
     </qresource>
     <qresource prefix="/images"/>
 </RCC>

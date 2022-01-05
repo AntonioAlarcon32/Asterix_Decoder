@@ -26,6 +26,7 @@ public:
     QString GetMode3A();
     QTreeWidgetItem* GetPacketInfo();
     QString GetTypeOfTransmission();
+    double GetTrackAngle();
 
 private:
 

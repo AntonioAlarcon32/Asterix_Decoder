@@ -35,7 +35,7 @@ void CustomMap::SetZoom(int level) {
             Q_ARG(QVariant, value));
 }
 
-void CustomMap::AddCircleMarker(WGS84Coordinates coordinates, int radius, int color, QString itemId, QString callSign, QString address, QString trackNumber) {
+void CustomMap::AddCircleMarker(WGS84Coordinates coordinates, int radius, int color, QString itemId, QString callSign, QString address, QString trackNumber, double trackAngle) {
     QVariant lat = coordinates.GetLatitude();
     QVariant lon = coordinates.GetLongitude();
     QString colorCode = "";
@@ -56,7 +56,7 @@ void CustomMap::AddCircleMarker(WGS84Coordinates coordinates, int radius, int co
         colorCode = "#ff0000";
     }
     QMetaObject::invokeMethod(map_, "addItemToMap", Q_ARG(QVariant, lat),Q_ARG(QVariant, lon),Q_ARG(QVariant, radius),Q_ARG(QVariant, colorCode),
-                              Q_ARG(QVariant, itemId),Q_ARG(QVariant, callSign),Q_ARG(QVariant, address),Q_ARG(QVariant, trackNumber));
+                              Q_ARG(QVariant, itemId),Q_ARG(QVariant, callSign),Q_ARG(QVariant, address),Q_ARG(QVariant, trackNumber),Q_ARG(QVariant, trackAngle));
 }
 
 void CustomMap::Clear() {

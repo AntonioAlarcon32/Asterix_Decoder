@@ -17,12 +17,29 @@ MapItemGroup {
     property alias color: markerDraw.color
     property bool labelVisible: false
     property int cycles: 0
+    property double angle: 0
 
     MapQuickItem {
         id: marker
         property int radius: 1
         sourceItem: Rectangle { id: markerDraw; width: radius; height: radius; color: "#002fff"; smooth: true; radius: radius }
         anchorPoint: Qt.point(sourceItem.width/2, sourceItem.height/2)
+        visible: true
+    }
+
+    MapQuickItem {
+        id: markerIcon
+        sourceItem: Image{
+            id:markerImage
+            source: ""
+            width: 20
+            height: 20
+            fillMode: Image.Stretch
+        }
+        anchorPoint: Qt.point(10,10)
+        coordinate: position
+        visible: true
+        rotation: angle
     }
 
     MapQuickItem {
@@ -49,6 +66,31 @@ MapItemGroup {
         }
         else {
             itemGroup.label = trackNumber
+        }
+    }
+
+    function selectIcon() {
+        if (angle != 400) {
+            markerIcon.visible = true;
+            marker.visible = false;
+            if (marker.sourceItem.color == "#ff0000") {
+                markerImage.source = "arrow102.png";
+                markerImage.width = 13
+                markerImage.height = 13
+            }
+            else if (marker.sourceItem.color == "#ff9900") {
+                markerImage.source = "icon101.png";
+            }
+            else if (marker.sourceItem.color == "#a600ff") {
+                markerImage.source = "icon20.png";
+            }
+            else if (marker.sourceItem.color == "#002fff") {
+                markerImage.source = "icon21.png";
+            }
+        }
+        else {
+            markerIcon.visible = false;
+            marker.visible = true;
         }
     }
 }
