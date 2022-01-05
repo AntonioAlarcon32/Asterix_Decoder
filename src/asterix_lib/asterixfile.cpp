@@ -407,21 +407,21 @@ void AsterixFile::ResetFilters() {
     packetTable_->setHorizontalHeaderLabels({"Packet","Category", "Length", "SAC/SIC", "Time of Transmission", "Type of Message"});
 }
 
-void AsterixFile::writeFile(QString filePath) {
+void AsterixFile::writeFile(QString filePath, bool saveAll) {
     QFile file(filePath);
     if (!file.open(QFile::WriteOnly)) {
         qDebug() << "Could not open file for writing";
         return;
     }
 
-    if (this->filteredPackets_.length() != 0) {
-        for (DataBlock* dataBlock : this->filteredPackets_) {
+    if (saveAll) {
+        for (DataBlock* dataBlock : *this->dataBlocks) {
             file.write(dataBlock->GetData());
         }
     }
 
     else {
-        for (DataBlock* dataBlock : *this->dataBlocks) {
+        for (DataBlock* dataBlock : this->filteredPackets_) {
             file.write(dataBlock->GetData());
         }
     }

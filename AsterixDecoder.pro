@@ -10,6 +10,7 @@ CONFIG += app_bundle
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    selectsavedialog.cpp \
     src/asterix_lib/coordinatesxyz.cpp \
     src/gui/emitterdetailswindow.cpp \
     src/gui/livecapturewindow.cpp \
@@ -54,9 +55,11 @@ HEADERS += \
     hdr/asterix_lib/sensor.h \
     hdr/gui/packetdetaildialog.h \
     hdr/asterix_lib/wgs84coordinates.h \
-    hdr/gui/livecapturewindow.h
+    hdr/gui/livecapturewindow.h \
+    selectsavedialog.h
 
 FORMS += \
+    selectsavedialog.ui \
     ui/emitterdetailswindow.ui \
     ui/livecapturewindow.ui \
     ui/widgets/custommap.ui \

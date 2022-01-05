@@ -126,7 +126,6 @@ void FileWindow::on_filtersButton_clicked()
         astFile_->ApplyFilters(category,callSign,address,trackNumber, mode3ACode);
 
     }
-    filtersDialog->close();
 }
 
 void FileWindow::RefreshMap() {
@@ -269,24 +268,46 @@ void FileWindow::SetFileDetailsTab() {
 }
 
 void FileWindow::on_SaveFileClicked() {
-    QFileDialog dialog(this);
 
-    dialog.setFileMode(QFileDialog::AnyFile);
-    dialog.setNameFilter(tr("Valid Files (*.ast *.gps)"));
-    dialog.setViewMode(QFileDialog::Detail);
-    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    SelectSaveDialog *saveDialog = new SelectSaveDialog(this);
 
-    QStringList fileNames;
+    int code = saveDialog->exec();
+    bool saveAll = false;
+    bool notClosed = true;
 
-    if (dialog.exec())
-        fileNames = dialog.selectedFiles();
-
-    if (fileNames.length() == 1) {
-        QString filePath = fileNames.at(0);
-        this->astFile_->writeFile(filePath);
+    if (code == 0) { //CLOSED
+        notClosed = false;
     }
 
-    else {
+    else if (code == 5) {//SAVE FILTERED
+        saveAll = false;
+    }
+
+    else if (code == 6) {//SAVE ALL
+        saveAll = true;
+    }
+
+    if (notClosed) {
+
+        QFileDialog dialog(this);
+
+        dialog.setFileMode(QFileDialog::AnyFile);
+        dialog.setNameFilter(tr("Valid Files (*.ast *.gps)"));
+        dialog.setViewMode(QFileDialog::Detail);
+        dialog.setAcceptMode(QFileDialog::AcceptSave);
+
+        QStringList fileNames;
+
+        if (dialog.exec())
+            fileNames = dialog.selectedFiles();
+
+        if (fileNames.length() == 1) {
+            QString filePath = fileNames.at(0);
+            this->astFile_->writeFile(filePath,saveAll);
+        }
+
+        else {
+        }
     }
 }
 

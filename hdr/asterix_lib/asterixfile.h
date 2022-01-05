@@ -52,7 +52,7 @@ public:
     QStandardItemModel* emitterTable_;
     QFileInfo fileInfo_;
     QMap<int,int> categoryStats_;
-    void writeFile(QString path);
+    void writeFile(QString path, bool saveAll);
 
 public slots:
 
