@@ -160,6 +160,7 @@ void AsterixFile::readFile(QString path) {
         }
     }
     packetTable_->setHorizontalHeaderLabels({"Packet","Category", "Length", "SAC/SIC", "Time of Transmission", "Type of Message"});
+    this->ProcessEmitters();
     filteredPackets_ = *dataBlocks;
 
     emit finishLoading();
@@ -207,28 +208,7 @@ void AsterixFile::ProcessEmitters() {
 
     for (DataBlock *dataBlock : *dataBlocks) {
 
-        if (dataBlock->GetAddress() == "N/A") {
-            QString trackNumber = dataBlock->GetTrackNumber();
-            if (trackNumber != "N/A" && trackNumber != "-1") {
-
-                int index = addresses.indexOf(trackNumber);
-
-                if (index == -1) {
-                    Emitter emitter = Emitter("N/A",dataBlock->GetTypeOfTransmission());
-                    emitter.SetTrackNumber(trackNumber);
-                    emitter.AddPoint(dataBlock->GetPosition(),dataBlock->GetTimeOfReception(),dataBlock->GetCategory(),dataBlock->GetTypeOfTransmission());
-                    emitters_.append(emitter);
-                    addresses.append(trackNumber);
-                }
-
-                else {
-                    emitters_[index].AddPoint(dataBlock->GetPosition(),dataBlock->GetTimeOfReception(),dataBlock->GetCategory(),dataBlock->GetTypeOfTransmission());
-                }
-            }
-
-        }
-
-        else if (dataBlock->GetAddress() != "N/A") {
+        if (dataBlock->GetAddress() != "N/A") {
             QString address = dataBlock->GetAddress();
             int index = addresses.indexOf(address);
 
@@ -267,12 +247,12 @@ void AsterixFile::ProcessEmitters() {
     emitterTable_->setHorizontalHeaderLabels({"CallSign","Target Address", "First Report at", "Last Report At", "Detected Emissions"});
 }
 
-void AsterixFile::FilterByCallSign(QString callSign, QList<DataBlock*> &packetList) {
+void AsterixFile::FilterByCallSign(QStringList callSign, QList<DataBlock*> &packetList) {
     int i = 0;
     while (i < packetList.length()) {
         DataBlock* dataBlock = packetList.at(i);
-        QString callSignDB = dataBlock->GetCallSign();
-        if (callSignDB == callSign) {
+        int present = callSign.indexOf(dataBlock->GetCallSign());
+        if (present != -1) {
             i++;
         }
         else {
@@ -282,11 +262,12 @@ void AsterixFile::FilterByCallSign(QString callSign, QList<DataBlock*> &packetLi
     }
 }
 
-void AsterixFile::FilterByCategory(int category, QList<DataBlock*> &packetList) {
+void AsterixFile::FilterByCategory(QList<int> category, QList<DataBlock*> &packetList) {
     int i = 0;
     while (i < packetList.length()) {
         DataBlock* dataBlock = packetList.at(i);
-        if (dataBlock->GetCategory() == category) {
+        int present = category.indexOf(dataBlock->GetCategory());
+        if (present != -1) {
             i++;
         }
         else {
@@ -296,11 +277,12 @@ void AsterixFile::FilterByCategory(int category, QList<DataBlock*> &packetList) 
     }
 }
 
-void AsterixFile::FilterByAddress(QString address, QList<DataBlock*> &packetList) {
+void AsterixFile::FilterByAddress(QStringList address, QList<DataBlock*> &packetList) {
     int i = 0;
     while (i < packetList.length()) {
         DataBlock* dataBlock = packetList.at(i);
-        if (dataBlock->GetAddress().replace(" ","") == address) {
+        int present = address.indexOf(dataBlock->GetAddress());
+        if (present != -1) {
             i++;
         }
         else {
@@ -310,12 +292,12 @@ void AsterixFile::FilterByAddress(QString address, QList<DataBlock*> &packetList
     }
 }
 
-void AsterixFile::FilterByTrackNumber(int trackNumber, QList<DataBlock*> &packetList) {
+void AsterixFile::FilterByTrackNumber(QList<int> trackNumber, QList<DataBlock*> &packetList) {
     int i = 0;
     while (i < packetList.length()) {
         DataBlock* dataBlock = packetList.at(i);
-        int packetTrackNumber = dataBlock->GetTrackNumber().toInt();
-        if (packetTrackNumber == trackNumber) {
+        int present = trackNumber.indexOf(dataBlock->GetTrackNumber().toInt());
+        if (present != -1) {
             i++;
         }
         else {
@@ -325,11 +307,12 @@ void AsterixFile::FilterByTrackNumber(int trackNumber, QList<DataBlock*> &packet
     }
 }
 
-void AsterixFile::FilterByMode3A(int mode3ACode, QList<DataBlock*> &packetList) {
+void AsterixFile::FilterByMode3A(QList<int> mode3ACode, QList<DataBlock*> &packetList) {
     int i = 0;
     while (i < packetList.length()) {
         DataBlock* dataBlock = packetList.at(i);
-        if (dataBlock->GetMode3A().toInt() == mode3ACode) {
+        int present = mode3ACode.indexOf(dataBlock->GetMode3A().toInt());
+        if (present != -1) {
             i++;
         }
         else {
@@ -339,25 +322,25 @@ void AsterixFile::FilterByMode3A(int mode3ACode, QList<DataBlock*> &packetList) 
     }
 }
 
-void AsterixFile::ApplyFilters(int category, QString callSign, QString address, int trackNumber, int mode3ACode) {
+void AsterixFile::ApplyFilters(QList<int> category, QStringList callSign, QStringList address, QList<int> trackNumber, QList<int> mode3ACode) {
 
-    if (category != -1) {
+    if (category.length() != 0) {
         this->FilterByCategory(category,this->filteredPackets_);
     }
 
-    if (callSign != "") {
+    if (callSign.length() != 0) {
         this->FilterByCallSign(callSign,this->filteredPackets_);
     }
 
-    if (address != "") {
+    if (address.length() != 0) {
         this->FilterByAddress(address,this->filteredPackets_);
     }
 
-    if (trackNumber != -1) {
+    if (trackNumber.length() != 0) {
         this->FilterByTrackNumber(trackNumber,this->filteredPackets_);
     }
 
-    if (mode3ACode != -1) {
+    if (mode3ACode.length() != 0) {
         this->FilterByMode3A(mode3ACode,this->filteredPackets_);
     }
 

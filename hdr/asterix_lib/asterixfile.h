@@ -38,14 +38,14 @@ public:
     int GetTotalPackets(QString path);
 
     void ResetFilters();
-    void FilterByCallSign(QString callSign, QList<DataBlock*> &packetList);
-    void FilterByCategory(int category,QList<DataBlock*> &packetList);
-    void FilterByAddress(QString address,QList<DataBlock*> &packetList);
-    void FilterByTrackNumber(int trackNumber,QList<DataBlock*> &packetList);
-    void FilterByMode3A(int mode3ACode,QList<DataBlock*> &packetList);
+    void FilterByCallSign(QStringList callSign, QList<DataBlock*> &packetList);
+    void FilterByCategory(QList<int> category,QList<DataBlock*> &packetList);
+    void FilterByAddress(QStringList address,QList<DataBlock*> &packetList);
+    void FilterByTrackNumber(QList<int> trackNumber,QList<DataBlock*> &packetList);
+    void FilterByMode3A(QList<int> mode3ACode,QList<DataBlock*> &packetList);
     bool AddPacketToList(QByteArray data);
 
-    void ApplyFilters(int category = -1, QString callSign = "", QString address = "", int trackNumber = -1, int mode3ACode = -1);
+    void ApplyFilters(QList<int> category, QStringList callSign, QStringList address, QList<int> trackNumber, QList<int> mode3ACode);
 
 
     QStandardItemModel* packetTable_;

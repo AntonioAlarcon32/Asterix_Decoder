@@ -118,13 +118,12 @@ void FileWindow::on_filtersButton_clicked()
 
     if (code == QDialog::Accepted) {
 
-        QString callSign = filtersDialog->callSign_;
-        QString address = filtersDialog->address_;
-        int trackNumber = filtersDialog->trackNumber_;
-        int category = filtersDialog->category_;
-        int mode3ACode = filtersDialog->mode3A_;
-        astFile_->ApplyFilters(category,callSign,address,trackNumber, mode3ACode);
-
+        QStringList callSign = filtersDialog->callSigns_;
+        QStringList address = filtersDialog->addresses_;
+        QList<int> trackNumber = filtersDialog->trackNumbers_;
+        QList<int> categories = filtersDialog->categories_;
+        QList<int> mode3ACode = filtersDialog->mode3ACodes_;
+        astFile_->ApplyFilters(categories,callSign,address,trackNumber, mode3ACode);
     }
 }
 

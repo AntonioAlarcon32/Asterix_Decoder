@@ -6,11 +6,11 @@ FiltersDialog::FiltersDialog(QWidget *parent) :
     ui(new Ui::FiltersDialog)
 {
     ui->setupUi(this);
-    callSign_ = "";
-    address_ = "";
-    trackNumber_ = -1;
-    category_ = -1;
-    mode3A_ = -1;
+    callSigns_ = QStringList();
+    addresses_ = QStringList();
+    trackNumbers_ = QList<int>();
+    categories_ = QList<int>();
+    mode3ACodes_ = QList<int>();
 }
 
 FiltersDialog::~FiltersDialog()
@@ -27,22 +27,31 @@ void FiltersDialog::on_buttonBox_accepted()
     m3aChecked_ = ui->mode3ACheck->isChecked();
 
     if (callSignChecked_) {
-        callSign_ = ui->callSignText->text();
+        callSigns_ = ui->callSignText->text().split(";");
     }
 
     if (addressChecked_) {
-        address_ = ui->addressText->text();
+        addresses_ = ui->addressText->text().split(";");
     }
 
     if (trackNumberChecked_) {
-        QString text = ui->trackNumberText->text();
-        trackNumber_ = text.toInt();
+        QStringList text = ui->trackNumberText->text().split(";");
+        for (QString trackNumber : text) {
+            trackNumbers_.append(trackNumber.toInt());
+        }
+
     }
     if (categoryChecked_) {
-        category_ = ui->categoryText->text().toInt();
+        QStringList text = ui->categoryText->text().split(";");
+        for (QString trackNumber : text) {
+            categories_.append(trackNumber.toInt());
+        }
     }
     if (m3aChecked_) {
-        mode3A_ = ui->mode3AText->text().toInt();
+        QStringList text = ui->mode3AText->text().split(";");
+        for (QString trackNumber : text) {
+            mode3ACodes_.append(trackNumber.toInt());
+        }
     }
 }
 

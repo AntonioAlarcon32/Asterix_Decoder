@@ -21,11 +21,11 @@ public:
     bool categoryChecked_;
     bool m3aChecked_;
 
-    QString callSign_;
-    QString address_;
-    int trackNumber_;
-    int category_;
-    int mode3A_;
+    QStringList callSigns_;
+    QStringList addresses_;
+    QList<int> trackNumbers_;
+    QList<int> categories_;
+    QList<int> mode3ACodes_;
 
 signals:
     void ResetPacketsClicked();
