@@ -142,8 +142,8 @@ void FileWindow::RefreshMap() {
         i++;
     }
 
-    for (;packetCounter_ < astFile_->dataBlocks->length(); packetCounter_++) {
-        DataBlock* dataBlock = astFile_->dataBlocks->at(packetCounter_);
+    for (;packetCounter_ < astFile_->filteredPackets_.length(); packetCounter_++) {
+        DataBlock* dataBlock = astFile_->filteredPackets_.at(packetCounter_);
         int msecsTo = this->currentTime_.msecsTo(dataBlock->GetTimeOfReception());
         QString address = "", id = "", callSign = "", trackNumber = "";
         int color;
