@@ -27,6 +27,9 @@ LiveCaptureWindow::LiveCaptureWindow(QWidget *parent) :
     packetCounter_ = 0;
     connect(this->ui->showPacketDetailsButton, &QAbstractButton::clicked, this, &LiveCaptureWindow::on_PacketRowClicked);
     connect(this->ui->startCaptureButton, &QAbstractButton::clicked, this, &LiveCaptureWindow::on_StartCaptureClicked);
+    connect(this->ui->stopCaptureButton, &QAbstractButton::clicked, this, &LiveCaptureWindow::on_StopCaptureClicked);
+    connect(this->ui->actionSave_File, &QAction::triggered, this, &LiveCaptureWindow::on_SaveFileClicked);
+
 
     ui->tableView->setModel(astFile_->packetTable_);
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -76,6 +79,36 @@ void LiveCaptureWindow::on_StartCaptureClicked() {
         bool joined = socket->joinMulticastGroup(address);
         connect(socket, &QUdpSocket::readyRead,
                         this, &LiveCaptureWindow::ProcessPendingDatagrams);
+    }
+}
+
+void LiveCaptureWindow::on_StopCaptureClicked() {
+    for (int i = 0; i < groupAddresses4_.length(); i++) {
+        QHostAddress address = groupAddresses4_.at(i);
+        QUdpSocket *socket = udpSockets4_.at(i);
+        socket->leaveMulticastGroup(address);
+    }
+}
+
+void LiveCaptureWindow::on_SaveFileClicked() {
+    QFileDialog dialog(this);
+
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setNameFilter(tr("Valid Files (*.ast *.gps)"));
+    dialog.setViewMode(QFileDialog::Detail);
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+
+    QStringList fileNames;
+
+    if (dialog.exec())
+        fileNames = dialog.selectedFiles();
+
+    if (fileNames.length() == 1) {
+        QString filePath = fileNames.at(0);
+        this->astFile_->writeFile(filePath,true);
+    }
+
+    else {
     }
 }
 

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QUdpSocket>
 #include <QHostAddress>
+#include <QFileDialog>
 #include <hdr/appconfig.h>
 #include "hdr/asterix_lib/asterixfile.h"
 #include "hdr/gui/packetdetaildialog.h"
@@ -33,6 +34,8 @@ private slots:
     void ProcessPendingDatagrams();
     void on_PacketRowClicked();
     void on_StartCaptureClicked();
+    void on_StopCaptureClicked();
+    void on_SaveFileClicked();
 };
 
 #endif // LIVECAPTUREWINDOW_H
