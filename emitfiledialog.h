@@ -29,6 +29,8 @@ private slots:
 
     void on_StopEmitButton_clicked();
 
+    void on_horizontalSlider_sliderMoved(int position);
+
 private:
     Ui::EmitFileDialog *ui;
     AsterixFile *astFile_;

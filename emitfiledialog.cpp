@@ -61,3 +61,13 @@ void EmitFileDialog::EmitPacket(DataBlock* dataBlock) {
     senderSocket_.writeDatagram(datagram, senderIp_, senderPort_);
 }
 
+
+void EmitFileDialog::on_horizontalSlider_sliderMoved(int position)
+{
+    currentPacket = position;
+    DataBlock *currentData = astFile_->dataBlocks->at(currentPacket);
+    currentTime_ = currentData->GetTimeOfReception();
+    this->ui->currentTimeLabel->setText(currentTime_.toString("hh:mm:ss:zzz"));
+    this->ui->sentPacketsLabel->setText("Packets Sent: " + QString::number(currentPacket));
+}
+

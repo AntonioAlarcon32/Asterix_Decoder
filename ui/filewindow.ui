@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="packetTab">
        <attribute name="title">
@@ -139,6 +139,23 @@
         <string>Map</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
+        <item row="3" column="0">
+         <widget class="QCheckBox" name="showMarkersCheck">
+          <property name="text">
+           <string>Show Markers</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="CustomMap" name="widget" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0">
          <widget class="QLabel" name="timerLabel">
           <property name="sizePolicy">
@@ -264,19 +281,9 @@
          </layout>
         </item>
         <item row="2" column="0">
-         <widget class="QCheckBox" name="showMarkersCheck">
-          <property name="text">
-           <string>Show Markers</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="CustomMap" name="widget" native="true">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+         <widget class="QSlider" name="horizontalSlider">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>

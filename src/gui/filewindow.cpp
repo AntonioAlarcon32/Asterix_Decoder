@@ -59,6 +59,10 @@ void FileWindow::on_FinishLoading() {
     int min = astFile_->dataBlocks->first()->GetTimeOfReception().minute();
     int sec = astFile_->dataBlocks->first()->GetTimeOfReception().second();
 
+    this->ui->horizontalSlider->setMinimum(0);
+    this->ui->horizontalSlider->setMaximum(astFile_->numberOfPackets_-1);
+    this->ui->horizontalSlider->setValue(0);
+
     this->SetFileDetailsTab();
 
     currentTime_ = QTime(hour,min,sec,0);
@@ -102,6 +106,7 @@ void FileWindow::ConnectSignalsSlots() {
     connect(this->ui->x8Button, &QAbstractButton::clicked, this, &FileWindow::on_x8Clicked);
     connect(this->ui->x16Button, &QAbstractButton::clicked, this, &FileWindow::on_x16Clicked);
     connect(this->ui->actionStart_Multicast, &QAction::triggered, this, &FileWindow::on_StartMulticastClicked);
+    connect(this->ui->horizontalSlider, &QSlider::sliderMoved, this, &FileWindow::on_SliderMoved);
 }
 
 void FileWindow::on_TimerTick() {
@@ -213,6 +218,7 @@ void FileWindow::RefreshMap() {
         else if (msecsTo >= 500) {
             break;
         }
+        this->ui->horizontalSlider->setValue(packetCounter_);
     }
 }
 
@@ -422,6 +428,17 @@ void FileWindow::on_StartMulticastClicked() {
     EmitFileDialog *emitWindow = new EmitFileDialog(this,astFile_);
     emitWindow->show();
     emitWindow->raise();
+}
+
+void FileWindow::on_SliderMoved(int position) {
+    packetCounter_ = position;
+    DataBlock *dataBlock = astFile_->dataBlocks->at(position);
+    int hour = dataBlock->GetTimeOfReception().hour();
+    int min = dataBlock->GetTimeOfReception().minute();
+    int sec = dataBlock->GetTimeOfReception().second();
+
+    currentTime_ = QTime(hour,min,sec,0);
+    this->ui->timerLabel->setText(currentTime_.toString("hh:mm:ss:zzz"));
 }
 
 

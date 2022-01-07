@@ -80,6 +80,7 @@ private slots:
     void on_x8Clicked();
     void on_x16Clicked();
     void on_StartMulticastClicked();
+    void on_SliderMoved(int position);
 };
 
 
