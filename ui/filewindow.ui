@@ -309,7 +309,14 @@
     <addaction name="actionSave_File"/>
     <addaction name="menuExport_as"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionStart_Multicast"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuTools"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSave_File">
@@ -325,6 +332,11 @@
   <action name="actionCSV">
    <property name="text">
     <string>CSV</string>
+   </property>
+  </action>
+  <action name="actionStart_Multicast">
+   <property name="text">
+    <string>Start Multicast</string>
    </property>
   </action>
  </widget>

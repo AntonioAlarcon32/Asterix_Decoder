@@ -21,6 +21,7 @@
 
 #include <hdr/gui/preferenceswindow.h>
 #include <selectsavedialog.h>
+#include <emitfiledialog.h>
 
 namespace Ui {
 class FileWindow;
@@ -78,6 +79,7 @@ private slots:
     void on_x2Clicked();
     void on_x8Clicked();
     void on_x16Clicked();
+    void on_StartMulticastClicked();
 };
 
 

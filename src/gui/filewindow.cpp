@@ -101,6 +101,7 @@ void FileWindow::ConnectSignalsSlots() {
     connect(this->ui->x2Button, &QAbstractButton::clicked, this, &FileWindow::on_x2Clicked);
     connect(this->ui->x8Button, &QAbstractButton::clicked, this, &FileWindow::on_x8Clicked);
     connect(this->ui->x16Button, &QAbstractButton::clicked, this, &FileWindow::on_x16Clicked);
+    connect(this->ui->actionStart_Multicast, &QAction::triggered, this, &FileWindow::on_StartMulticastClicked);
 }
 
 void FileWindow::on_TimerTick() {
@@ -415,4 +416,13 @@ void FileWindow::on_x8Clicked() {
 void FileWindow::on_x16Clicked() {
     playTimer_->setInterval(31);
 }
+
+void FileWindow::on_StartMulticastClicked() {
+
+    EmitFileDialog *emitWindow = new EmitFileDialog(this,astFile_);
+    emitWindow->show();
+    emitWindow->raise();
+}
+
+
 
