@@ -92,4 +92,8 @@ QString CustomMap::GetAddedItem(int pos) {
     return addedItem.toString();
 }
 
+void CustomMap::SetNumberOfCycles(int number) {
+    QMetaObject::invokeMethod(map_, "setNumberOfCycles", Q_ARG(QVariant, number));
+}
+
 

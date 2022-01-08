@@ -27,6 +27,7 @@ public:
     void DeleteMarker(QString id);
     void ShowLabels();
     void HideLabels();
+    void SetNumberOfCycles(int number);
     int GetAddedItemsLength();
     QString GetAddedItem(int pos);
 

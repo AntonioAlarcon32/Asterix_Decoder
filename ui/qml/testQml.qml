@@ -17,6 +17,7 @@ Rectangle {
         plugin: mapPlugin
         center: QtPositioning.coordinate(59.91, 10.75) // Oslo
         zoomLevel: 14
+        property int numberOfCycles: 2
         property var addedItems: []
         property bool showMarkers: false
 
@@ -78,7 +79,7 @@ Rectangle {
 
         function clearItemsWithTwoCycles() {
             for (var i = 0; i < testMap.addedItems.length;) {
-                if (1 === testMap.addedItems[i].cycles) {
+                if ((numberOfCycles - 1) === testMap.addedItems[i].cycles) {
                     testMap.removeMapItemGroup(testMap.addedItems[i])
                     testMap.addedItems.splice(i,1)
                 }
@@ -95,6 +96,10 @@ Rectangle {
 
         function  getAddedItem(pos) {
             return addedItems[pos].aircraftId;
+        }
+
+        function setNumberOfCycles(num) {
+            testMap.numberOfCycles = num;
         }
     }
     Plugin {

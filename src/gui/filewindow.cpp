@@ -343,15 +343,26 @@ void FileWindow::on_showMarkersCheck_stateChanged(int arg1)
 
 void FileWindow::SaveKMLFile() {
 
+    QFileDialog dialog(this);
 
-    QString filename = QDir::currentPath() + "/test.kml";
-        QFile file(filename);
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setNameFilter(tr("Valid Files (*.kml)"));
+    dialog.setViewMode(QFileDialog::Detail);
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+
+    QStringList fileNames;
+
+    if (dialog.exec())
+        fileNames = dialog.selectedFiles();
+
+    if (fileNames.length() == 1) {
+        QString filePath = fileNames.at(0);
+        QFile file(filePath);
         if (file.open(QIODevice::ReadWrite)) {
             QTextStream stream(&file);
             stream << "<?xml version='1.0' encoding='UTF-8'?>" << endl;
             stream << "<kml xmlns='http://www.opengis.net/kml/2.2'>" << endl;
             stream << "<Document>" << endl;
-            stream << "<Folder><name>CAT21</name><open>1</open>" << endl;
             stream << "<Style id='cat21Style'>" << endl;
             stream << "<LineStyle>" << endl;
             stream << "<color>641400FF</color>" << endl;
@@ -361,30 +372,93 @@ void FileWindow::SaveKMLFile() {
             stream << "<color>641400FF</color>" << endl;
             stream << "</PolyStyle>" << endl;
             stream <<"</Style>" << endl;
+            stream << "<Style id='cat20Style'>" << endl;
+            stream << "<LineStyle>" << endl;
+            stream << "<color>50FF78F0</color>" << endl;
+            stream << "<width>4</width>" << endl;
+            stream << "</LineStyle>" << endl;
+            stream << "<PolyStyle>" << endl;
+            stream << "<color>50FF78F0</color>" << endl;
+            stream << "</PolyStyle>" << endl;
+            stream <<"</Style>" << endl;
+            stream << "<Style id='cat10Style'>" << endl;
+            stream << "<LineStyle>" << endl;
+            stream << "<color>5014B4FF</color>" << endl;
+            stream << "<width>4</width>" << endl;
+            stream << "</LineStyle>" << endl;
+            stream << "<PolyStyle>" << endl;
+            stream << "<color>5014B4FF</color>" << endl;
+            stream << "</PolyStyle>" << endl;
+            stream <<"</Style>" << endl;
 
             for (Emitter emitter : this->astFile_->emitters_) {
-                stream << "<Placemark>" << endl;
-                stream << "<name>" << emitter.GetCallSign().replace(" ","") << "</name>" << endl;
-                stream << "<styleUrl>#cat21Style</styleUrl>" << endl;
-                stream << "<LineString>" << endl;
-                stream << "<coordinates>" << endl;
+                stream << "<Folder><name>"+ emitter.GetCallSign() + "</name><open>1</open>" << endl;
 
-                for (WGS84Coordinates coord : emitter.pointsCat21) {
 
-                    stream << QString::number(coord.GetLongitude(),'g',15) << "," << QString::number(coord.GetLatitude(),'g',15) << endl;
+                if (emitter.pointsCat21.length() != 0) {
+                    stream << "<Placemark>" << endl;
+                    stream << "<name>" << "CAT 21: ADS-B" << "</name>" << endl;
+                    stream << "<styleUrl>#cat21Style</styleUrl>" << endl;
+                    stream << "<LineString>" << endl;
+                    stream << "<coordinates>" << endl;
+                    for (WGS84Coordinates coord : emitter.pointsCat21) {
+
+                        stream << QString::number(coord.GetLongitude(),'g',15) << "," << QString::number(coord.GetLatitude(),'g',15) << endl;
+
+                    }
+
+                    stream << "</coordinates>" << endl;
+                    stream << "</LineString>" << endl;
+                    stream << "</Placemark>" << endl;
 
                 }
+                if (emitter.pointsCat20.length() != 0) {
+                    stream << "<Placemark>" << endl;
+                    stream << "<name>" << "CAT 20: MLAT" << "</name>" << endl;
+                    stream << "<styleUrl>#cat20Style</styleUrl>" << endl;
+                    stream << "<LineString>" << endl;
+                    stream << "<coordinates>" << endl;
+                    for (WGS84Coordinates coord : emitter.pointsCat20) {
 
-                stream << "</coordinates>" << endl;
-                stream << "</LineString>" << endl;
-                stream << "</Placemark>" << endl;
+                        stream << QString::number(coord.GetLongitude(),'g',15) << "," << QString::number(coord.GetLatitude(),'g',15) << endl;
 
+                    }
+
+                    stream << "</coordinates>" << endl;
+                    stream << "</LineString>" << endl;
+                    stream << "</Placemark>" << endl;
+                }
+                if (emitter.pointsCat10Mlat.length() != 0) {
+
+                    stream << "<Placemark>" << endl;
+                    stream << "<name>" << "CAT 10: MLAT" << "</name>" << endl;
+                    stream << "<styleUrl>#cat10Style</styleUrl>" << endl;
+                    stream << "<LineString>" << endl;
+                    stream << "<coordinates>" << endl;
+                    for (WGS84Coordinates coord : emitter.pointsCat10Mlat) {
+
+                        stream << QString::number(coord.GetLongitude(),'g',15) << "," << QString::number(coord.GetLatitude(),'g',15) << endl;
+
+                    }
+
+                    stream << "</coordinates>" << endl;
+                    stream << "</LineString>" << endl;
+                    stream << "</Placemark>" << endl;
+                }
+                stream << "</Folder>" << endl;
             }
-
-            stream << "</Folder>" << endl;
             stream << "</Document>" << endl;
             stream << "</kml>" << endl;
         }
+
+        QMessageBox *msg = new QMessageBox(this);
+        msg->setText("KML Exported succesfully");
+        msg->setStandardButtons(QMessageBox::Ok);
+        msg->open();
+    }
+
+    else {
+    }
 
 }
 
