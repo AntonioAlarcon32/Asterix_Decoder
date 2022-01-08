@@ -326,7 +326,7 @@ void FileWindow::on_ExportAsKMLCLicked() {
 }
 
 void FileWindow::on_ExportAsCSVCLicked() {
-    int c = 1;
+    SaveCSVFile();
 }
 
 
@@ -339,6 +339,90 @@ void FileWindow::on_showMarkersCheck_stateChanged(int arg1)
     else if (!this->ui->showMarkersCheck->isChecked()) {
         this->ui->widget->HideLabels();
     }
+}
+
+void FileWindow::SaveCSVFile() {
+
+    QFileDialog dialog(this);
+
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setNameFilter(tr("Valid Files (*.csv)"));
+    dialog.setViewMode(QFileDialog::Detail);
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+
+    QStringList fileNames;
+
+    if (dialog.exec())
+        fileNames = dialog.selectedFiles();
+
+    if (fileNames.length() == 1) {
+        QString filePath = fileNames.at(0);
+        QFile file(filePath);
+        if (file.open(QIODevice::ReadWrite)) {
+            QTextStream stream(&file);
+
+            stream << "Address,CallSign,Mode 3/A,Track Number" << endl;
+            stream << "Category,Coordinates" << endl;
+            stream << "TimeStamps" << endl;
+
+            for (Emitter emitter : this->astFile_->emitters_) {
+                stream << emitter.GetTargetAddress() << "," << emitter.GetCallSign() << "," << emitter.GetMode3ACode() << "," << emitter.GetTrackNumber() << endl;
+                if (emitter.pointsCat21.length() > 0) {
+                    stream << "CAT21" << endl;
+                    for (int c = 0; c < emitter.pointsCat21.length(); c++) {
+                        WGS84Coordinates coord = emitter.pointsCat21.at(c);
+                        stream << QString::number(coord.GetLatitude(),'g',15) << ";" << QString::number(coord.GetLongitude(),'g',15) << ",";
+                    }
+                    stream << endl;
+                    for (int c = 0; c < emitter.timeStampsCat21.length(); c++) {
+                        QTime timestamp = emitter.timeStampsCat21.at(c);
+                        stream << timestamp.toString("hh:mm:ss:zzz") << ",";
+                    }
+                    stream << endl;
+                }
+
+                if (emitter.pointsCat20.length() > 0) {
+                    stream << "CAT20" << endl;
+                    for (int c = 0; c < emitter.pointsCat21.length(); c++) {
+                        WGS84Coordinates coord = emitter.pointsCat20.at(c);
+                        stream << QString::number(coord.GetLatitude(),'g',15) << ";" << QString::number(coord.GetLongitude(),'g',15) << ",";
+                    }
+                    stream << endl;
+                    for (int c = 0; c < emitter.timeStampsCat20.length(); c++) {
+                        QTime timestamp = emitter.timeStampsCat20.at(c);
+                        stream << timestamp.toString("hh:mm:ss:zzz") << ",";
+                    }
+                    stream << endl;
+                }
+
+                if (emitter.pointsCat10Mlat.length() > 0) {
+                    stream << "CAT10: MLAT" << endl;
+                    for (int c = 0; c < emitter.pointsCat10Mlat.length(); c++) {
+                        WGS84Coordinates coord = emitter.pointsCat10Mlat.at(c);
+                        stream << QString::number(coord.GetLatitude(),'g',15) << ";" << QString::number(coord.GetLongitude(),'g',15) << ",";
+                    }
+                    stream << endl;
+                    for (int c = 0; c < emitter.timeStampsCat10Mlat.length(); c++) {
+                        QTime timestamp = emitter.timeStampsCat10Mlat.at(c);
+                        stream << timestamp.toString("hh:mm:ss:zzz") << ",";
+                    }
+                    stream << endl;
+                }
+            }
+            stream << "END" << endl;
+
+            QMessageBox *msg = new QMessageBox(this);
+            msg->setText("CSV Exported succesfully");
+            msg->setStandardButtons(QMessageBox::Ok);
+            msg->open();
+
+        }
+
+    }
+
+    else {
+    }
+
 }
 
 void FileWindow::SaveKMLFile() {
@@ -449,12 +533,12 @@ void FileWindow::SaveKMLFile() {
             }
             stream << "</Document>" << endl;
             stream << "</kml>" << endl;
-        }
 
-        QMessageBox *msg = new QMessageBox(this);
-        msg->setText("KML Exported succesfully");
-        msg->setStandardButtons(QMessageBox::Ok);
-        msg->open();
+            QMessageBox *msg = new QMessageBox(this);
+            msg->setText("KML Exported succesfully");
+            msg->setStandardButtons(QMessageBox::Ok);
+            msg->open();
+        }
     }
 
     else {

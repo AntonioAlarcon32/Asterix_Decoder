@@ -53,6 +53,7 @@ private:
     void SetFileDetailsTab();
     void RefreshMap();
     void SaveKMLFile();
+    void SaveCSVFile();
 
 
 

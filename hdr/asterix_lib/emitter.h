@@ -32,17 +32,16 @@ public:
     QList<WGS84Coordinates> pointsCat20;
     QList<WGS84Coordinates> pointsCat10Mlat;
     QList<WGS84Coordinates> pointsCat10Smr;
+    QList<QTime> timeStampsCat21;
+    QList<QTime> timeStampsCat20;
+    QList<QTime> timeStampsCat10Mlat;
+    QList<QTime> timeStampsCat10Smr;
 
 private:
     QString callSign;
     QString targetAddress;
     QString trackNumber;
     QString mode3ACode;
-
-    QList<QTime> timeStampsCat21;
-    QList<QTime> timeStampsCat20;
-    QList<QTime> timeStampsCat10Mlat;
-    QList<QTime> timeStampsCat10Smr;
     QList<QString> detectedEmissions;
 };
 
