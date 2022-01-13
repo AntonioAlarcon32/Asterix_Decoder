@@ -31,6 +31,7 @@ void EmitFileDialog::on_startEmitButton_clicked()
     senderIp_ = QHostAddress(this->ui->ipEdit->text());
     senderPort_ = this->ui->udpEdit->text().toInt();
     senderSocket_.bind(QHostAddress(QHostAddress::AnyIPv4), 0);
+    senderSocket_.setSocketOption(QAbstractSocket::MulticastTtlOption,3);
     emitTimer_->setInterval(1);
     emitTimer_->start();
 }

@@ -22,11 +22,13 @@ LiveCaptureWindow::LiveCaptureWindow(QWidget *parent) :
 
     for (int uniqueId : sensorIDs) {
         Sensor *sensor = appConfig_->GetSensorInfo(uniqueId);
-        QHostAddress newAddress = QHostAddress(sensor->sensorIp);
-        QUdpSocket *newSocket = new QUdpSocket();
-        udpSockets4_.append(newSocket);
-        groupAddresses4_.append(newAddress);
-        udpPorts_.append(sensor->port);
+        if (sensor->sensorIp != ""){
+            QHostAddress newAddress = QHostAddress(sensor->sensorIp);
+            QUdpSocket *newSocket = new QUdpSocket();
+            udpSockets4_.append(newSocket);
+            groupAddresses4_.append(newAddress);
+            udpPorts_.append(sensor->port);
+        }
     }
 
     packetCounter_ = 0;

@@ -27,9 +27,16 @@ void PreferencesWindow::LoadSensorsToTable() {
 
     for (int id: uniqueIds) {
         Sensor *sensor = appConfig_->GetSensorInfo(id);
-        QString coordinates = QString::number(sensor->sensorLatitude) + "," + QString::number(sensor->sensorLongitude);
-        table_->appendRow({new QStandardItem(QString::number(sensor->systemIdCode)),new QStandardItem(QString::number(sensor->systemAreaCode)),new QStandardItem(sensor->sensorDescription),
-                           new QStandardItem(QString::number(sensor->category)),new QStandardItem(sensor->sensorIp+":"+QString::number(sensor->port)),new QStandardItem(coordinates)});
+        if (sensor->sensorIp != "") {
+            QString coordinates = QString::number(sensor->sensorLatitude) + "," + QString::number(sensor->sensorLongitude);
+            table_->appendRow({new QStandardItem(QString::number(sensor->systemIdCode)),new QStandardItem(QString::number(sensor->systemAreaCode)),new QStandardItem(sensor->sensorDescription),
+                               new QStandardItem(QString::number(sensor->category)),new QStandardItem(sensor->sensorIp+":"+QString::number(sensor->port)),new QStandardItem(coordinates)});
+        }
+        else {
+            QString coordinates = QString::number(sensor->sensorLatitude) + "," + QString::number(sensor->sensorLongitude);
+            table_->appendRow({new QStandardItem(QString::number(sensor->systemIdCode)),new QStandardItem(QString::number(sensor->systemAreaCode)),new QStandardItem(sensor->sensorDescription),
+                               new QStandardItem(QString::number(sensor->category)),new QStandardItem(""),new QStandardItem(coordinates)});
+        }
     }
     ui->tableView->setModel(table_);
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -51,9 +58,16 @@ void PreferencesWindow::SaveSensorsToConfig() {
 
         newSensor.sensorDescription = table_->data(table_->index(i,2)).toString();
         newSensor.category = table_->data(table_->index(i,3)).toInt();
-        QStringList ipAndPort = table_->data(table_->index(i,4)).toString().split(":");
-        newSensor.sensorIp =ipAndPort.at(0);
-        newSensor.port = ipAndPort.at(1).toInt();
+        QString ipInput = table_->data(table_->index(i,4)).toString();
+        if (ipInput != "") {
+            QStringList ipAndPort = table_->data(table_->index(i,4)).toString().split(":");
+            newSensor.sensorIp =ipAndPort.at(0);
+            newSensor.port = ipAndPort.at(1).toInt();
+        }
+        else {
+            newSensor.sensorIp = "";
+            newSensor.port = 0;
+        }
         QStringList coord = table_->data(table_->index(i,5)).toString().split(",");
         newSensor.sensorLatitude = coord.at(0).toDouble();
         newSensor.sensorLongitude = coord.at(1).toDouble();
