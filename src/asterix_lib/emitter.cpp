@@ -4,31 +4,31 @@ Emitter::Emitter(QString targetAddress, QString detectedEmission)
 {
     this->pointsCat21 = QList<WGS84Coordinates>();
     this->pointsCat20 = QList<WGS84Coordinates>();
-    this->pointsCat10Mlat = QList<WGS84Coordinates>();
+    this->pointsCat10Mlat = QList<WGS84Coordinates>();          //Lists of points for all categories
     this->pointsCat10Smr = QList<WGS84Coordinates>();
     this->timeStampsCat21 = QList<QTime>();
     this->timeStampsCat20 = QList<QTime>();
-    this->timeStampsCat10Mlat = QList<QTime>();
+    this->timeStampsCat10Mlat = QList<QTime>();                 //List of timestamps for all categories
     this->timeStampsCat10Smr = QList<QTime>();
-    this->detectedEmissions = QList<QString>();
+    this->detectedEmissions = QList<QString>();         //List of detected categories of this emitter
 
-    this->targetAddress = targetAddress;
+    this->targetAddress = targetAddress;                //Set the address
     this->trackNumber = "N/A";
     this->callSign = "N/A";
     this->mode3ACode = "N/A";
 
-    this->detectedEmissions.append(detectedEmission);
+    this->detectedEmissions.append(detectedEmission);       //Add the detected emission when created
 
 }
 
 void Emitter::AddPoint(WGS84Coordinates point, QTime timeStamp, int category, QString typeOfEmission) {
 
     if (detectedEmissions.indexOf(typeOfEmission) == -1) {
-        detectedEmissions.append(typeOfEmission);
+        detectedEmissions.append(typeOfEmission);               //Search if the detected emission exists, if not, add it
     }
 
     if (category == 10 && typeOfEmission == "CAT 10: PSR") {
-        this->pointsCat10Smr.append(point);
+        this->pointsCat10Smr.append(point);                     //For CAT10, separate SMR and MLAT
         this->timeStampsCat10Smr.append(timeStamp);
     }
 
@@ -91,14 +91,14 @@ QTime Emitter::GetFirstReport() {
         firstTimeStamps.append(timeStampsCat20.first());
     }
     if (timeStampsCat21.length() != 0) {
-        firstTimeStamps.append(timeStampsCat21.first());
+        firstTimeStamps.append(timeStampsCat21.first());                //Create a list with the first timestamp of each category
     }
 
     QTime currentFirst = firstTimeStamps.at(0);
 
     for (int i = 1; i < firstTimeStamps.length(); i++) {
         if (currentFirst > firstTimeStamps.at(i)) {
-            currentFirst = firstTimeStamps.at(i);
+            currentFirst = firstTimeStamps.at(i);                   //Loop the list to see which one is the first
         }
     }
 
@@ -125,7 +125,7 @@ QTime Emitter::GetLastReport() {
     QTime currentLast = lastTimeStamps.at(0);
 
     for (int i = 1; i < lastTimeStamps.length(); i++) {
-        if (currentLast < lastTimeStamps.at(i)) {
+        if (currentLast < lastTimeStamps.at(i)) {                   //Same as before, but for latest emission
             currentLast = lastTimeStamps.at(i);
         }
     }

@@ -4,33 +4,33 @@
 namespace Utilities {
 
 
-QVector<unsigned char> DataTools::GetFixedLengthDataItem(QByteArray &message, int length, int &offset) {
+QVector<unsigned char> DataTools::GetFixedLengthDataItem(QByteArray &message, int length, int &offset) {    //Function for getting a fixed length data item
 
     int i = 0;
     QVector<unsigned char> dataItem(length);
 
-    if (message.length() - offset >= length) {
+    if (message.length() - offset >= length) {                  //Check that there are enough bytes for getting this data item
 
         while (i < length) {
-            dataItem[i] = message.at(i+offset);
+            dataItem[i] = message.at(i+offset);                 //Get bytes until we get the desired length
             i++;
         }
         offset += i;
-        return dataItem;
+        return dataItem;                                    //Return the vector of bytes
     }
 
     else {
-        throw -1;
+        throw -1;                               //Throw an exception if required length is greater than available bytes
     }
 }
 
-QVector<unsigned char> DataTools::GetVariableLengthDataItem(QByteArray &message, int &offset) {
+QVector<unsigned char> DataTools::GetVariableLengthDataItem(QByteArray &message, int &offset) {     //Function to get a variable length data item using the LSB extension
     int i = 0;
     QVector<unsigned char> dataItem;
 
     dataItem.append(message.at(offset));
 
-    while ((dataItem.at(i) & 0x01) == 1) {
+    while ((dataItem.at(i) & 0x01) == 1) {                          //If last bit is 1, FX is true, so we have to get next byte
         dataItem.append(message.at(offset+i+1));
         i++;
     }
@@ -38,7 +38,7 @@ QVector<unsigned char> DataTools::GetVariableLengthDataItem(QByteArray &message,
     return dataItem;
 }
 
-QVector<unsigned char> DataTools::GetRepetitiveDataItem(QByteArray &message, int factor, int &offset) {
+QVector<unsigned char> DataTools::GetRepetitiveDataItem(QByteArray &message, int factor, int &offset) {     //Function to get a repetitive data item
 
     QVector<unsigned char> dataItem;
     short repFactor = (short) message.at(offset);
@@ -46,10 +46,10 @@ QVector<unsigned char> DataTools::GetRepetitiveDataItem(QByteArray &message, int
 
     int i = 0;
 
-    if (factor * repFactor <= message.length() - offset) {
+    if (factor * repFactor <= message.length() - offset) {                  //Check that there are enough bytes for returning the array
 
         while (i < (repFactor * factor)) {
-            dataItem.append(message.at(offset+i+1));
+            dataItem.append(message.at(offset+i+1));                        //We get X items of the data item of Y length
             i++;
         }
         offset += (i+1);
@@ -57,30 +57,30 @@ QVector<unsigned char> DataTools::GetRepetitiveDataItem(QByteArray &message, int
     }
 
     else {
-        throw -1;
+        throw -1;                   //If not enough bytes, throw an exception
     }
 }
 
-double DataTools::DecodeUnsignedBytesToDouble(QVector<unsigned char> bytes, double resolution) {
+double DataTools::DecodeUnsignedBytesToDouble(QVector<unsigned char> bytes, double resolution) {        //Function to get decimal value of an array of bytes
 
     double bytesValue = 0;
-    double multiplier = 1;
-    for (int c = bytes.length() - 1; c >= 0; c--)
+    double multiplier = 1;                                          //Multiplying factor for each byte.
+    for (int c = bytes.length() - 1; c >= 0; c--)                   //Start by the last byte of the array (holds the LSB)
     {
-        bytesValue += ((unsigned char)bytes.at(c) * multiplier);
-        multiplier = multiplier * pow(2,8);
+        bytesValue += ((unsigned char)bytes.at(c) * multiplier);        //Add the value of the chart times the multiplier
+        multiplier = multiplier * pow(2,8);                             //Multiply the factor by 2^8, as the next byte starts at bit 9 of the data item
     }
-    return bytesValue * resolution;
+    return bytesValue * resolution;                                     //Multiply the value with the resolution of the data item
 }
 
-double DataTools::DecodeTwosComplementToDouble(QVector<unsigned char> bytes, double resolution) {
+double DataTools::DecodeTwosComplementToDouble(QVector<unsigned char> bytes, double resolution) {           //Function to get decimal value of an array of bytes encoded in twos complement
 
-    unsigned char mask = 0x7F;
+    unsigned char mask = 0x7F;                  //Mask to remove the sign bit
     bool negative = false;
-    if ((unsigned char)bytes.at(0) > 127) {
+    if ((unsigned char)bytes.at(0) > 127) {     //If the value of the first byte (MSB) is greater than 127, MSB is true so value is negative
         negative = true;
     }
-    unsigned char noSign = (unsigned char)(bytes.at(0) & mask);
+    unsigned char noSign = (unsigned char)(bytes.at(0) & mask);     //Get a byte removing the sign byte
     double bytesValue = 0;
     double multiplier = 1;
 
@@ -88,20 +88,20 @@ double DataTools::DecodeTwosComplementToDouble(QVector<unsigned char> bytes, dou
     {
         if (c == 0)
         {
-            bytesValue += noSign * multiplier;
+            bytesValue += noSign * multiplier;                          //Decode the value as normal
             break;
         }
         bytesValue += ((unsigned char)bytes.at(c) * multiplier);
         multiplier = multiplier * pow(2, 8);
     }
     if (negative) {
-        bytesValue = bytesValue - pow(2, (bytes.length() * 8) - 1);
+        bytesValue = bytesValue - pow(2, (bytes.length() * 8) - 1);     //If the value is negative, we use the formula to get the twos complement of that number (Cn2 - 2^n = -N)
     }
 
     return bytesValue * resolution;
 }
 
-QString DataTools::GetAircraftIDFromBytes(QVector<unsigned char> bytes) {
+QString DataTools::GetAircraftIDFromBytes(QVector<unsigned char> bytes) {           //Function that translates from bytes to callsign using ICAO encoding
 
     QString result = "";
 
@@ -226,7 +226,7 @@ QString DataTools::GetAircraftIDFromBytes(QVector<unsigned char> bytes) {
     return result.replace(" ","");
 }
 
-double DataTools::DecodeSpecialTwosComplement(QVector<unsigned char> bytes, double resolution, unsigned char  mask, int signIndicator) {
+double DataTools::DecodeSpecialTwosComplement(QVector<unsigned char> bytes, double resolution, unsigned char  mask, int signIndicator) {        //Function to decode twos complement when sign byte is not in MSB
 
     bool negative = false;
     if ((unsigned char)bytes.at(0) >= signIndicator) {
@@ -267,7 +267,7 @@ double RadarTools::ALMOST_ZERO = 1e-10;
 double RadarTools::REQUIRED_PRECISION = 1e-8;
 double RadarTools::RAD2DEG = 180.0/PI;
 
-CoordinatesXYZ RadarTools::ChangeRadarCartesianToGeocentric(WGS84Coordinates radarCoords, CoordinatesXYZ radarCartesian) {
+CoordinatesXYZ RadarTools::ChangeRadarCartesianToGeocentric(WGS84Coordinates radarCoords, CoordinatesXYZ radarCartesian) {  //Function to change from radar 2D Cartesian to Geocentric
 
     double lat = radarCoords.GetLatitude() * DEG2RAD;
     double lon = radarCoords.GetLongitude() * DEG2RAD;
@@ -292,7 +292,7 @@ CoordinatesXYZ RadarTools::ChangeRadarCartesianToGeocentric(WGS84Coordinates rad
     int c = 1;
 }
 
-WGS84Coordinates RadarTools::ChangeGeocentricToGeodesic(CoordinatesXYZ objectGeocenctric) {
+WGS84Coordinates RadarTools::ChangeGeocentricToGeodesic(CoordinatesXYZ objectGeocenctric) {             //Change from Geocentric to Geodesic
     double x = objectGeocenctric.GetX();
     double y = objectGeocenctric.GetY();
     double z = objectGeocenctric.GetZ();
@@ -300,15 +300,12 @@ WGS84Coordinates RadarTools::ChangeGeocentricToGeodesic(CoordinatesXYZ objectGeo
 
     double lat, lon, height;
 
-
-
     double b = 6356752.3142;
 
     if ((abs(x) < ALMOST_ZERO) && (abs(y) < ALMOST_ZERO))
     {
         if (abs(z) < ALMOST_ZERO)
         {
-            // the point is at the center of earth :)
             result.SetLatitude(PI / 2.0);
         }
         else
@@ -321,41 +318,34 @@ WGS84Coordinates RadarTools::ChangeGeocentricToGeodesic(CoordinatesXYZ objectGeo
     }
 
     double d_xy = sqrt(x * x + y * y);
-                // from formula 20
-                lat = atan((z / d_xy) /
-                    (1 - (A * E2) / sqrt(d_xy * d_xy + z * z)));
-                // from formula 24
-                double nu = A / sqrt(1 - E2 * pow(sin(lat), 2.0));
-                // from formula 20
-                height = (d_xy / cos(lat)) - nu;
+    lat = atan((z / d_xy) /
+               (1 - (A * E2) / sqrt(d_xy * d_xy + z * z)));
+    double nu = A / sqrt(1 - E2 * pow(sin(lat), 2.0));
+    height = (d_xy / cos(lat)) - nu;
 
-                // iteration from formula 20b
-                double Lat_over;
-                if (lat >= 0) {
-                    Lat_over = -0.1;
-                }
-                else {
-                    Lat_over = 0.1;
-                }
+    double Lat_over;
+    if (lat >= 0) {
+        Lat_over = -0.1;
+    }
+    else {
+        Lat_over = 0.1;
+    }
 
-                int loop_count = 0;
-                while ((abs(lat - Lat_over) > REQUIRED_PRECISION) && (loop_count < 50)) {
-                    loop_count++;
-                    Lat_over = lat;
-                    lat = atan((z * (1 + height / nu)) / (d_xy * ((1 - E2) + (height / nu))));
-                    nu = A / sqrt(1 - E2 * pow(sin(lat), 2.0));
-                    height = d_xy / cos(lat) - nu;
-                }
-                lon = atan2(y, x);
-                // if (loop_count == 50) { // exception }
+    int loop_count = 0;
+    while ((abs(lat - Lat_over) > REQUIRED_PRECISION) && (loop_count < 50)) {
+        loop_count++;
+        Lat_over = lat;
+        lat = atan((z * (1 + height / nu)) / (d_xy * ((1 - E2) + (height / nu))));
+        nu = A / sqrt(1 - E2 * pow(sin(lat), 2.0));
+        height = d_xy / cos(lat) - nu;
+    }
+    lon = atan2(y, x);
 
-                result.SetLatitude(lat*RAD2DEG);
-                result.SetLongitude(lon*RAD2DEG);
-                result.SetHeight(height);
-                return result;
+    result.SetLatitude(lat*RAD2DEG);
+    result.SetLongitude(lon*RAD2DEG);
+    result.SetHeight(height);
+    return result;
 }
-
-
 
 }
 
