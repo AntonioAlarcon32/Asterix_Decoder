@@ -112,8 +112,18 @@ void AppConfig::SaveXMLFile(QString path) {
         else {
             xmlWriter.writeTextElement("ip","");
         }
-        xmlWriter.writeTextElement("latitude",QString::number(sensor->sensorLatitude,'g',8));
-        xmlWriter.writeTextElement("longitude",QString::number(sensor->sensorLongitude,'g',8));
+        if (!isnan(sensor->sensorLatitude)) {
+            xmlWriter.writeTextElement("latitude",QString::number(sensor->sensorLatitude,'g',8));
+        }
+        else {
+            xmlWriter.writeTextElement("latitude","nan");
+        }
+        if (!isnan(sensor->sensorLongitude)) {
+            xmlWriter.writeTextElement("longitude",QString::number(sensor->sensorLongitude,'g',8));
+        }
+        else {
+            xmlWriter.writeTextElement("longitude","nan");
+        }
         xmlWriter.writeTextElement("category",QString::number(sensor->category));
         xmlWriter.writeTextElement("system_id_code",QString::number(sensor->systemIdCode));
         xmlWriter.writeTextElement("system_area_code",QString::number(sensor->systemAreaCode));
@@ -156,10 +166,22 @@ void AppConfig::LoadXMLFile(QString path) {
                                     sensor.sensorDescription = reader.readElementText();
                                 }
                                 else if (reader.name() == "latitude") {
-                                    sensor.sensorLatitude = reader.readElementText().toDouble();
+                                    QString latInput = reader.readElementText();
+                                    if (latInput == "nan") {
+                                        sensor.sensorLatitude = nan("");
+                                    }
+                                    else {
+                                        sensor.sensorLatitude = latInput.toDouble();
+                                    }
                                 }
                                 else if (reader.name() == "longitude") {
-                                    sensor.sensorLongitude = reader.readElementText().toDouble();
+                                    QString lonInput = reader.readElementText();
+                                    if (lonInput == "nan") {
+                                        sensor.sensorLongitude = nan("");
+                                    }
+                                    else {
+                                        sensor.sensorLongitude = lonInput.toDouble();
+                                    }
                                 }
                                 else if (reader.name() == "category") {
                                     sensor.category = reader.readElementText().toInt();

@@ -27,13 +27,22 @@ void PreferencesWindow::LoadSensorsToTable() {
 
     for (int id: uniqueIds) {
         Sensor *sensor = appConfig_->GetSensorInfo(id);
+
+        QString lat,lon, coordinates;
+        lat = (!isnan(sensor->sensorLatitude)) ? QString::number(sensor->sensorLatitude): "";
+        lon = (!isnan(sensor->sensorLongitude)) ? QString::number(sensor->sensorLongitude): "";
+        if (lat != "" && lon != "") {
+            coordinates = QString::number(sensor->sensorLatitude) + "," + QString::number(sensor->sensorLongitude);
+        }
+        else {
+            coordinates = "";
+        }
+
         if (sensor->sensorIp != "") {
-            QString coordinates = QString::number(sensor->sensorLatitude) + "," + QString::number(sensor->sensorLongitude);
             table_->appendRow({new QStandardItem(QString::number(sensor->systemIdCode)),new QStandardItem(QString::number(sensor->systemAreaCode)),new QStandardItem(sensor->sensorDescription),
                                new QStandardItem(QString::number(sensor->category)),new QStandardItem(sensor->sensorIp+":"+QString::number(sensor->port)),new QStandardItem(coordinates)});
         }
         else {
-            QString coordinates = QString::number(sensor->sensorLatitude) + "," + QString::number(sensor->sensorLongitude);
             table_->appendRow({new QStandardItem(QString::number(sensor->systemIdCode)),new QStandardItem(QString::number(sensor->systemAreaCode)),new QStandardItem(sensor->sensorDescription),
                                new QStandardItem(QString::number(sensor->category)),new QStandardItem(""),new QStandardItem(coordinates)});
         }
@@ -68,9 +77,16 @@ void PreferencesWindow::SaveSensorsToConfig() {
             newSensor.sensorIp = "";
             newSensor.port = 0;
         }
-        QStringList coord = table_->data(table_->index(i,5)).toString().split(",");
-        newSensor.sensorLatitude = coord.at(0).toDouble();
-        newSensor.sensorLongitude = coord.at(1).toDouble();
+        QString coordInput = table_->data(table_->index(i,5)).toString();
+        if (coordInput != "") {
+            QStringList coord = coordInput.split(",");
+            newSensor.sensorLatitude = coord.at(0).toDouble();
+            newSensor.sensorLongitude = coord.at(1).toDouble();
+        }
+        else {
+            newSensor.sensorLatitude = nan("");
+            newSensor.sensorLongitude = nan("");
+        }
         appConfig_->AddSensor(newSensor);
     }
     appConfig_->SaveXMLFile(QDir::currentPath() + "/config.xml");
