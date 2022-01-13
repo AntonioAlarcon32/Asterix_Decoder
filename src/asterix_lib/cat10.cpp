@@ -174,12 +174,23 @@ QString Cat10::GetTypeOfTransmission() {
 
 double Cat10::GetTrackAngle() {
 
-    if (!isnan(this->targetOrientation)) {
+    if (!isnan(this->polarTrackAngle) && this->trTYP == "PSR") {
+        return this->polarTrackAngle;
+    }
+
+    else if (!isnan(this->targetOrientation)) {
         return targetOrientation;
+    }
+
+    if (!isnan(this->cartesianVx) && (this->cartesianVx != 0 && this->cartesianVy != 0)) {
+        double ang = atan2(cartesianVy,cartesianVx);
+        double  angDegrees = ang * 180.0 /Utilities::RadarTools::PI;
+        return 90 - angDegrees;
     }
     else {
         return 400;
     }
+
 }
 
 
