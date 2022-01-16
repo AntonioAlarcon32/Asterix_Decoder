@@ -1,4 +1,4 @@
-#include "selectsavedialog.h"
+#include "hdr/gui/selectsavedialog.h"
 #include "ui_selectsavedialog.h"
 
 SelectSaveDialog::SelectSaveDialog(QWidget *parent) :

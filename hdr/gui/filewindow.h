@@ -20,8 +20,8 @@
 #include "emitterdetailswindow.h"
 
 #include <hdr/gui/preferenceswindow.h>
-#include <selectsavedialog.h>
-#include <emitfiledialog.h>
+#include <hdr/gui/selectsavedialog.h>
+#include <hdr/gui/emitfiledialog.h>
 
 namespace Ui {
 class FileWindow;

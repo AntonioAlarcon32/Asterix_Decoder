@@ -1,4 +1,4 @@
-#include "emitfiledialog.h"
+#include "hdr/gui/emitfiledialog.h"
 #include "ui_emitfiledialog.h"
 
 EmitFileDialog::EmitFileDialog(QWidget *parent, AsterixFile *astFile) :
